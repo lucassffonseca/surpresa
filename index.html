@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meu Amor Eterno ❤️</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Poppins:wght@300;400;600&display=swap');
+
+        :root {
+            --bg-color: #fffaf0;    
+            --primary-pink: #ffb6c1; 
+            --accent-red: #d32f2f;   
+            --text-main: #4a4a4a;    
+            --text-muted: #8c8c8c;
+            --card-bg: #ffffff;
+            --gold: #d4af37;        
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Poppins', sans-serif;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        h1, h2, h3 { font-family: 'Playfair Display', serif; color: var(--accent-red); }
+        .special-title { font-family: 'Dancing Script', cursive; color: var(--gold); }
+
+        /* --- TELAS DE FLUXO --- */
+        .screen {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background-color: var(--bg-color);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.4s ease, visibility 0.4s;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+
+        .btn {
+            background-color: var(--accent-red);
+            color: white;
+            border: none;
+            padding: 16px 36px;
+            font-size: 16px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
+            font-family: 'Poppins', sans-serif;
+            margin-top: 30px;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(211, 47, 47, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+        }
+
+        .btn:hover { background-color: #b71c1c; transform: translateY(-2px); }
+
+        .heart-icon { font-size: 40px; margin-bottom: 20px; animation: pulse 1.5s infinite; color: var(--accent-red); }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+
+        /* Caixas Centrais (Senha e Alerta) */
+        .card-container {
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.05);
+            width: 100%;
+            max-width: 380px;
+            border: 2px solid var(--primary-pink);
+            position: relative;
+            z-index: 10000;
+        }
+
+        input[type="password"] {
+            width: 100%;
+            padding: 15px;
+            margin-top: 20px;
+            border: 2px solid #ddd;
+            border-radius: 12px;
+            font-size: 18px;
+            text-align: center;
+            outline: none;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        input[type="password"]:focus { border-color: var(--accent-red); }
+        .error-msg { color: var(--accent-red); font-size: 14px; margin-top: 10px; display: none; font-weight: 600; }
+
+        /* --- CONTEÚDO PRINCIPAL --- */
+        #main-content {
+            display: none; 
+            max-width: 650px;
+            margin: 0 auto;
+            background-color: var(--card-bg);
+            padding-bottom: 80px;
+            box-shadow: 0 0 50px rgba(0,0,0,0.03);
+            border-radius: 0 0 20px 20px;
+            position: relative;
+            z-index: 10; 
+        }
+
+        .hero {
+            text-align: center;
+            padding: 100px 30px 60px;
+            background: linear-gradient(to bottom, #fff0f0, var(--card-bg));
+        }
+
+        .hero h1 { font-size: 36px; margin-bottom: 15px; }
+        .hero p { color: var(--text-main); font-size: 17px; line-height: 1.8; font-style: italic; }
+
+        .counter-box {
+            background-color: #fff0f0;
+            border-radius: 20px;
+            padding: 30px;
+            margin: 30px 30px 60px;
+            text-align: center;
+            border: 2px solid var(--primary-pink);
+            box-shadow: 0 5px 15px rgba(255,182,193,0.3);
+        }
+        .counter-label { font-size: 13px; text-transform: uppercase; letter-spacing: 2px; color: var(--accent-red); margin-bottom: 10px; font-weight: 600; }
+        #time-together { font-size: 20px; font-weight: 600; color: var(--text-main); }
+
+        .feed-container { padding: 0 30px; }
+        .feed-title { text-align: center; margin: 60px 0 40px; font-size: 28px; }
+
+        .feed-post {
+            background: var(--card-bg);
+            border: 1px solid #eee;
+            border-radius: 20px;
+            margin-bottom: 50px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            background-color: #ffffff;
+        }
+        
+        .feed-post:hover { transform: translateY(-5px); box-shadow: 0 15px 40px rgba(211, 47, 47, 0.1); }
+
+        .feed-header {
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid #f5f5f5;
+            background-color: #fffafa;
+        }
+
+        .feed-date { font-weight: 600; font-size: 15px; color: var(--accent-red); }
+
+        .feed-img-container {
+            width: 100%;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .feed-img {
+            width: 100%;
+            height: auto;
+            max-height: 600px;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.5s ease;
+        }
+        
+        .feed-post:hover .feed-img { transform: scale(1.03); } 
+
+        .feed-caption {
+            padding: 25px;
+            font-size: 16px;
+            line-height: 1.8;
+            color: var(--text-main);
+        }
+
+        .final-message {
+            padding: 60px 40px 40px;
+            text-align: center;
+            font-size: 18px;
+            line-height: 1.8;
+            color: var(--accent-red);
+            font-style: italic;
+        }
+
+        .signature { text-align: right; font-family: 'Dancing Script', cursive; font-size: 28px; color: var(--gold); padding: 0 40px 80px; }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 1s cubic-bezier(0.5, 0, 0, 1);
+            visibility: hidden;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+            visibility: visible;
+        }
+
+        /* BALÕES TRANSPARENTES */
+        .floating-heart {
+            position: fixed;
+            color: rgba(211, 47, 47, 0.25); 
+            pointer-events: none; 
+            z-index: 9998; 
+            bottom: -50px; 
+            animation: balloonFloatUp linear forwards;
+        }
+
+        @keyframes balloonFloatUp {
+            0% { transform: translateY(0) translateX(0) scale(1) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-120vh) translateX(var(--drift)) scale(1.2) rotate(var(--rotation)); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <audio id="bg-music" loop>
+        <source src="musica.mp3" type="audio/mpeg">
+    </audio>
+
+    <div id="screen-1" class="screen">
+        <div class="heart-icon">&hearts;</div>
+        <h2 style="margin-bottom: 10px; font-size: 28px;">Uma carta para você</h2>
+        <p style="color: var(--text-muted); margin-bottom: 20px;"> Preparei uma pequena surpresa...</p>
+        <button class="btn" onclick="nextScreen('screen-1', 'screen-2')">Abrir o Envelope 💌</button>
+    </div>
+
+    <div id="screen-2" class="screen hidden" style="display: none;">
+        <div class="card-container">
+            <h2 style="font-size: 22px; margin-bottom: 10px;">Acesso Restrito</h2>
+            <p style="color: var(--text-muted); font-size: 14px;">Qual é o nosso código secreto?</p>
+            
+            <input type="password" id="secret-code" placeholder="****">
+            <div id="error-msg" class="error-msg">Código incorreto. Tente de novo! ❤️</div>
+            
+            <button class="btn" onclick="checkPassword()">Desbloquear</button>
+        </div>
+    </div>
+
+    <div id="screen-3" class="screen hidden" style="display: none;">
+        <div class="card-container">
+            <h2 style="font-size: 24px; margin-bottom: 15px;">Acesso Liberado! ✨</h2>
+            <p style="color: var(--text-main); font-size: 16px; margin-bottom: 25px;">Para uma experiência completa, por favor, aumente o volume do seu celular 🎶</p>
+            
+            <button class="btn" onclick="enterLetter()">Continuar ❤️</button>
+        </div>
+    </div>
+
+    <div id="main-content">
+        
+        <div class="hero">
+            <h1 class="special-title reveal">Meu Amor Eterno,</h1>
+            <p class="reveal">Escrevi isso para registrar um pouco de nós e te lembrar do quanto você é especial para mim todos os dias. Cada segundo com você é um presente.</p>
+        </div>
+
+        <div class="counter-box reveal">
+            <div class="counter-label">Nosso tempo juntos</div>
+            <div id="time-together">Calculando...</div>
+        </div>
+
+        <h2 class="feed-title special-title reveal">Nossos Momentos</h2>
+        <div class="feed-container">
+            
+            <div class="feed-post reveal">
+                <div class="feed-header">
+                    <div class="feed-date">15 de Fevereiro de 2026</div>
+                </div>
+                <div class="feed-img-container">
+                    <img src="foto01.png" alt="Momento 1" class="feed-img">
+                </div>
+                <div class="feed-caption">
+                    <strong>Onde tudo começou.</strong> Aquele dia em que percebi que minha vida mudaria para sempre. O primeiro de muitos momentos inesquecíveis ao seu lado.
+                </div>
+            </div>
+
+            <div class="feed-post reveal">
+                <div class="feed-header">
+                    <div class="feed-date">Nossa Viagem</div>
+                </div>
+                <div class="feed-img-container">
+                    <img src="foto02.png" alt="Momento 2" class="feed-img">
+                </div>
+                <div class="feed-caption">
+                    Descobrir lugares novos com você é minha atividade favorita. Cada risada, cada paisagem e cada pequeno detalhe ficaram guardados para sempre no meu coração.
+                </div>
+            </div>
+
+            <div class="feed-post reveal">
+                <div class="feed-header">
+                    <div class="feed-date">Hoje</div>
+                </div>
+                <div class="feed-img-container">
+                    <img src="foto03.png" alt="Momento 3" class="feed-img">
+                </div>
+                <div class="feed-caption">
+                    A cada dia que passa, tenho mais certeza do que sinto. Obrigado por ser minha parceira, minha melhor amiga e por dividir a vida comigo.
+                </div>
+            </div>
+
+        </div>
+
+        <div class="final-message reveal">
+            <p>E que essa seja apenas uma pequena parte de tudo o que ainda vamos construir juntos.</p>
+            <p>Eu te amo muito!</p>
+        </div>
+
+        <div class="signature reveal">
+            Com todo meu amor,<br>Lucas
+        </div>
+
+    </div>
+
+    <script>
+        const SENHA_CORRETA = "1206"; 
+        const DATA_INICIO = new Date("2026-02-15T00:00:00"); 
+
+        function startHeartBalloons() {
+            setInterval(createHeartBalloon, 1000);
+            for(let i = 0; i < 4; i++) {
+                setTimeout(createHeartBalloon, i * 300);
+            }
+        }
+
+        function createHeartBalloon() {
+            const heart = document.createElement('div');
+            heart.classList.add('floating-heart');
+            heart.innerHTML = '&hearts;'; 
+            
+            const startX = Math.random() * 95; 
+            const drift = (Math.random() - 0.5) * 150; 
+            const rotation = (Math.random() - 0.5) * 60; 
+            const duration = Math.random() * 10 + 15; 
+            const size = Math.random() * 20 + 20; 
+            
+            heart.style.left = `${startX}vw`;
+            heart.style.fontSize = `${size}px`;
+            heart.style.setProperty('--drift', `${drift}px`);
+            heart.style.setProperty('--rotation', `${rotation}deg`);
+            heart.style.animationDuration = `${duration}s`;
+            
+            document.body.appendChild(heart);
+            
+            setTimeout(() => { heart.remove(); }, duration * 1000);
+        }
+
+        function nextScreen(hideId, showId) {
+            document.getElementById(hideId).classList.add('hidden');
+            setTimeout(() => {
+                document.getElementById(hideId).style.display = 'none';
+                const showEl = document.getElementById(showId);
+                showEl.style.display = 'flex';
+                setTimeout(() => showEl.classList.remove('hidden'), 50); 
+            }, 400); 
+        }
+
+        function checkPassword() {
+            const input = document.getElementById('secret-code').value;
+            const errorMsg = document.getElementById('error-msg');
+            
+            if (input === SENHA_CORRETA) {
+                errorMsg.style.display = 'none';
+                
+                // Manda para a tela de Alerta de Volume (Screen 3)
+                nextScreen('screen-2', 'screen-3');
+
+            } else {
+                errorMsg.style.display = 'block';
+            }
+        }
+
+        document.getElementById('secret-code').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') checkPassword();
+        });
+
+        function enterLetter() {
+            const bgMusic = document.getElementById('bg-music');
+            
+            // Toca a música e liga os balões de coração
+            bgMusic.play().catch(e => console.log("Áudio pendente:", e)); 
+            startHeartBalloons();
+
+            document.getElementById('screen-3').classList.add('hidden');
+            
+            setTimeout(() => {
+                document.getElementById('screen-3').style.display = 'none';
+                const mainContent = document.getElementById('main-content');
+                mainContent.style.display = 'block';
+                
+                window.scrollTo(0, 0); 
+                triggerReveals(); 
+            }, 400);
+        }
+
+        function updateCounter() {
+            const now = new Date();
+            const diff = now - DATA_INICIO;
+
+            if (diff < 0) {
+                document.getElementById("time-together").innerHTML = "0 dias, 0h, 0m e 0s";
+                return;
+            }
+
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+            const mins = Math.floor((diff / 1000 / 60) % 60);
+            const secs = Math.floor((diff / 1000) % 60);
+
+            document.getElementById("time-together").innerHTML = 
+                `${days} dias, ${hours}h, ${mins}m e ${secs}s`;
+        }
+        setInterval(updateCounter, 1000);
+        updateCounter();
+
+        function triggerReveals() {
+            const reveals = document.querySelectorAll('.reveal');
+            reveals.forEach(el => {
+                const windowHeight = window.innerHeight;
+                const elementTop = el.getBoundingClientRect().top;
+                const elementVisible = 100;
+
+                if (elementTop < windowHeight - elementVisible) {
+                    el.classList.add('active');
+                }
+            });
+        }
+        window.addEventListener('scroll', triggerReveals);
+    </script>
+</body>
+</html>
