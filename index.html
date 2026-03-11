@@ -3,221 +3,201 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meu Amor Eterno ❤️</title>
+    <title>Nossos Momentos ❤️</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Poppins:wght@300;400;600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&family=Inter:wght@400;600&family=Dancing+Script:wght@700&display=swap');
 
         :root {
-            --bg-color: #fffaf0;    
-            --primary-pink: #ffb6c1; 
-            --accent-red: #d32f2f;   
-            --text-main: #4a4a4a;    
-            --text-muted: #8c8c8c;
-            --card-bg: #ffffff;
-            --gold: #d4af37;        
+            --dark-bg: #121212;
+            --orange-main: #FF6A00;
+            --orange-light: #FF9900;
+            --text-main: #ffffff;
+            --text-muted: #e0e0e0;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
-        body {
-            background-color: var(--bg-color);
+        body, html {
+            background-color: var(--dark-bg);
             color: var(--text-main);
-            font-family: 'Poppins', sans-serif;
-            overflow-x: hidden;
+            font-family: 'Inter', sans-serif;
+            overflow: hidden; 
             -webkit-font-smoothing: antialiased;
+            height: 100vh;
+            width: 100vw;
         }
 
-        h1, h2, h3 { font-family: 'Playfair Display', serif; color: var(--accent-red); }
-        .special-title { font-family: 'Dancing Script', cursive; color: var(--gold); }
+        h1, h2, h3 { font-family: 'Montserrat', sans-serif; letter-spacing: -1px; line-height: 1.1; }
 
         /* --- TELAS DE FLUXO --- */
         .screen {
             position: fixed;
             top: 0; left: 0; width: 100vw; height: 100vh;
-            background-color: var(--bg-color);
+            background-color: var(--dark-bg);
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             z-index: 9999;
-            transition: opacity 0.4s ease, visibility 0.4s;
+            transition: opacity 0.5s ease, visibility 0.5s;
             padding: 20px;
             text-align: center;
         }
 
+        .intro-bg { background: radial-gradient(circle at top right, #4a1c00 0%, var(--dark-bg) 70%); }
         .hidden { opacity: 0; visibility: hidden; pointer-events: none; }
 
         .btn {
-            background-color: var(--accent-red);
-            color: white;
+            background-color: var(--orange-main);
+            color: #ffffff;
             border: none;
-            padding: 16px 36px;
+            padding: 18px 40px;
             font-size: 16px;
             border-radius: 50px;
             cursor: pointer;
-            transition: background 0.3s, transform 0.2s;
-            font-family: 'Poppins', sans-serif;
+            transition: transform 0.2s, background 0.3s;
+            font-family: 'Inter', sans-serif;
             margin-top: 30px;
-            font-weight: 600;
-            box-shadow: 0 4px 15px rgba(211, 47, 47, 0.4);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
             width: 100%;
+            max-width: 300px;
+            box-shadow: 0 10px 20px rgba(255, 106, 0, 0.3);
         }
 
-        .btn:hover { background-color: #b71c1c; transform: translateY(-2px); }
+        .btn:hover { transform: scale(1.05); background-color: var(--orange-light); }
 
-        .heart-icon { font-size: 40px; margin-bottom: 20px; animation: pulse 1.5s infinite; color: var(--accent-red); }
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
-
-        /* Caixas Centrais (Senha e Alerta) */
-        .card-container {
-            background: var(--card-bg);
-            padding: 40px;
-            border-radius: 25px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.05);
+        .card-container { width: 100%; max-width: 400px; position: relative; z-index: 10000; }
+        
+        /* Caixa específica para a Carta (maior e com texto alinhado) */
+        .letter-container {
             width: 100%;
-            max-width: 380px;
-            border: 2px solid var(--primary-pink);
+            max-width: 500px;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 40px 30px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 106, 0, 0.3);
+            text-align: left;
             position: relative;
             z-index: 10000;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
         }
+
+        .letter-content {
+            color: var(--text-muted);
+            font-size: 16px;
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+        .letter-content p { margin-bottom: 15px; }
 
         input[type="password"] {
             width: 100%;
-            padding: 15px;
-            margin-top: 20px;
-            border: 2px solid #ddd;
-            border-radius: 12px;
-            font-size: 18px;
+            padding: 18px;
+            margin-top: 25px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 2px solid transparent;
+            color: white;
+            border-radius: 8px;
+            font-size: 20px;
             text-align: center;
             outline: none;
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Inter', sans-serif;
+            transition: border 0.3s, background 0.3s;
         }
 
-        input[type="password"]:focus { border-color: var(--accent-red); }
-        .error-msg { color: var(--accent-red); font-size: 14px; margin-top: 10px; display: none; font-weight: 600; }
+        input[type="password"]:focus { border-color: var(--orange-main); background-color: rgba(255, 255, 255, 0.15); }
+        .error-msg { color: #ff3b30; font-size: 14px; margin-top: 15px; display: none; font-weight: 600; }
 
-        /* --- CONTEÚDO PRINCIPAL --- */
+        /* --- CONTEÚDO PRINCIPAL (Slides) --- */
         #main-content {
             display: none; 
-            max-width: 650px;
-            margin: 0 auto;
-            background-color: var(--card-bg);
-            padding-bottom: 80px;
-            box-shadow: 0 0 50px rgba(0,0,0,0.03);
-            border-radius: 0 0 20px 20px;
+            height: 100vh;
+            width: 100vw;
+            overflow-y: scroll;
+            scroll-snap-type: y mandatory; 
+            scroll-behavior: smooth;
             position: relative;
             z-index: 10; 
         }
 
-        .hero {
-            text-align: center;
-            padding: 100px 30px 60px;
-            background: linear-gradient(to bottom, #fff0f0, var(--card-bg));
-        }
+        #main-content::-webkit-scrollbar { display: none; }
+        #main-content { -ms-overflow-style: none; scrollbar-width: none; }
 
-        .hero h1 { font-size: 36px; margin-bottom: 15px; }
-        .hero p { color: var(--text-main); font-size: 17px; line-height: 1.8; font-style: italic; }
-
-        .counter-box {
-            background-color: #fff0f0;
-            border-radius: 20px;
-            padding: 30px;
-            margin: 30px 30px 60px;
-            text-align: center;
-            border: 2px solid var(--primary-pink);
-            box-shadow: 0 5px 15px rgba(255,182,193,0.3);
-        }
-        .counter-label { font-size: 13px; text-transform: uppercase; letter-spacing: 2px; color: var(--accent-red); margin-bottom: 10px; font-weight: 600; }
-        #time-together { font-size: 20px; font-weight: 600; color: var(--text-main); }
-
-        .feed-container { padding: 0 30px; }
-        .feed-title { text-align: center; margin: 60px 0 40px; font-size: 28px; }
-
-        .feed-post {
-            background: var(--card-bg);
-            border: 1px solid #eee;
-            border-radius: 20px;
-            margin-bottom: 50px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.03);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            background-color: #ffffff;
-        }
-        
-        .feed-post:hover { transform: translateY(-5px); box-shadow: 0 15px 40px rgba(211, 47, 47, 0.1); }
-
-        .feed-header {
-            padding: 20px;
+        .slide {
+            height: 100vh;
+            width: 100vw;
+            scroll-snap-align: start; 
             display: flex;
-            align-items: center;
-            border-bottom: 1px solid #f5f5f5;
-            background-color: #fffafa;
-        }
-
-        .feed-date { font-weight: 600; font-size: 15px; color: var(--accent-red); }
-
-        .feed-img-container {
-            width: 100%;
-            overflow: hidden;
-            display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-        }
-
-        .feed-img {
-            width: 100%;
-            height: auto;
-            max-height: 600px;
-            object-fit: cover;
-            display: block;
-            transition: transform 0.5s ease;
-        }
-        
-        .feed-post:hover .feed-img { transform: scale(1.03); } 
-
-        .feed-caption {
-            padding: 25px;
-            font-size: 16px;
-            line-height: 1.8;
-            color: var(--text-main);
-        }
-
-        .final-message {
-            padding: 60px 40px 40px;
+            padding: 40px 30px;
+            position: relative;
             text-align: center;
-            font-size: 18px;
-            line-height: 1.8;
-            color: var(--accent-red);
-            font-style: italic;
+            overflow: hidden;
         }
 
-        .signature { text-align: right; font-family: 'Dancing Script', cursive; font-size: 28px; color: var(--gold); padding: 0 40px 80px; }
+        /* GRADIENTES */
+        .bg-0 { background: linear-gradient(135deg, #f12711, #f5af19); } 
+        .bg-1 { background: linear-gradient(135deg, #FF4B2B, #FF416C); } 
+        .bg-2 { background: linear-gradient(135deg, #F2994A, #F2C94C); } 
+        .bg-3 { background: linear-gradient(135deg, #ff7e5f, #feb47b); } 
+        .bg-4 { background: linear-gradient(135deg, #f46b45, #eea849); } 
+        .bg-5 { background: linear-gradient(135deg, #e65c00, #F9D423); } 
+        .bg-end { background: var(--dark-bg); }
 
-        .reveal {
-            opacity: 0;
-            transform: translateY(40px);
-            transition: all 1s cubic-bezier(0.5, 0, 0, 1);
-            visibility: hidden;
+        .huge-title { font-size: 46px; margin-bottom: 20px; text-transform: uppercase; line-height: 1; }
+        .medium-title { font-size: 32px; margin-bottom: 15px; }
+        .stat-label { font-size: 14px; text-transform: uppercase; letter-spacing: 3px; font-weight: 600; margin-bottom: 10px; opacity: 0.9; text-shadow: 1px 1px 5px rgba(0,0,0,0.2); }
+        .stat-number { font-size: 50px; font-weight: 900; font-family: 'Montserrat', sans-serif; text-shadow: 2px 2px 10px rgba(0,0,0,0.3); color: #ffffff; line-height: 1.1; }
+
+        .image-container {
+            width: 100%;
+            max-width: 320px;
+            height: 380px;
+            margin: 20px 0;
+            background: white;
+            padding: 15px 15px 45px 15px; 
+            border-radius: 4px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+            transform: rotate(-3deg);
+            transition: transform 0.3s ease;
         }
 
-        .reveal.active {
-            opacity: 1;
-            transform: translateY(0);
-            visibility: visible;
+        .slide:nth-child(even) .image-container { transform: rotate(3deg); }
+        .image-container:hover { transform: scale(1.05) rotate(0deg); }
+        .image-container img { width: 100%; height: 100%; object-fit: cover; border-radius: 2px; }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 30px;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            opacity: 0.8;
+            animation: bounce 2s infinite;
+            font-weight: 600;
         }
 
-        /* BALÕES TRANSPARENTES */
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+
+        .reveal { opacity: 0; transform: scale(0.9) translateY(30px); transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .reveal.active { opacity: 1; transform: scale(1) translateY(0); }
+
         .floating-heart {
             position: fixed;
-            color: rgba(211, 47, 47, 0.25); 
+            color: rgba(255, 140, 0, 0.35); 
             pointer-events: none; 
-            z-index: 9998; 
+            z-index: 100; 
             bottom: -50px; 
             animation: balloonFloatUp linear forwards;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
         }
 
         @keyframes balloonFloatUp {
@@ -234,107 +214,149 @@
         <source src="musica.mp3" type="audio/mpeg">
     </audio>
 
-    <div id="screen-1" class="screen">
-        <div class="heart-icon">&hearts;</div>
-        <h2 style="margin-bottom: 10px; font-size: 28px;">Uma carta para você</h2>
-        <p style="color: var(--text-muted); margin-bottom: 20px;"> Preparei uma pequena surpresa...</p>
-        <button class="btn" onclick="nextScreen('screen-1', 'screen-2')">Abrir o Envelope 💌</button>
+    <div id="screen-1" class="screen intro-bg">
+        <div class="card-container">
+            <h1 style="font-size: 42px; margin-bottom: 10px; color: var(--orange-main);">Nossos momentos</h1>
+            <p style="color: var(--text-muted); font-size: 16px; margin-bottom: 40px;">Amor, preparei uma pequena surpresa pra você!</p>
+            <button class="btn" onclick="nextScreen('screen-1', 'screen-2')">Acessar Agora</button>
+        </div>
     </div>
 
-    <div id="screen-2" class="screen hidden" style="display: none;">
+    <div id="screen-2" class="screen intro-bg hidden" style="display: none;">
         <div class="card-container">
-            <h2 style="font-size: 22px; margin-bottom: 10px;">Acesso Restrito</h2>
-            <p style="color: var(--text-muted); font-size: 14px;">Qual é o nosso código secreto?</p>
-            
+            <h2 style="font-size: 28px; margin-bottom: 10px; color: var(--orange-main);">Acesso Restrito</h2>
+            <p style="color: var(--text-muted); font-size: 14px;">Qual é o nosso código secreto? Dica: onde tudo começou!</p>
             <input type="password" id="secret-code" placeholder="****">
-            <div id="error-msg" class="error-msg">Código incorreto. Tente de novo! ❤️</div>
-            
+            <div id="error-msg" class="error-msg">Código incorreto. Tente de novo!</div>
             <button class="btn" onclick="checkPassword()">Desbloquear</button>
         </div>
     </div>
 
-    <div id="screen-3" class="screen hidden" style="display: none;">
+    <div id="screen-3" class="screen intro-bg hidden" style="display: none;">
         <div class="card-container">
-            <h2 style="font-size: 24px; margin-bottom: 15px;">Acesso Liberado! ✨</h2>
-            <p style="color: var(--text-main); font-size: 16px; margin-bottom: 25px;">Para uma experiência completa, por favor, aumente o volume do seu celular 🎶</p>
+            <h2 style="font-size: 32px; margin-bottom: 20px; color: var(--orange-light);">Ajuste o Som 🔊</h2>
+            <p style="color: var(--text-muted); font-size: 16px; margin-bottom: 30px; line-height: 1.6;">Acesso Liberado! ✨<br>Aumente o volume do seu celular para a experiência completa.</p>
+            <button class="btn" onclick="playMusicAndShowLetter()">Dar o Play ▶</button>
+        </div>
+    </div>
+
+    <div id="screen-4" class="screen intro-bg hidden" style="display: none;">
+        <div class="letter-container">
+            <h2 style="font-size: 28px; margin-bottom: 20px; color: var(--orange-light);">Thayna, meu amor, minha namorada!</h2>
             
-            <button class="btn" onclick="enterLetter()">Continuar ❤️</button>
+            <div class="letter-content">
+                <p>Existem pessoas que entram na nossa vida e, de alguma forma inexplicável, fazem tudo parecer mais leve, mais bonito e mais cheio de sentido. Você é assim para mim. Desde que nossos caminhos se cruzaram, meus dias ganharam mais cor, mais calma e um motivo a mais para sorrir. Essa carta é apenas uma pequena forma de expressar o quanto você é especial para mim e o quanto sou grato por ter você ao meu lado. Que possamos continuar construindo momentos lindos, colecionando sorrisos e escrevendo juntos uma história cheia de carinho, cumplicidade e amor. Cada segundo com você é um presente.</p>
+            </div>
+            
+            <div style="text-align: center;">
+                <button class="btn" onclick="enterWrapped()">Iniciar Jornada</button>
+            </div>
         </div>
     </div>
 
     <div id="main-content">
-        
-        <div class="hero">
-            <h1 class="special-title reveal">Meu Amor Eterno,</h1>
-            <p class="reveal">Escrevi isso para registrar um pouco de nós e te lembrar do quanto você é especial para mim todos os dias. Cada segundo com você é um presente.</p>
         </div>
-
-        <div class="counter-box reveal">
-            <div class="counter-label">Nosso tempo juntos</div>
-            <div id="time-together">Calculando...</div>
-        </div>
-
-        <h2 class="feed-title special-title reveal">Nossos Momentos</h2>
-        <div class="feed-container">
-            
-            <div class="feed-post reveal">
-                <div class="feed-header">
-                    <div class="feed-date">15 de Fevereiro de 2026</div>
-                </div>
-                <div class="feed-img-container">
-                    <img src="foto01.png" alt="Momento 1" class="feed-img">
-                </div>
-                <div class="feed-caption">
-                    <strong>Onde tudo começou.</strong> Aquele dia em que percebi que minha vida mudaria para sempre. O primeiro de muitos momentos inesquecíveis ao seu lado.
-                </div>
-            </div>
-
-            <div class="feed-post reveal">
-                <div class="feed-header">
-                    <div class="feed-date">Nossa Viagem</div>
-                </div>
-                <div class="feed-img-container">
-                    <img src="foto02.png" alt="Momento 2" class="feed-img">
-                </div>
-                <div class="feed-caption">
-                    Descobrir lugares novos com você é minha atividade favorita. Cada risada, cada paisagem e cada pequeno detalhe ficaram guardados para sempre no meu coração.
-                </div>
-            </div>
-
-            <div class="feed-post reveal">
-                <div class="feed-header">
-                    <div class="feed-date">Hoje</div>
-                </div>
-                <div class="feed-img-container">
-                    <img src="foto03.png" alt="Momento 3" class="feed-img">
-                </div>
-                <div class="feed-caption">
-                    A cada dia que passa, tenho mais certeza do que sinto. Obrigado por ser minha parceira, minha melhor amiga e por dividir a vida comigo.
-                </div>
-            </div>
-
-        </div>
-
-        <div class="final-message reveal">
-            <p>E que essa seja apenas uma pequena parte de tudo o que ainda vamos construir juntos.</p>
-            <p>Eu te amo muito!</p>
-        </div>
-
-        <div class="signature reveal">
-            Com todo meu amor,<br>Lucas
-        </div>
-
-    </div>
 
     <script>
-        const SENHA_CORRETA = "1206"; 
+        const SENHA_CORRETA = "tivoli"; 
         const DATA_INICIO = new Date("2026-02-15T00:00:00"); 
 
+        // ====================================================================
+        // LISTA DAS 30 FOTOS (GERADOR DE SLIDES)
+        // Edite os textos aqui. Garanta que as fotos estão na pasta com esses nomes.
+        // ====================================================================
+        const listaDeFotos = [
+            { arquivo: "foto01.jpeg", label: "Novembro/2025", titulo: "Onde Tudo Começou", legenda: "Belém me trouxe muitos desafios. O hotel me trouxe muitos problemas. Minha vida virou do avesso em 2025. Hoje agradeço por ter passado por tudo isso pois foram esses desafios que me levaram até você." },
+            { arquivo: "foto02.jpeg", label: "23/12/2025", titulo: "" , legenda: "Ver sua carinha feliz não tem preço. Momentos como esses ficam marcados nas nossas lembranças." },
+            { arquivo: "foto03.jpeg", label: "28/12/2025", titulo: "", legenda: "Quando tudo ainda era novo, essa foi uma tentativa de personificar nós 2 juntos!" },
+            { arquivo: "foto04.jpeg", label: "03/01/2026", titulo: "", legenda: "A saudade aumentava a cada dia e a única saída era utilizar a IA para tentar criar momentos juntos..." },
+            { arquivo: "foto05.jpeg", label: "10/01/2026", titulo: "O grande dia chegou.", legenda: "Depois de tanto esperar, só nos restava ansiedade e nervosismo pra o dia 10. Até tentativa de fugir teve nesse dia, mas superamos mais esse desafio e nos vemos a primeira vez de uma forma diferente...em um novo contexto..." },
+            { arquivo: "foto06.jpeg", label: "10/01/2026", titulo: "", legenda: "Tivemos um final de semana maravilhoso. Muito carinho e cuidado envolvido...Nossas energias vibraram na mesma sintonia e pudemos ter momentos íntimos e de prazer sem medo!" },
+            { arquivo: "foto07.jpeg", label: "12/01/2026", titulo: "", legenda: "O resultado do final de semana foi esse. Mais leves, mais felizes e com o sentimento de ter tomado a decisão certa..." },
+            { arquivo: "foto24.jpeg", label: "12/01/2026", titulo: "Primeira cartinha...", legenda: "Ganhei a primeira cartinha...fiquei bobo e surpreso pois não esperava por isso!" },
+            { arquivo: "foto25.jpeg", label: "18/01/2026", titulo: "Segunda cartinha", legenda: "E veio a segunda cartinha...Resumindo nosso final de semana, o primeiro 'eu te amo', e como sempre muito amor envolvido..." },
+            { arquivo: "foto08.jpeg", label: "19/01/2026", titulo: "", legenda: "Tivemos mais um final de semana maravilhoso juntos, com direito a caras e bocas." },
+            { arquivo: "foto09.jpeg", label: "19/01/2026", titulo: "", legenda: "Com direito a um cafezinho..." },
+            { arquivo: "foto10.jpeg", label: "19/01/2026", titulo: "", legenda: "E ainda fomos a um showzinho gostoso e dançamos coladinhos..." },
+            { arquivo: "foto26.jpeg", label: "23/01/2026", titulo: "Terceira cartinha...", legenda: "Essa cartinha veio com 2 presentes lindos. Amei a lembrança e o carinho que você empregou em tudo..." },
+            { arquivo: "foto12.jpeg", label: "24/01/2026", titulo: "", legenda: "Visitamos um museu e pintamos um pássaro juntos." },
+            { arquivo: "foto11.jpeg", label: "24/01/2026", titulo: "", legenda: "Você me apresentou a música clássica🧡" },
+            { arquivo: "foto13.jpeg", label: "25/01/2026", titulo: "", legenda: "E também tivemos a primeira despedida no aeroporto. Mixto de felicidade com tristeza, vontade de chorar e sorrir...mas já contando os dias pra nos ver novamente." },
+            { arquivo: "foto14.jpeg", label: "02/02/2026", titulo: "", legenda: "Você foi me ver na Bahia" },
+            { arquivo: "foto15.jpeg", label: "03/02/2026", titulo: "", legenda: "Turistando em Salvador" },
+            { arquivo: "foto16.jpeg", label: "03/02/2026", titulo: "", legenda: "Momentos únicos ao seu lado." },
+            { arquivo: "foto17.jpeg", label: "03/02/2026", titulo: "", legenda: "Uma semana maravilhosa ao seu lado. Muito carinho e amor envolvido" },
+            { arquivo: "foto18.jpeg", label: "04/02/2026", titulo: "", legenda: "Se esbaldando na moqueca..." },
+            { arquivo: "foto19.jpeg", label: "05/02/2026", titulo: "", legenda: "E teve acarajé também!" },
+            { arquivo: "foto27.jpeg", label: "02/02/2026", titulo: "Quarta cartinha...", legenda: "Dessa vez mais picante...kkkkk...muito besta!" },
+            { arquivo: "foto20.jpeg", label: "15/02/2026", titulo: "Quer namorar comigo?", legenda: "Te pedi em namoro e você aceitou! Felicidade transbordando..." },
+            { arquivo: "foto21.jpeg", label: "17/02/2026", titulo: "", legenda: "Nosso programa favorito...melhor companhia para um café..." },
+            { arquivo: "foto22.jpeg", label: "17/02/2026", titulo: "", legenda: "Nosso carnaval foi maravilhoso." },
+            { arquivo: "foto23.jpeg", label: "18/02/2026", titulo: "", legenda: "Meu amor e nosso filho Pipoca...pais de pet =]" },
+            { arquivo: "foto28.jpeg", label: "08/03/2026", titulo: "", legenda: "Café da manhã do jeito que gostamos: simples e gostosinho!" },
+            { arquivo: "foto30.jpeg", label: "08/03/2026", titulo: "", legenda: "Todo momento ao seu lado é delicioso." },
+            { arquivo: "foto29.jpeg", label: "08/03/2026", titulo: "", legenda: "E teve almoço gostosinho também..." },
+        ];
+
+        // ==========================================
+        // FUNÇÃO QUE MONTA O SITE AUTOMATICAMENTE
+        // ==========================================
+        function gerarSlides() {
+            const container = document.getElementById('main-content');
+            
+            // 1. Slide de Introdução
+            let htmlHTML = `
+                                
+                <section class="slide bg-1">
+                    <h2 class="medium-title reveal">Há exatos...</h2>
+                    <div id="time-together" class="stat-number reveal" style="margin: 30px 0;">Calculando...</div>
+                    <p class="reveal" style="font-size: 18px; font-weight: 600;">escrevendo a melhor história da minha vida.</p>
+                </section>
+            `;
+
+            // 2. Loop que gera as 30 fotos intercalando 6 cores de fundo diferentes
+            listaDeFotos.forEach((foto, index) => {
+                let corDeFundo = index % 6; // Vai usar bg-0 até bg-5 e repetir
+                
+                htmlHTML += `
+                    <section class="slide bg-${corDeFundo}">
+                        <div class="stat-label reveal">${foto.label}</div>
+                        <h2 class="medium-title reveal">${foto.titulo}</h2>
+                        <div class="image-container reveal">
+                            <img src="${foto.arquivo}" alt="${foto.titulo}">
+                        </div>
+                        <p class="reveal" style="font-size: 16px; padding: 0 20px; font-weight: 600; text-shadow: 1px 1px 4px rgba(0,0,0,0.3);">${foto.legenda}</p>
+                    </section>
+                `;
+            });
+
+            // 3. Slide Final
+            htmlHTML += `
+                <section class="slide bg-end">
+                    <div class="stat-label reveal" style="color: var(--orange-main);">Só tenho uma coisa a dizer...</div>
+                    <h1 class="huge-title reveal" style="color: var(--orange-light);">Obrigado.</h1>
+                    <p class="reveal" style="font-size: 18px; line-height: 1.6; margin: 30px 20px; color: var(--text-muted);">
+                        Sei que palavras nunca conseguem traduzir completamente aquilo que o coração sente, mas espero que cada momento desta carta consiga mostrar um pouco do quanto você é importante para mim. Obrigado por trazer tanta luz, carinho e significado para os meus dias. Estar ao seu lado é um presente que eu valorizo profundamente. Que a nossa história continue sendo escrita com leveza, companheirismo, sorrisos e muito amor. E que cada novo capítulo seja ainda mais bonito do que o anterior.<br><br>Eu te amo muito!
+                    </p>
+                    <p class="reveal" style="font-family: 'Dancing Script', cursive; font-size: 40px; color: var(--orange-main); margin-top: 20px;">
+                        Lucas Fonseca
+                    </p>
+                </section>
+            `;
+
+            container.innerHTML = htmlHTML;
+        }
+
+        // Chama a função para criar os slides assim que a página carrega
+        gerarSlides();
+
+
+        // ==========================================
+        // GERADOR DE BALÕES LARANJAS
+        // ==========================================
         function startHeartBalloons() {
-            setInterval(createHeartBalloon, 1000);
-            for(let i = 0; i < 4; i++) {
-                setTimeout(createHeartBalloon, i * 300);
-            }
+            setInterval(createHeartBalloon, 1200); 
+            for(let i = 0; i < 4; i++) { setTimeout(createHeartBalloon, i * 400); }
         }
 
         function createHeartBalloon() {
@@ -346,7 +368,7 @@
             const drift = (Math.random() - 0.5) * 150; 
             const rotation = (Math.random() - 0.5) * 60; 
             const duration = Math.random() * 10 + 15; 
-            const size = Math.random() * 20 + 20; 
+            const size = Math.random() * 30 + 15;
             
             heart.style.left = `${startX}vw`;
             heart.style.fontSize = `${size}px`;
@@ -355,10 +377,12 @@
             heart.style.animationDuration = `${duration}s`;
             
             document.body.appendChild(heart);
-            
             setTimeout(() => { heart.remove(); }, duration * 1000);
         }
 
+        // ==========================================
+        // FLUXO DE TELAS
+        // ==========================================
         function nextScreen(hideId, showId) {
             document.getElementById(hideId).classList.add('hidden');
             setTimeout(() => {
@@ -375,10 +399,7 @@
             
             if (input === SENHA_CORRETA) {
                 errorMsg.style.display = 'none';
-                
-                // Manda para a tela de Alerta de Volume (Screen 3)
                 nextScreen('screen-2', 'screen-3');
-
             } else {
                 errorMsg.style.display = 'block';
             }
@@ -388,58 +409,73 @@
             if (e.key === 'Enter') checkPassword();
         });
 
-        function enterLetter() {
+        // 1. Toca música e mostra a CARTA
+        function playMusicAndShowLetter() {
             const bgMusic = document.getElementById('bg-music');
-            
-            // Toca a música e liga os balões de coração
             bgMusic.play().catch(e => console.log("Áudio pendente:", e)); 
+            
             startHeartBalloons();
+            nextScreen('screen-3', 'screen-4');
+        }
 
-            document.getElementById('screen-3').classList.add('hidden');
+        // 2. Sai da carta e entra nos Slides
+        function enterWrapped() {
+            document.getElementById('screen-4').classList.add('hidden');
             
             setTimeout(() => {
-                document.getElementById('screen-3').style.display = 'none';
+                document.getElementById('screen-4').style.display = 'none';
+                
                 const mainContent = document.getElementById('main-content');
                 mainContent.style.display = 'block';
                 
-                window.scrollTo(0, 0); 
+                mainContent.scrollTo(0, 0); 
                 triggerReveals(); 
             }, 400);
         }
 
+        // ==========================================
+        // CONTADOR DE TEMPO
+        // ==========================================
         function updateCounter() {
             const now = new Date();
             const diff = now - DATA_INICIO;
 
+            const targetElement = document.getElementById("time-together");
+            if(!targetElement) return;
+
             if (diff < 0) {
-                document.getElementById("time-together").innerHTML = "0 dias, 0h, 0m e 0s";
+                targetElement.innerHTML = "0 <span style='font-size:18px; font-weight:400;'>dias</span>";
                 return;
             }
 
             const days = Math.floor(diff / (1000 * 60 * 60 * 24));
             const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-            const mins = Math.floor((diff / 1000 / 60) % 60);
-            const secs = Math.floor((diff / 1000) % 60);
-
-            document.getElementById("time-together").innerHTML = 
-                `${days} dias, ${hours}h, ${mins}m e ${secs}s`;
+            
+            targetElement.innerHTML = 
+                `${days} <span style='font-size:24px; font-weight:600; opacity: 0.9;'>Dias</span><br>` +
+                `${hours} <span style='font-size:24px; font-weight:600; opacity: 0.9;'>Horas</span>`;
         }
         setInterval(updateCounter, 1000);
-        updateCounter();
 
+        // ==========================================
+        // ANIMAÇÕES NO SCROLL (SNAP)
+        // ==========================================
         function triggerReveals() {
             const reveals = document.querySelectorAll('.reveal');
+            
             reveals.forEach(el => {
                 const windowHeight = window.innerHeight;
                 const elementTop = el.getBoundingClientRect().top;
-                const elementVisible = 100;
-
-                if (elementTop < windowHeight - elementVisible) {
+                
+                if (elementTop < windowHeight - 50 && elementTop > -100) {
                     el.classList.add('active');
+                } else {
+                    el.classList.remove('active'); 
                 }
             });
         }
-        window.addEventListener('scroll', triggerReveals);
+        
+        document.getElementById('main-content').addEventListener('scroll', triggerReveals);
     </script>
 </body>
 </html>
