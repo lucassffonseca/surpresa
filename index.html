@@ -529,15 +529,16 @@
             slides.forEach((slide, index) => {
                 const rect = slide.getBoundingClientRect();
                 
-                // 1. Lógica para animar os textos que entram na tela
+                // 1. Lógica CORRIGIDA para animar os textos
+                // Agora ele usa a altura real da tela para saber se o slide ainda está visível
                 const reveals = slide.querySelectorAll('.reveal');
-                if (rect.top < windowHeight - 50 && rect.top > -100) {
+                if (rect.top > -windowHeight + 100 && rect.top < windowHeight - 100) {
                     reveals.forEach(el => el.classList.add('active'));
                 } else {
                     reveals.forEach(el => el.classList.remove('active')); 
                 }
 
-                // 2. Lógica para acender a bolinha correta (se o slide estiver no meio da tela)
+                // 2. Lógica para acender a bolinha correta
                 if (rect.top >= -windowHeight / 2 && rect.top < windowHeight / 2) {
                     document.querySelectorAll('.dot').forEach(d => d.classList.remove('active'));
                     const activeDot = document.getElementById(`dot-${index}`);
