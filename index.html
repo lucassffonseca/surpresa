@@ -70,7 +70,7 @@
 
         .card-container { width: 100%; max-width: 400px; position: relative; z-index: 10000; }
         
-        /* Caixa específica para a Carta */
+        /* Carta Dinâmica */
         .letter-container {
             width: 100%;
             max-width: 500px;
@@ -82,8 +82,6 @@
             position: relative;
             z-index: 10000;
             box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-            
-            /* A MÁGICA PARA O CELULAR: Limita a altura e organiza os itens */
             max-height: 85vh; 
             display: flex;
             flex-direction: column;
@@ -94,17 +92,12 @@
             font-size: 16px;
             line-height: 1.8;
             margin-bottom: 20px;
-            
-            /* Permite que o texto role internamente se for muito grande */
             overflow-y: auto; 
-            padding-right: 10px; /* Espacinho para não colar na borda */
+            padding-right: 10px; 
         }
         
-        /* Deixa a barra de rolagem interna bonitinha e fina com a cor do site */
         .letter-content::-webkit-scrollbar { width: 4px; }
         .letter-content::-webkit-scrollbar-thumb { background: var(--orange-main); border-radius: 4px; }
-
-        .letter-content p { margin-bottom: 15px; }
         .letter-content p { margin-bottom: 15px; }
 
         input[type="password"] {
@@ -148,7 +141,7 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 40px 30px;
+            padding: 30px 20px;
             position: relative;
             text-align: center;
             overflow: hidden;
@@ -163,32 +156,91 @@
         .bg-5 { background: linear-gradient(135deg, #e65c00, #F9D423); } 
         .bg-end { background: var(--dark-bg); }
 
-        .huge-title { font-size: 46px; margin-bottom: 20px; text-transform: uppercase; line-height: 1; }
-        .medium-title { font-size: 32px; margin-bottom: 15px; }
-        .stat-label { font-size: 14px; text-transform: uppercase; letter-spacing: 3px; font-weight: 600; margin-bottom: 10px; opacity: 0.9; text-shadow: 1px 1px 5px rgba(0,0,0,0.2); }
-        .stat-number { font-size: 50px; font-weight: 900; font-family: 'Montserrat', sans-serif; text-shadow: 2px 2px 10px rgba(0,0,0,0.3); color: #ffffff; line-height: 1.1; }
+        .huge-title { font-size: 42px; margin-bottom: 15px; text-transform: uppercase; line-height: 1.1; }
+        .medium-title { font-size: 28px; margin-bottom: 10px; }
+        .stat-label { font-size: 13px; text-transform: uppercase; letter-spacing: 2px; font-weight: 600; margin-bottom: 8px; opacity: 0.9; text-shadow: 1px 1px 5px rgba(0,0,0,0.2); }
+        .stat-number { font-size: 45px; font-weight: 900; font-family: 'Montserrat', sans-serif; text-shadow: 2px 2px 10px rgba(0,0,0,0.3); color: #ffffff; line-height: 1.1; }
 
+        /* FOTOS DINÂMICAS PARA CELULARES */
         .image-container {
             width: 100%;
-            max-width: 320px;
-            height: 380px;
-            margin: 20px 0;
+            max-width: 280px;
+            height: 42vh; /* Usa 42% da altura da tela */
+            min-height: 250px;
+            margin: 15px 0;
             background: white;
-            padding: 15px 15px 45px 15px; 
+            padding: 12px 12px 40px 12px; 
             border-radius: 4px;
             box-shadow: 0 20px 50px rgba(0,0,0,0.4);
             transform: rotate(-3deg);
             transition: transform 0.3s ease;
+            display: flex;
+            justify-content: center;
         }
 
         .slide:nth-child(even) .image-container { transform: rotate(3deg); }
         .image-container:hover { transform: scale(1.05) rotate(0deg); }
         .image-container img { width: 100%; height: 100%; object-fit: cover; border-radius: 2px; }
 
+        /* LEGENDAS COM ROLAGEM */
+        .caption-container {
+            width: 100%;
+            max-width: 320px;
+            max-height: 20vh; /* Ocupa 20% da tela */
+            overflow-y: auto;
+            padding-right: 5px;
+            margin-top: 5px;
+        }
+        .caption-container p { font-size: 15px; font-weight: 600; text-shadow: 1px 1px 4px rgba(0,0,0,0.3); line-height: 1.5; }
+        .caption-container::-webkit-scrollbar { width: 3px; }
+        .caption-container::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.4); border-radius: 4px; }
+
+        /* TEXTO FINAL COM ROLAGEM */
+        .final-content {
+            width: 100%;
+            max-width: 400px;
+            max-height: 45vh; /* Ocupa 45% da tela */
+            overflow-y: auto;
+            margin: 20px 0;
+            padding-right: 10px;
+        }
+        .final-content p { font-size: 17px; line-height: 1.6; color: var(--text-muted); }
+        .final-content::-webkit-scrollbar { width: 4px; }
+        .final-content::-webkit-scrollbar-thumb { background: var(--orange-main); border-radius: 4px; }
+
+        /* MARCADOR DE BOLINHAS LATERAIS (DOTS) */
+        .progress-dots {
+            position: fixed;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            z-index: 10001;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s;
+        }
+        .progress-dots.visible { opacity: 1; visibility: visible; }
+        
+        .dot {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+        .dot.active {
+            background-color: #ffffff;
+            transform: scale(1.8);
+            box-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+        }
+
         .scroll-indicator {
             position: absolute;
-            bottom: 30px;
-            font-size: 12px;
+            bottom: 20px;
+            font-size: 11px;
             text-transform: uppercase;
             letter-spacing: 2px;
             opacity: 0.8;
@@ -269,17 +321,12 @@
         </div>
     </div>
 
-    <div id="main-content">
-        </div>
+    <div id="main-content"></div>
 
     <script>
         const SENHA_CORRETA = "tivoli"; 
         const DATA_INICIO = new Date("2026-02-15T00:00:00"); 
 
-        // ====================================================================
-        // LISTA DAS 30 FOTOS (GERADOR DE SLIDES)
-        // Edite os textos aqui. Garanta que as fotos estão na pasta com esses nomes.
-        // ====================================================================
         const listaDeFotos = [
             { arquivo: "foto01.jpeg", label: "Novembro/2025", titulo: "Onde Tudo Começou", legenda: "Belém me trouxe muitos desafios. O hotel me trouxe muitos problemas. Minha vida virou do avesso em 2025. Hoje agradeço por ter passado por tudo isso pois foram esses desafios que me levaram até você." },
             { arquivo: "foto02.jpeg", label: "23/12/2025", titulo: "" , legenda: "Ver sua carinha feliz não tem preço. Momentos como esses ficam marcados nas nossas lembranças." },
@@ -314,14 +361,13 @@
         ];
 
         // ==========================================
-        // FUNÇÃO QUE MONTA O SITE AUTOMATICAMENTE
+        // FUNÇÃO QUE MONTA O SITE E AS BOLINHAS
         // ==========================================
         function gerarSlides() {
             const container = document.getElementById('main-content');
             
             // 1. Slide de Introdução
             let htmlHTML = `
-                                
                 <section class="slide bg-1">
                     <h2 class="medium-title reveal">Há exatos...</h2>
                     <div id="time-together" class="stat-number reveal" style="margin: 30px 0;">Calculando...</div>
@@ -329,45 +375,62 @@
                 </section>
             `;
 
-            // 2. Loop que gera as 30 fotos intercalando 6 cores de fundo diferentes
+            // 2. Loop para as fotos com caixas de legenda adaptáveis
             listaDeFotos.forEach((foto, index) => {
-                let corDeFundo = index % 6; // Vai usar bg-0 até bg-5 e repetir
+                let corDeFundo = index % 6; 
                 
+                // Só cria o H2 se existir título para economizar espaço
+                let tituloHTML = foto.titulo ? `<h2 class="medium-title reveal">${foto.titulo}</h2>` : ``;
+
                 htmlHTML += `
                     <section class="slide bg-${corDeFundo}">
                         <div class="stat-label reveal">${foto.label}</div>
-                        <h2 class="medium-title reveal">${foto.titulo}</h2>
+                        ${tituloHTML}
                         <div class="image-container reveal">
                             <img src="${foto.arquivo}" alt="${foto.titulo}">
                         </div>
-                        <p class="reveal" style="font-size: 16px; padding: 0 20px; font-weight: 600; text-shadow: 1px 1px 4px rgba(0,0,0,0.3);">${foto.legenda}</p>
+                        <div class="caption-container reveal">
+                            <p>${foto.legenda}</p>
+                        </div>
                     </section>
                 `;
             });
 
-            // 3. Slide Final
+            // 3. Slide Final adaptável
             htmlHTML += `
                 <section class="slide bg-end">
                     <div class="stat-label reveal" style="color: var(--orange-main);">Só tenho uma coisa a dizer...</div>
                     <h1 class="huge-title reveal" style="color: var(--orange-light);">Obrigado.</h1>
-                    <p class="reveal" style="font-size: 18px; line-height: 1.6; margin: 30px 20px; color: var(--text-muted);">
-                        Sei que palavras nunca conseguem traduzir completamente aquilo que o coração sente, mas espero que cada momento desta carta consiga mostrar um pouco do quanto você é importante para mim. Obrigado por trazer tanta luz, carinho e significado para os meus dias. Estar ao seu lado é um presente que eu valorizo profundamente. Que a nossa história continue sendo escrita com leveza, companheirismo, sorrisos e muito amor. E que cada novo capítulo seja ainda mais bonito do que o anterior.<br><br>Eu te amo muito!
-                    </p>
-                    <p class="reveal" style="font-family: 'Dancing Script', cursive; font-size: 40px; color: var(--orange-main); margin-top: 20px;">
+                    
+                    <div class="final-content reveal">
+                        <p>
+                            Sei que palavras nunca conseguem traduzir completamente aquilo que o coração sente, mas espero que cada momento desta carta consiga mostrar um pouco do quanto você é importante para mim. Obrigado por trazer tanta luz, carinho e significado para os meus dias. Estar ao seu lado é um presente que eu valorizo profundamente. Que a nossa história continue sendo escrita com leveza, companheirismo, sorrisos e muito amor. E que cada novo capítulo seja ainda mais bonito do que o anterior.<br><br>Eu te amo muito!
+                        </p>
+                    </div>
+
+                    <p class="reveal" style="font-family: 'Dancing Script', cursive; font-size: 40px; color: var(--orange-main); margin-top: 10px;">
                         Lucas Fonseca
                     </p>
                 </section>
             `;
 
             container.innerHTML = htmlHTML;
+
+            // 4. Criação dinâmica das bolinhas de progresso (Dots)
+            let totalSlides = listaDeFotos.length + 2; // Intro + 30 fotos + Final
+            let dotsHTML = '<div id="progress-dots" class="progress-dots">';
+            for(let i = 0; i < totalSlides; i++) {
+                dotsHTML += `<div class="dot" id="dot-${i}"></div>`;
+            }
+            dotsHTML += '</div>';
+            document.body.insertAdjacentHTML('beforeend', dotsHTML);
         }
 
-        // Chama a função para criar os slides assim que a página carrega
         gerarSlides();
 
 
         // ==========================================
-        // GERADOR DE BALÕES LARANJAS
+        // ANIMAÇÕES E NAVEGAÇÃO
         // ==========================================
         function startHeartBalloons() {
             setInterval(createHeartBalloon, 1200); 
@@ -378,26 +441,20 @@
             const heart = document.createElement('div');
             heart.classList.add('floating-heart');
             heart.innerHTML = '&hearts;'; 
-            
             const startX = Math.random() * 95; 
             const drift = (Math.random() - 0.5) * 150; 
             const rotation = (Math.random() - 0.5) * 60; 
             const duration = Math.random() * 10 + 15; 
             const size = Math.random() * 30 + 15;
-            
             heart.style.left = `${startX}vw`;
             heart.style.fontSize = `${size}px`;
             heart.style.setProperty('--drift', `${drift}px`);
             heart.style.setProperty('--rotation', `${rotation}deg`);
             heart.style.animationDuration = `${duration}s`;
-            
             document.body.appendChild(heart);
             setTimeout(() => { heart.remove(); }, duration * 1000);
         }
 
-        // ==========================================
-        // FLUXO DE TELAS
-        // ==========================================
         function nextScreen(hideId, showId) {
             document.getElementById(hideId).classList.add('hidden');
             setTimeout(() => {
@@ -409,14 +466,12 @@
         }
 
         function checkPassword() {
-            const input = document.getElementById('secret-code').value;
-            const errorMsg = document.getElementById('error-msg');
-            
+            const input = document.getElementById('secret-code').value.toLowerCase();
             if (input === SENHA_CORRETA) {
-                errorMsg.style.display = 'none';
+                document.getElementById('error-msg').style.display = 'none';
                 nextScreen('screen-2', 'screen-3');
             } else {
-                errorMsg.style.display = 'block';
+                document.getElementById('error-msg').style.display = 'block';
             }
         }
 
@@ -424,37 +479,34 @@
             if (e.key === 'Enter') checkPassword();
         });
 
-        // 1. Toca música e mostra a CARTA
         function playMusicAndShowLetter() {
             const bgMusic = document.getElementById('bg-music');
             bgMusic.play().catch(e => console.log("Áudio pendente:", e)); 
-            
             startHeartBalloons();
             nextScreen('screen-3', 'screen-4');
         }
 
-        // 2. Sai da carta e entra nos Slides
         function enterWrapped() {
             document.getElementById('screen-4').classList.add('hidden');
             
             setTimeout(() => {
                 document.getElementById('screen-4').style.display = 'none';
-                
                 const mainContent = document.getElementById('main-content');
                 mainContent.style.display = 'block';
                 
+                // Mostra as bolinhas de progresso na lateral
+                document.getElementById('progress-dots').classList.add('visible');
+
                 mainContent.scrollTo(0, 0); 
-                triggerReveals(); 
+                updateScrollState(); 
             }, 400);
         }
 
         // ==========================================
-        // CONTADOR DE TEMPO
+        // LÓGICA DO CONTADOR E ROLAGEM (SCROLL)
         // ==========================================
         function updateCounter() {
-            const now = new Date();
-            const diff = now - DATA_INICIO;
-
+            const diff = new Date() - DATA_INICIO;
             const targetElement = document.getElementById("time-together");
             if(!targetElement) return;
 
@@ -465,32 +517,36 @@
 
             const days = Math.floor(diff / (1000 * 60 * 60 * 24));
             const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-            
-            targetElement.innerHTML = 
-                `${days} <span style='font-size:24px; font-weight:600; opacity: 0.9;'>Dias</span><br>` +
-                `${hours} <span style='font-size:24px; font-weight:600; opacity: 0.9;'>Horas</span>`;
+            targetElement.innerHTML = `${days} <span style='font-size:24px; font-weight:600; opacity: 0.9;'>Dias</span><br>${hours} <span style='font-size:24px; font-weight:600; opacity: 0.9;'>Horas</span>`;
         }
         setInterval(updateCounter, 1000);
 
-        // ==========================================
-        // ANIMAÇÕES NO SCROLL (SNAP)
-        // ==========================================
-        function triggerReveals() {
-            const reveals = document.querySelectorAll('.reveal');
-            
-            reveals.forEach(el => {
-                const windowHeight = window.innerHeight;
-                const elementTop = el.getBoundingClientRect().top;
+        // Controla as animações de texto e as bolinhas de progresso
+        function updateScrollState() {
+            const slides = document.querySelectorAll('.slide');
+            const windowHeight = window.innerHeight;
+
+            slides.forEach((slide, index) => {
+                const rect = slide.getBoundingClientRect();
                 
-                if (elementTop < windowHeight - 50 && elementTop > -100) {
-                    el.classList.add('active');
+                // 1. Lógica para animar os textos que entram na tela
+                const reveals = slide.querySelectorAll('.reveal');
+                if (rect.top < windowHeight - 50 && rect.top > -100) {
+                    reveals.forEach(el => el.classList.add('active'));
                 } else {
-                    el.classList.remove('active'); 
+                    reveals.forEach(el => el.classList.remove('active')); 
+                }
+
+                // 2. Lógica para acender a bolinha correta (se o slide estiver no meio da tela)
+                if (rect.top >= -windowHeight / 2 && rect.top < windowHeight / 2) {
+                    document.querySelectorAll('.dot').forEach(d => d.classList.remove('active'));
+                    const activeDot = document.getElementById(`dot-${index}`);
+                    if (activeDot) activeDot.classList.add('active');
                 }
             });
         }
         
-        document.getElementById('main-content').addEventListener('scroll', triggerReveals);
+        document.getElementById('main-content').addEventListener('scroll', updateScrollState);
     </script>
 </body>
 </html>
