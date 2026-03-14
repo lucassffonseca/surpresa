@@ -325,7 +325,7 @@
 
     <script>
         const SENHA_CORRETA = "tivoli"; 
-        const DATA_INICIO = new Date("2026-02-15T00:00:00"); 
+        const DATA_INICIO = new Date("2026-01-10T00:00:00"); 
 
         const listaDeFotos = [
             { arquivo: "foto01.jpeg", label: "Novembro/2025", titulo: "Onde Tudo Começou", legenda: "Belém me trouxe muitos desafios. O hotel me trouxe muitos problemas. Minha vida virou do avesso em 2025. Hoje agradeço por ter passado por tudo isso pois foram esses desafios que me levaram até você." },
@@ -360,6 +360,11 @@
             { arquivo: "foto29.jpeg", label: "08/03/2026", titulo: "", legenda: "E teve almoço gostosinho também..." },
             { arquivo: "foto31.jpeg", label: "11/03/2026", titulo: "Primeira vez...", legenda: "Primeira vez no Teatro na vida, e não poderia ter melhor companhia!" },
             { arquivo: "foto32.jpeg", label: "11/03/2026", titulo: "", legenda: "Sempre bom estar com você, em todos os momentos." },
+            { arquivo: "foto33.jpeg", label: "13/03/2026", titulo: "", legenda: "Mais uma nova experirência ao seu lado." },
+            { arquivo: "foto34.jpeg", label: "13/03/2026", titulo: "", legenda: "Você sempre será minha melhor companhia" },
+            { arquivo: "foto35.jpeg", label: "13/03/2026", titulo: "", legenda: "A mais bela de todas." },
+            { arquivo: "foto36.jpeg", label: "14/03/2026", titulo: "", legenda: "Você é sinônimo de paz, amor e tranquilidade!" },
+            { arquivo: "foto37.jpeg", label: "14/03/2026", titulo: "", legenda: "Te amo de um jeito inexplicável! Nossos momentos são únicos." },
         ];
 
         // ==========================================
@@ -510,69 +515,21 @@
         }
 
         // ==========================================
-        // CONTADOR DE TEMPO (COM MESES E COMEMORAÇÃO)
+        // LÓGICA DO CONTADOR E ROLAGEM (SCROLL)
         // ==========================================
         function updateCounter() {
-            const now = new Date();
-            const start = DATA_INICIO; // 15/02/2026
-
+            const diff = new Date() - DATA_INICIO;
             const targetElement = document.getElementById("time-together");
             if(!targetElement) return;
 
-            if (now < start) {
+            if (diff < 0) {
                 targetElement.innerHTML = "0 <span style='font-size:18px; font-weight:400;'>dias</span>";
                 return;
             }
 
-            // Cálculo preciso de meses, dias e horas
-            let years = now.getFullYear() - start.getFullYear();
-            let months = now.getMonth() - start.getMonth();
-            let days = now.getDate() - start.getDate();
-            let hours = now.getHours() - start.getHours();
-
-            if (hours < 0) {
-                hours += 24;
-                days--;
-            }
-            if (days < 0) {
-                let prevMonth = new Date(now.getFullYear(), now.getMonth(), 0);
-                days += prevMonth.getDate();
-                months--;
-            }
-            if (months < 0) {
-                months += 12;
-                years--;
-            }
-
-            let totalMonths = (years * 12) + months;
-            
-            let htmlOut = "";
-
-            // ====== ANIMAÇÃO DE COMEMORAÇÃO (MÊS DE NAMORO) ======
-            if (totalMonths > 0) {
-                let mesTexto = totalMonths === 1 ? "Mês" : "Meses";
-                
-                // Div com brilho dourado e emojis animados (pulando)
-                htmlOut += `
-                    <div style="color: #F9D423; text-shadow: 0 0 15px rgba(249, 212, 35, 0.6); margin-bottom: 10px;">
-                        <span style="font-size: 35px; display: inline-block; animation: bounce 2s infinite;">🎉</span>
-                        <span style="font-size: 55px; font-weight: 900; margin: 0 5px;">${totalMonths}</span> 
-                        <span style="font-size: 24px; font-weight: 600;">${mesTexto}</span>
-                        <span style="font-size: 35px; display: inline-block; animation: bounce 2s infinite 0.5s;">✨</span>
-                    </div>
-                `;
-            }
-
-            // ====== DIAS E HORAS ======
-            // Se tiver dias sobrando, exibe (ex: 1 Mês e 5 Dias). Se for o dia exato, exibe só o mês e as horas.
-            if (days > 0 || totalMonths === 0) {
-                let diaTexto = days === 1 ? "Dia" : "Dias";
-                htmlOut += `<span style="font-size: 40px;">${days}</span> <span style='font-size:20px; font-weight:600; opacity: 0.9;'>${diaTexto}</span><br>`;
-            }
-            
-            htmlOut += `<span style="font-size: 35px;">${hours}</span> <span style='font-size:18px; font-weight:600; opacity: 0.9;'>Horas</span>`;
-
-            targetElement.innerHTML = htmlOut;
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+            targetElement.innerHTML = `${days} <span style='font-size:24px; font-weight:600; opacity: 0.9;'>Dias</span><br>${hours} <span style='font-size:24px; font-weight:600; opacity: 0.9;'>Horas</span>`;
         }
         setInterval(updateCounter, 1000);
 
