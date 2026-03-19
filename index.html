@@ -123,7 +123,7 @@
         input[type="password"]:focus { border-color: var(--orange-main); background-color: rgba(255, 255, 255, 0.1); box-shadow: 0 0 20px var(--orange-glow); }
         .error-msg { color: #ff453a; font-size: 14px; margin-top: 15px; display: none; font-weight: 600; }
 
-        /* --- O NOVO DIÁRIO E CONTADORES --- */
+        /* --- O NOVO DIÁRIO --- */
         #main-content {
             display: none; 
             width: 100%;
@@ -135,21 +135,57 @@
             z-index: 10; 
         }
 
+        /* --- NOVO: MINI-PAINEL FIXO DE VIDRO --- */
+        .mini-header {
+            position: fixed;
+            top: 0;
+            left: 50%;
+            transform: translate(-50%, -100%);
+            width: 100%;
+            max-width: 600px;
+            background: rgba(10, 10, 10, 0.85);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(255, 106, 0, 0.3);
+            display: flex;
+            justify-content: space-around;
+            padding: 15px 10px;
+            z-index: 9999;
+            transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.4s ease;
+            opacity: 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+        }
+
+        .mini-header.visible {
+            transform: translate(-50%, 0);
+            opacity: 1;
+        }
+
+        .mini-stat {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 15px;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .mini-stat span { font-size: 16px; }
+
+        /* --- PAINEL GRANDE (FLUIDO) --- */
         .diary-header {
-            padding: 60px 20px 40px;
+            padding: 50px 20px 20px;
             text-align: center;
-            margin-bottom: 20px;
             position: relative;
         }
 
-        /* GRID DOS 4 CONTADORES */
         .counters-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 15px;
-            margin-top: 30px;
-            padding-bottom: 30px;
-            border-bottom: 1px dashed rgba(255, 106, 0, 0.2);
+            padding-bottom: 20px;
+            margin-top: 20px;
         }
 
         .counter-card {
@@ -171,12 +207,11 @@
         .counter-value { font-family: 'Montserrat', sans-serif; font-size: 22px; font-weight: 800; line-height: 1.1; }
         .counter-sub { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
 
-        /* Destaque para o card de Namoro Oficial */
         .card-namoro { background: rgba(255, 106, 0, 0.1); border-color: rgba(255, 106, 0, 0.3); }
         .card-namoro .counter-value { color: var(--orange-main); }
 
-        /* Estrutura da Timeline */
-        .timeline { position: relative; padding: 0 20px; padding-top: 30px; }
+        /* --- Estrutura da Timeline --- */
+        .timeline { position: relative; padding: 0 20px; padding-top: 10px; }
 
         .timeline::before {
             content: ''; position: absolute; top: 0; left: 35px; height: 100%; width: 2px;
@@ -272,11 +307,9 @@
     <div id="screen-4" class="screen intro-bg hidden" style="display: none;">
         <div class="letter-container">
             <h2 style="font-size: 32px; margin-bottom: 20px; color: var(--orange-light); font-family: 'Dancing Script', cursive;">Thayna, meu amor!</h2>
-            
             <div class="letter-content">
                 <p>Existem pessoas que entram na nossa vida e, de alguma forma inexplicável, fazem tudo parecer mais leve, mais bonito e mais cheio de sentido. Você é assim para mim. Desde que nossos caminhos se cruzaram, meus dias ganharam mais cor, mais calma e um motivo a mais para sorrir. Essa carta é apenas uma pequena forma de expressar o quanto você é especial para mim e o quanto sou grato por ter você ao meu lado. Que possamos continuar construindo momentos lindos, colecionando sorrisos e escrevendo juntos uma história cheia de carinho, cumplicidade e amor. Cada segundo com você é um presente.</p>
             </div>
-            
             <div style="text-align: center;">
                 <button class="btn" onclick="enterWrapped()">Abrir nosso Diário</button>
             </div>
@@ -290,7 +323,6 @@
         
         // ==========================================
         // DATAS DOS 4 MOMENTOS IMPORTANTES
-        // Se precisar, altere os dias e meses aqui! (Formato: AAAA-MM-DDT00:00:00)
         // ==========================================
         const D1_AMIZADE = new Date("2025-11-02T00:00:00");
         const D2_ENCONTRO = new Date("2026-01-10T00:00:00");
@@ -306,10 +338,10 @@
             { arquivo: "foto06.jpeg", label: "10/01/2026", titulo: "", legenda: "Tivemos um final de semana maravilhoso. Muito carinho e cuidado envolvido...Nossas energias vibraram na mesma sintonia e pudemos ter momentos íntimos e de prazer sem medo!" },
             { arquivo: "foto07.jpeg", label: "12/01/2026", titulo: "", legenda: "O resultado do final de semana foi esse. Mais leves, mais felizes e com o sentimento de ter tomado a decisão certa..." },
             { arquivo: "foto24.jpeg", label: "12/01/2026", titulo: "Primeira cartinha...", legenda: "Ganhei a primeira cartinha...fiquei bobo e surpreso pois não esperava por isso!" },
+            { arquivo: "foto08.jpeg", label: "18/01/2026", titulo: "", legenda: "Tivemos mais um final de semana maravilhoso juntos, com direito a caras e bocas." },
+            { arquivo: "foto09.jpeg", label: "18/01/2026", titulo: "", legenda: "Com direito a um cafezinho..." },
+            { arquivo: "foto10.jpeg", label: "18/01/2026", titulo: "", legenda: "E ainda fomos a um showzinho gostoso e dançamos coladinhos..." },
             { arquivo: "foto25.jpeg", label: "18/01/2026", titulo: "Segunda cartinha", legenda: "E veio a segunda cartinha...Resumindo nosso final de semana, o primeiro 'eu te amo', e como sempre muito amor envolvido..." },
-            { arquivo: "foto08.jpeg", label: "19/01/2026", titulo: "", legenda: "Tivemos mais um final de semana maravilhoso juntos, com direito a caras e bocas." },
-            { arquivo: "foto09.jpeg", label: "19/01/2026", titulo: "", legenda: "Com direito a um cafezinho..." },
-            { arquivo: "foto10.jpeg", label: "19/01/2026", titulo: "", legenda: "E ainda fomos a um showzinho gostoso e dançamos coladinhos..." },
             { arquivo: "foto26.jpeg", label: "23/01/2026", titulo: "Terceira cartinha...", legenda: "Essa cartinha veio com 2 presentes lindos. Amei a lembrança e o carinho que você empregou em tudo..." },
             { arquivo: "foto12.jpeg", label: "24/01/2026", titulo: "", legenda: "Visitamos um museu e pintamos um pássaro juntos." },
             { arquivo: "foto11.jpeg", label: "24/01/2026", titulo: "", legenda: "Você me apresentou a música clássica 🧡" },
@@ -342,9 +374,19 @@
         function gerarTimeline() {
             const container = document.getElementById('main-content');
             
-            // Cabeçalho com o NOVO Painel de 4 Contadores
+            // --- O MINI-PAINEL INTELIGENTE (ESCONDIDO) ---
             let htmlHTML = `
-                <div class="diary-header reveal">
+                <div id="mini-header" class="mini-header">
+                    <div class="mini-stat"><span>🤝</span> <b id="mini-amizade">-</b></div>
+                    <div class="mini-stat"><span>✨</span> <b id="mini-encontro">-</b></div>
+                    <div class="mini-stat"><span>💌</span> <b id="mini-euteamo">-</b></div>
+                    <div class="mini-stat" style="color: var(--orange-main);"><span>💍</span> <b id="mini-namoro">-</b></div>
+                </div>
+            `;
+
+            // --- O CABEÇALHO GRANDE ---
+            htmlHTML += `
+                <div class="diary-header reveal" id="big-header">
                     <h2 style="color: var(--orange-main); font-family: 'Dancing Script', cursive; font-size: 42px; text-shadow: 0 0 20px rgba(255,106,0,0.3);">Baú de Memórias</h2>
                     
                     <div class="counters-grid">
@@ -404,7 +446,7 @@
 
             htmlHTML += `</div>`; 
 
-            // Sessão Final do Diário (Limpa)
+            // --- SESSÃO FINAL ---
             htmlHTML += `
                 <div class="final-section reveal">
                     <h1 style="color: var(--orange-light); font-size: 36px; margin-bottom: 30px;">Continua...</h1>
@@ -427,7 +469,7 @@
         gerarTimeline();
 
         // ==========================================
-        // LÓGICA MATEMÁTICA DOS 4 CONTADORES
+        // LÓGICA MATEMÁTICA DOS CONTADORES (GRANDES E MINIS)
         // ==========================================
         function calcTimeDiff(startDate) {
             const now = new Date();
@@ -447,7 +489,6 @@
 
             let totalMonths = (years * 12) + months;
             
-            // Para exibição de dias corridos simples (útil para os primeiros 3 cards)
             let diffTime = Math.abs(now - startDate);
             let totalDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
 
@@ -455,38 +496,35 @@
         }
 
         function updateAllCounters() {
-            // Card 1: Amizade (Exibe dias totais)
             let c1 = calcTimeDiff(D1_AMIZADE);
-            if(document.getElementById("count-amizade")) {
-                document.getElementById("count-amizade").innerHTML = c1.totalDays;
-            }
+            if(document.getElementById("count-amizade")) document.getElementById("count-amizade").innerHTML = c1.totalDays;
+            if(document.getElementById("mini-amizade")) document.getElementById("mini-amizade").innerHTML = c1.totalDays + "d";
 
-            // Card 2: Encontro (Exibe dias totais)
             let c2 = calcTimeDiff(D2_ENCONTRO);
-            if(document.getElementById("count-encontro")) {
-                document.getElementById("count-encontro").innerHTML = c2.totalDays;
-            }
+            if(document.getElementById("count-encontro")) document.getElementById("count-encontro").innerHTML = c2.totalDays;
+            if(document.getElementById("mini-encontro")) document.getElementById("mini-encontro").innerHTML = c2.totalDays + "d";
 
-            // Card 3: Eu te amo (Exibe dias totais)
             let c3 = calcTimeDiff(D3_EU_TE_AMO);
-            if(document.getElementById("count-euteamo")) {
-                document.getElementById("count-euteamo").innerHTML = c3.totalDays;
-            }
+            if(document.getElementById("count-euteamo")) document.getElementById("count-euteamo").innerHTML = c3.totalDays;
+            if(document.getElementById("mini-euteamo")) document.getElementById("mini-euteamo").innerHTML = c3.totalDays + "d";
 
-            // Card 4: Namoro (Exibe Meses e Dias detalhados)
             let c4 = calcTimeDiff(D4_NAMORO);
             if(document.getElementById("count-namoro")) {
                 let htmlNamoro = "";
-                if(c4.totalMonths > 0) {
-                    htmlNamoro += `${c4.totalMonths}M e `;
-                }
+                if(c4.totalMonths > 0) { htmlNamoro += `${c4.totalMonths}M e `; }
                 htmlNamoro += `${c4.days}D`;
                 document.getElementById("count-namoro").innerHTML = htmlNamoro;
+            }
+            if(document.getElementById("mini-namoro")) {
+                let htmlMini = "";
+                if(c4.totalMonths > 0) { htmlMini += `${c4.totalMonths}M `; }
+                htmlMini += `${c4.days}d`;
+                document.getElementById("mini-namoro").innerHTML = htmlMini;
             }
         }
         
         setInterval(updateAllCounters, 1000);
-        updateAllCounters(); // Roda a primeira vez imediatamente
+        updateAllCounters(); 
 
         // ==========================================
         // ANIMAÇÕES E FLUXO GERAL
@@ -560,14 +598,28 @@
             }, 600);
         }
 
+        // --- CONTROLE DE ROLAGEM E STICKY DASHBOARD ---
         function updateScrollState() {
             const reveals = document.querySelectorAll('.reveal');
             const windowHeight = window.innerHeight;
+            const scrollY = window.scrollY;
 
+            // Animação das fotos
             reveals.forEach(el => {
                 const rect = el.getBoundingClientRect();
                 if (rect.top < windowHeight * 0.85) { el.classList.add('active'); }
             });
+
+            // Lógica para mostrar/esconder o Mini Painel
+            const miniHeader = document.getElementById('mini-header');
+            if (miniHeader) {
+                // Se o usuário rolou mais de 280px (o tamanho do painel grande), o pequeno desce
+                if (scrollY > 280) {
+                    miniHeader.classList.add('visible');
+                } else {
+                    miniHeader.classList.remove('visible');
+                }
+            }
         }
         
         window.addEventListener('scroll', updateScrollState);
