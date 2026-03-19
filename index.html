@@ -5,14 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nossos Momentos ❤️</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&family=Inter:wght@400;600&family=Dancing+Script:wght@700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&family=Inter:wght@300;400;600;800&family=Dancing+Script:wght@700&display=swap');
 
         :root {
-            --dark-bg: #121212;
+            --dark-bg: #0a0a0a; 
             --orange-main: #FF6A00;
             --orange-light: #FF9900;
+            --orange-glow: rgba(255, 106, 0, 0.4);
             --text-main: #ffffff;
-            --text-muted: #e0e0e0;
+            --text-muted: #a0a0a0;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -21,13 +22,11 @@
             background-color: var(--dark-bg);
             color: var(--text-main);
             font-family: 'Inter', sans-serif;
-            overflow: hidden; 
+            overflow-x: hidden; 
             -webkit-font-smoothing: antialiased;
-            height: 100vh;
-            width: 100vw;
         }
 
-        h1, h2, h3 { font-family: 'Montserrat', sans-serif; letter-spacing: -1px; line-height: 1.1; }
+        h1, h2, h3 { font-family: 'Montserrat', sans-serif; letter-spacing: -1px; line-height: 1.2; }
 
         /* --- TELAS DE FLUXO --- */
         .screen {
@@ -39,61 +38,66 @@
             justify-content: center;
             align-items: center;
             z-index: 9999;
-            transition: opacity 0.5s ease, visibility 0.5s;
+            transition: opacity 0.6s ease, visibility 0.6s;
             padding: 20px;
             text-align: center;
         }
 
-        .intro-bg { background: radial-gradient(circle at top right, #4a1c00 0%, var(--dark-bg) 70%); }
+        .intro-bg { 
+            background: radial-gradient(circle at top right, rgba(255, 106, 0, 0.15) 0%, var(--dark-bg) 60%); 
+        }
+        
         .hidden { opacity: 0; visibility: hidden; pointer-events: none; }
 
         .btn {
-            background-color: var(--orange-main);
+            background: linear-gradient(135deg, var(--orange-main), var(--orange-light));
             color: #ffffff;
             border: none;
-            padding: 18px 40px;
+            padding: 16px 36px;
             font-size: 16px;
             border-radius: 50px;
             cursor: pointer;
-            transition: transform 0.2s, background 0.3s;
+            transition: transform 0.3s, box-shadow 0.3s;
             font-family: 'Inter', sans-serif;
             margin-top: 30px;
-            font-weight: 700;
+            font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 2px;
             width: 100%;
             max-width: 300px;
-            box-shadow: 0 10px 20px rgba(255, 106, 0, 0.3);
+            box-shadow: 0 10px 30px var(--orange-glow);
         }
 
-        .btn:hover { transform: scale(1.05); background-color: var(--orange-light); }
+        .btn:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 15px 40px rgba(255, 153, 0, 0.5); }
 
         .card-container { width: 100%; max-width: 400px; position: relative; z-index: 10000; }
         
-        /* Carta Dinâmica */
         .letter-container {
             width: 100%;
             max-width: 500px;
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             padding: 40px 30px;
-            border-radius: 20px;
-            border: 1px solid rgba(255, 106, 0, 0.3);
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
             text-align: left;
             position: relative;
             z-index: 10000;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.8);
             max-height: 85vh; 
             display: flex;
             flex-direction: column;
         }
 
         .letter-content {
-            color: var(--text-muted);
+            color: #cccccc;
             font-size: 16px;
             line-height: 1.8;
             margin-bottom: 20px;
             overflow-y: auto; 
-            padding-right: 10px; 
+            padding-right: 15px; 
+            font-weight: 300;
         }
         
         .letter-content::-webkit-scrollbar { width: 4px; }
@@ -104,174 +108,132 @@
             width: 100%;
             padding: 18px;
             margin-top: 25px;
-            background-color: rgba(255, 255, 255, 0.1);
-            border: 2px solid transparent;
+            background-color: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             color: white;
-            border-radius: 8px;
+            border-radius: 12px;
             font-size: 20px;
             text-align: center;
             outline: none;
             font-family: 'Inter', sans-serif;
-            transition: border 0.3s, background 0.3s;
+            transition: all 0.3s;
+            letter-spacing: 2px;
         }
 
-        input[type="password"]:focus { border-color: var(--orange-main); background-color: rgba(255, 255, 255, 0.15); }
-        .error-msg { color: #ff3b30; font-size: 14px; margin-top: 15px; display: none; font-weight: 600; }
+        input[type="password"]:focus { border-color: var(--orange-main); background-color: rgba(255, 255, 255, 0.1); box-shadow: 0 0 20px var(--orange-glow); }
+        .error-msg { color: #ff453a; font-size: 14px; margin-top: 15px; display: none; font-weight: 600; }
 
-        /* --- CONTEÚDO PRINCIPAL (Slides) --- */
+        /* --- O NOVO DIÁRIO E CONTADORES --- */
         #main-content {
             display: none; 
-            height: 100vh;
-            width: 100vw;
-            overflow-y: scroll;
-            scroll-snap-type: y mandatory; 
-            scroll-behavior: smooth;
+            width: 100%;
+            max-width: 600px; 
+            margin: 0 auto;
+            min-height: 100vh;
+            padding-bottom: 100px;
             position: relative;
             z-index: 10; 
         }
 
-        #main-content::-webkit-scrollbar { display: none; }
-        #main-content { -ms-overflow-style: none; scrollbar-width: none; }
+        .diary-header {
+            padding: 60px 20px 40px;
+            text-align: center;
+            margin-bottom: 20px;
+            position: relative;
+        }
 
-        .slide {
-            height: 100vh;
-            width: 100vw;
-            scroll-snap-align: start; 
+        /* GRID DOS 4 CONTADORES */
+        .counters-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 30px;
+            padding-bottom: 30px;
+            border-bottom: 1px dashed rgba(255, 106, 0, 0.2);
+        }
+
+        .counter-card {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 15px 10px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 30px 20px;
-            position: relative;
             text-align: center;
-            overflow: hidden;
         }
 
-        /* GRADIENTES */
-        .bg-0 { background: linear-gradient(135deg, #f12711, #f5af19); } 
-        .bg-1 { background: linear-gradient(135deg, #FF4B2B, #FF416C); } 
-        .bg-2 { background: linear-gradient(135deg, #F2994A, #F2C94C); } 
-        .bg-3 { background: linear-gradient(135deg, #ff7e5f, #feb47b); } 
-        .bg-4 { background: linear-gradient(135deg, #f46b45, #eea849); } 
-        .bg-5 { background: linear-gradient(135deg, #e65c00, #F9D423); } 
-        .bg-end { background: var(--dark-bg); }
+        .counter-icon { font-size: 20px; margin-bottom: 5px; }
+        .counter-title { font-size: 11px; font-weight: 600; text-transform: uppercase; color: var(--orange-light); letter-spacing: 1px; margin-bottom: 8px; }
+        .counter-value { font-family: 'Montserrat', sans-serif; font-size: 22px; font-weight: 800; line-height: 1.1; }
+        .counter-sub { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
 
-        .huge-title { font-size: 42px; margin-bottom: 15px; text-transform: uppercase; line-height: 1.1; }
-        .medium-title { font-size: 28px; margin-bottom: 10px; }
-        .stat-label { font-size: 13px; text-transform: uppercase; letter-spacing: 2px; font-weight: 600; margin-bottom: 8px; opacity: 0.9; text-shadow: 1px 1px 5px rgba(0,0,0,0.2); }
-        .stat-number { font-size: 45px; font-weight: 900; font-family: 'Montserrat', sans-serif; text-shadow: 2px 2px 10px rgba(0,0,0,0.3); color: #ffffff; line-height: 1.1; }
+        /* Destaque para o card de Namoro Oficial */
+        .card-namoro { background: rgba(255, 106, 0, 0.1); border-color: rgba(255, 106, 0, 0.3); }
+        .card-namoro .counter-value { color: var(--orange-main); }
 
-        /* FOTOS DINÂMICAS PARA CELULARES */
-        .image-container {
-            width: 100%;
-            max-width: 280px;
-            height: 42vh; /* Usa 42% da altura da tela */
-            min-height: 250px;
-            margin: 15px 0;
-            background: white;
-            padding: 12px 12px 40px 12px; 
-            border-radius: 4px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.4);
-            transform: rotate(-3deg);
-            transition: transform 0.3s ease;
-            display: flex;
-            justify-content: center;
+        /* Estrutura da Timeline */
+        .timeline { position: relative; padding: 0 20px; padding-top: 30px; }
+
+        .timeline::before {
+            content: ''; position: absolute; top: 0; left: 35px; height: 100%; width: 2px;
+            background: linear-gradient(to bottom, var(--orange-main), rgba(255, 106, 0, 0.1)); border-radius: 2px;
         }
 
-        .slide:nth-child(even) .image-container { transform: rotate(3deg); }
-        .image-container:hover { transform: scale(1.05) rotate(0deg); }
-        .image-container img { width: 100%; height: 100%; object-fit: cover; border-radius: 2px; }
+        .timeline-item { position: relative; margin-bottom: 60px; padding-left: 45px; }
 
-        /* LEGENDAS COM ROLAGEM */
-        .caption-container {
-            width: 100%;
-            max-width: 320px;
-            max-height: 20vh; /* Ocupa 20% da tela */
-            overflow-y: auto;
-            padding-right: 5px;
-            margin-top: 5px;
+        .timeline-dot {
+            position: absolute; left: 10px; top: 0; width: 12px; height: 12px;
+            background: var(--orange-light); border-radius: 50%;
+            box-shadow: 0 0 15px var(--orange-main), 0 0 30px var(--orange-main); z-index: 2;
         }
-        .caption-container p { font-size: 15px; font-weight: 600; text-shadow: 1px 1px 4px rgba(0,0,0,0.3); line-height: 1.5; }
-        .caption-container::-webkit-scrollbar { width: 3px; }
-        .caption-container::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.4); border-radius: 4px; }
 
-        /* TEXTO FINAL COM ROLAGEM */
+        .timeline-date {
+            font-family: 'Montserrat', sans-serif; font-size: 20px; color: var(--text-main);
+            margin-bottom: 20px; padding-top: -5px; text-shadow: 0 0 10px rgba(255,255,255,0.2);
+        }
+
+        .memory-card {
+            position: relative; width: 100%; border-radius: 24px; overflow: hidden;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5); background: #1a1a1a;
+        }
+
+        .memory-card img { width: 100%; height: auto; display: block; transition: transform 0.7s ease; }
+        .timeline-item.active .memory-card img { transform: scale(1.05); }
+
+        .memory-glass {
+            position: absolute; bottom: 0; left: 0; width: 100%; padding: 30px 20px 20px;
+            background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.5) 60%, transparent 100%); text-align: left;
+        }
+
+        .memory-glass h3 { font-size: 22px; color: var(--orange-light); margin-bottom: 8px; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
+        .memory-glass p { font-size: 15px; color: #eaeaea; line-height: 1.5; text-shadow: 0 1px 3px rgba(0,0,0,0.8); font-weight: 400; }
+
+        /* Seção Final */
+        .final-section { padding: 80px 30px; text-align: center; position: relative; }
         .final-content {
-            width: 100%;
-            max-width: 400px;
-            max-height: 45vh; /* Ocupa 45% da tela */
-            overflow-y: auto;
-            margin: 20px 0;
-            padding-right: 10px;
+            background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 24px; padding: 40px 25px; box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            backdrop-filter: blur(10px); margin-top: 30px;
         }
-        .final-content p { font-size: 17px; line-height: 1.6; color: var(--text-muted); }
-        .final-content::-webkit-scrollbar { width: 4px; }
-        .final-content::-webkit-scrollbar-thumb { background: var(--orange-main); border-radius: 4px; }
+        .final-content p { font-size: 16px; line-height: 1.8; color: #cccccc; font-weight: 300; }
 
-        /* MARCADOR DE BOLINHAS LATERAIS (DOTS) */
-        .progress-dots {
-            position: fixed;
-            right: 8px;
-            top: 50%;
-            transform: translateY(-50%);
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-            z-index: 10001;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.5s;
-        }
-        .progress-dots.visible { opacity: 1; visibility: visible; }
-        
-        .dot {
-            width: 5px;
-            height: 5px;
-            border-radius: 50%;
-            background-color: rgba(255, 255, 255, 0.2);
-            transition: all 0.3s ease;
-        }
-        .dot.active {
-            background-color: #ffffff;
-            transform: scale(1.8);
-            box-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
-        }
-
-        .scroll-indicator {
-            position: absolute;
-            bottom: 20px;
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            opacity: 0.8;
-            animation: bounce 2s infinite;
-            font-weight: 600;
-        }
-
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-            40% { transform: translateY(-10px); }
-            60% { transform: translateY(-5px); }
-        }
-
-        .reveal { opacity: 0; transform: scale(0.9) translateY(30px); transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        .reveal.active { opacity: 1; transform: scale(1) translateY(0); }
+        .reveal { opacity: 0; transform: translateY(40px); transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
 
         .floating-heart {
-            position: fixed;
-            color: rgba(255, 140, 0, 0.35); 
-            pointer-events: none; 
-            z-index: 100; 
-            bottom: -50px; 
-            animation: balloonFloatUp linear forwards;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+            position: fixed; color: rgba(255, 106, 0, 0.25); pointer-events: none; 
+            z-index: 1; bottom: -50px; animation: balloonFloatUp linear forwards; filter: blur(1px); 
         }
 
         @keyframes balloonFloatUp {
             0% { transform: translateY(0) translateX(0) scale(1) rotate(0deg); opacity: 0; }
             10% { opacity: 1; }
             90% { opacity: 1; }
-            100% { transform: translateY(-120vh) translateX(var(--drift)) scale(1.2) rotate(var(--rotation)); opacity: 0; }
+            100% { transform: translateY(-120vh) translateX(var(--drift)) scale(1.5) rotate(var(--rotation)); opacity: 0; }
         }
     </style>
 </head>
@@ -309,14 +271,14 @@
 
     <div id="screen-4" class="screen intro-bg hidden" style="display: none;">
         <div class="letter-container">
-            <h2 style="font-size: 28px; margin-bottom: 20px; color: var(--orange-light);">Thayna, meu amor, minha namorada!</h2>
+            <h2 style="font-size: 32px; margin-bottom: 20px; color: var(--orange-light); font-family: 'Dancing Script', cursive;">Thayna, meu amor!</h2>
             
             <div class="letter-content">
                 <p>Existem pessoas que entram na nossa vida e, de alguma forma inexplicável, fazem tudo parecer mais leve, mais bonito e mais cheio de sentido. Você é assim para mim. Desde que nossos caminhos se cruzaram, meus dias ganharam mais cor, mais calma e um motivo a mais para sorrir. Essa carta é apenas uma pequena forma de expressar o quanto você é especial para mim e o quanto sou grato por ter você ao meu lado. Que possamos continuar construindo momentos lindos, colecionando sorrisos e escrevendo juntos uma história cheia de carinho, cumplicidade e amor. Cada segundo com você é um presente.</p>
             </div>
             
             <div style="text-align: center;">
-                <button class="btn" onclick="enterWrapped()">Iniciar Jornada</button>
+                <button class="btn" onclick="enterWrapped()">Abrir nosso Diário</button>
             </div>
         </div>
     </div>
@@ -325,14 +287,22 @@
 
     <script>
         const SENHA_CORRETA = "tivoli"; 
-        const DATA_INICIO = new Date("2026-01-10T00:00:00"); 
+        
+        // ==========================================
+        // DATAS DOS 4 MOMENTOS IMPORTANTES
+        // Se precisar, altere os dias e meses aqui! (Formato: AAAA-MM-DDT00:00:00)
+        // ==========================================
+        const D1_AMIZADE = new Date("2025-11-02T00:00:00");
+        const D2_ENCONTRO = new Date("2026-01-10T00:00:00");
+        const D3_EU_TE_AMO = new Date("2026-01-18T00:00:00");
+        const D4_NAMORO = new Date("2026-02-15T00:00:00");
 
         const listaDeFotos = [
             { arquivo: "foto01.jpeg", label: "Novembro/2025", titulo: "Onde Tudo Começou", legenda: "Belém me trouxe muitos desafios. O hotel me trouxe muitos problemas. Minha vida virou do avesso em 2025. Hoje agradeço por ter passado por tudo isso pois foram esses desafios que me levaram até você." },
             { arquivo: "foto02.jpeg", label: "23/12/2025", titulo: "" , legenda: "Ver sua carinha feliz não tem preço. Momentos como esses ficam marcados nas nossas lembranças." },
             { arquivo: "foto03.jpeg", label: "28/12/2025", titulo: "", legenda: "Quando tudo ainda era novo, essa foi uma tentativa de personificar nós 2 juntos!" },
             { arquivo: "foto04.jpeg", label: "03/01/2026", titulo: "", legenda: "A saudade aumentava a cada dia e a única saída era utilizar a IA para tentar criar momentos juntos..." },
-            { arquivo: "foto05.jpeg", label: "10/01/2026", titulo: "O grande dia chegou.", legenda: "Depois de tanto esperar, só nos restava ansiedade e nervosismo pra o dia 10. Até tentativa de fugir teve nesse dia, mas superamos mais esse desafio e nos vemos a primeira vez de uma forma diferente...em um novo contexto..." },
+            { arquivo: "foto05.jpeg", label: "10/01/2026", titulo: "O grande dia chegou", legenda: "Depois de tanto esperar, só nos restava ansiedade e nervosismo pra o dia 10. Até tentativa de fugir teve nesse dia, mas superamos mais esse desafio e nos vemos a primeira vez de uma forma diferente...em um novo contexto..." },
             { arquivo: "foto06.jpeg", label: "10/01/2026", titulo: "", legenda: "Tivemos um final de semana maravilhoso. Muito carinho e cuidado envolvido...Nossas energias vibraram na mesma sintonia e pudemos ter momentos íntimos e de prazer sem medo!" },
             { arquivo: "foto07.jpeg", label: "12/01/2026", titulo: "", legenda: "O resultado do final de semana foi esse. Mais leves, mais felizes e com o sentimento de ter tomado a decisão certa..." },
             { arquivo: "foto24.jpeg", label: "12/01/2026", titulo: "Primeira cartinha...", legenda: "Ganhei a primeira cartinha...fiquei bobo e surpreso pois não esperava por isso!" },
@@ -342,7 +312,7 @@
             { arquivo: "foto10.jpeg", label: "19/01/2026", titulo: "", legenda: "E ainda fomos a um showzinho gostoso e dançamos coladinhos..." },
             { arquivo: "foto26.jpeg", label: "23/01/2026", titulo: "Terceira cartinha...", legenda: "Essa cartinha veio com 2 presentes lindos. Amei a lembrança e o carinho que você empregou em tudo..." },
             { arquivo: "foto12.jpeg", label: "24/01/2026", titulo: "", legenda: "Visitamos um museu e pintamos um pássaro juntos." },
-            { arquivo: "foto11.jpeg", label: "24/01/2026", titulo: "", legenda: "Você me apresentou a música clássica🧡" },
+            { arquivo: "foto11.jpeg", label: "24/01/2026", titulo: "", legenda: "Você me apresentou a música clássica 🧡" },
             { arquivo: "foto13.jpeg", label: "25/01/2026", titulo: "", legenda: "E também tivemos a primeira despedida no aeroporto. Mixto de felicidade com tristeza, vontade de chorar e sorrir...mas já contando os dias pra nos ver novamente." },
             { arquivo: "foto14.jpeg", label: "02/02/2026", titulo: "", legenda: "Você foi me ver na Bahia" },
             { arquivo: "foto15.jpeg", label: "03/02/2026", titulo: "", legenda: "Turistando em Salvador" },
@@ -369,77 +339,157 @@
             { arquivo: "foto39.jpeg", label: "15/03/2026", titulo: "", legenda: "E teve mais uma despedida. Dessa vez foi impossível conter as emoções..." },
         ];
 
-        // ==========================================
-        // FUNÇÃO QUE MONTA O SITE E AS BOLINHAS
-        // ==========================================
-        function gerarSlides() {
+        function gerarTimeline() {
             const container = document.getElementById('main-content');
             
-            // 1. Slide de Introdução
+            // Cabeçalho com o NOVO Painel de 4 Contadores
             let htmlHTML = `
-                <section class="slide bg-1">
-                    <h2 class="medium-title reveal">Há exatos...</h2>
-                    <div id="time-together" class="stat-number reveal" style="margin: 30px 0;">Calculando...</div>
-                    <p class="reveal" style="font-size: 18px; font-weight: 600;">escrevendo a melhor história da minha vida.</p>
-                </section>
+                <div class="diary-header reveal">
+                    <h2 style="color: var(--orange-main); font-family: 'Dancing Script', cursive; font-size: 42px; text-shadow: 0 0 20px rgba(255,106,0,0.3);">Baú de Memórias</h2>
+                    
+                    <div class="counters-grid">
+                        <div class="counter-card">
+                            <div class="counter-icon">🤝</div>
+                            <div class="counter-title">Nossa Amizade</div>
+                            <div id="count-amizade" class="counter-value">-</div>
+                            <div class="counter-sub">Dias Atrás</div>
+                        </div>
+                        <div class="counter-card">
+                            <div class="counter-icon">✨</div>
+                            <div class="counter-title">1º Encontro</div>
+                            <div id="count-encontro" class="counter-value">-</div>
+                            <div class="counter-sub">Dias Atrás</div>
+                        </div>
+                        <div class="counter-card">
+                            <div class="counter-icon">💌</div>
+                            <div class="counter-title">1º "Eu te Amo"</div>
+                            <div id="count-euteamo" class="counter-value">-</div>
+                            <div class="counter-sub">Dias Atrás</div>
+                        </div>
+                        <div class="counter-card card-namoro">
+                            <div class="counter-icon">💍</div>
+                            <div class="counter-title">Nosso Namoro</div>
+                            <div id="count-namoro" class="counter-value">-</div>
+                            <div class="counter-sub">Oficialmente</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="timeline">
             `;
 
-            // 2. Loop para as fotos com caixas de legenda adaptáveis
-            listaDeFotos.forEach((foto, index) => {
-                let corDeFundo = index % 6; 
-                
-                // Só cria o H2 se existir título para economizar espaço
-                let tituloHTML = foto.titulo ? `<h2 class="medium-title reveal">${foto.titulo}</h2>` : ``;
+            let dataAnterior = "";
+
+            listaDeFotos.forEach((foto) => {
+                let mostraDataHTML = "";
+                if (foto.label !== dataAnterior) {
+                    mostraDataHTML = `<div class="timeline-date reveal">${foto.label}</div>`;
+                    dataAnterior = foto.label;
+                }
+                let tituloHTML = foto.titulo ? `<h3>${foto.titulo}</h3>` : ``;
 
                 htmlHTML += `
-                    <section class="slide bg-${corDeFundo}">
-                        <div class="stat-label reveal">${foto.label}</div>
-                        ${tituloHTML}
-                        <div class="image-container reveal">
-                            <img src="${foto.arquivo}" alt="${foto.titulo}">
+                    <div class="timeline-item reveal">
+                        <div class="timeline-dot"></div>
+                        ${mostraDataHTML}
+                        <div class="memory-card">
+                            <img src="${foto.arquivo}" alt="Memória">
+                            <div class="memory-glass">
+                                ${tituloHTML}
+                                <p>${foto.legenda}</p>
+                            </div>
                         </div>
-                        <div class="caption-container reveal">
-                            <p>${foto.legenda}</p>
-                        </div>
-                    </section>
+                    </div>
                 `;
             });
 
-            // 3. Slide Final adaptável
+            htmlHTML += `</div>`; 
+
+            // Sessão Final do Diário (Limpa)
             htmlHTML += `
-                <section class="slide bg-end">
-                    <div class="stat-label reveal" style="color: var(--orange-main);">Só tenho uma coisa a dizer...</div>
-                    <h1 class="huge-title reveal" style="color: var(--orange-light);">Obrigado.</h1>
+                <div class="final-section reveal">
+                    <h1 style="color: var(--orange-light); font-size: 36px; margin-bottom: 30px;">Continua...</h1>
                     
-                    <div class="final-content reveal">
+                    <div class="final-content">
                         <p>
                             Sei que palavras nunca conseguem traduzir completamente aquilo que o coração sente, mas espero que cada momento desta carta consiga mostrar um pouco do quanto você é importante para mim. Obrigado por trazer tanta luz, carinho e significado para os meus dias. Estar ao seu lado é um presente que eu valorizo profundamente. Que a nossa história continue sendo escrita com leveza, companheirismo, sorrisos e muito amor. E que cada novo capítulo seja ainda mais bonito do que o anterior.<br><br>Eu te amo muito!
                         </p>
                     </div>
 
-                    <p class="reveal" style="font-family: 'Dancing Script', cursive; font-size: 40px; color: var(--orange-main); margin-top: 10px;">
+                    <p style="font-family: 'Dancing Script', cursive; font-size: 45px; color: var(--orange-main); margin-top: 30px; margin-bottom: 40px;">
                         Lucas Fonseca
                     </p>
-                </section>
+                </div>
             `;
 
             container.innerHTML = htmlHTML;
-
-            // 4. Criação dinâmica das bolinhas de progresso (Dots)
-            let totalSlides = listaDeFotos.length + 2; // Intro + 30 fotos + Final
-            let dotsHTML = '<div id="progress-dots" class="progress-dots">';
-            for(let i = 0; i < totalSlides; i++) {
-                dotsHTML += `<div class="dot" id="dot-${i}"></div>`;
-            }
-            dotsHTML += '</div>';
-            document.body.insertAdjacentHTML('beforeend', dotsHTML);
         }
 
-        gerarSlides();
-
+        gerarTimeline();
 
         // ==========================================
-        // ANIMAÇÕES E NAVEGAÇÃO
+        // LÓGICA MATEMÁTICA DOS 4 CONTADORES
+        // ==========================================
+        function calcTimeDiff(startDate) {
+            const now = new Date();
+            if (now < startDate) return { totalMonths: 0, days: 0, hours: 0 };
+            
+            let years = now.getFullYear() - startDate.getFullYear();
+            let months = now.getMonth() - startDate.getMonth();
+            let days = now.getDate() - startDate.getDate();
+            let hours = now.getHours() - startDate.getHours();
+
+            if (hours < 0) { hours += 24; days--; }
+            if (days < 0) {
+                let prevMonth = new Date(now.getFullYear(), now.getMonth(), 0);
+                days += prevMonth.getDate(); months--;
+            }
+            if (months < 0) { months += 12; years--; }
+
+            let totalMonths = (years * 12) + months;
+            
+            // Para exibição de dias corridos simples (útil para os primeiros 3 cards)
+            let diffTime = Math.abs(now - startDate);
+            let totalDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+            return { totalMonths, days, hours, totalDays };
+        }
+
+        function updateAllCounters() {
+            // Card 1: Amizade (Exibe dias totais)
+            let c1 = calcTimeDiff(D1_AMIZADE);
+            if(document.getElementById("count-amizade")) {
+                document.getElementById("count-amizade").innerHTML = c1.totalDays;
+            }
+
+            // Card 2: Encontro (Exibe dias totais)
+            let c2 = calcTimeDiff(D2_ENCONTRO);
+            if(document.getElementById("count-encontro")) {
+                document.getElementById("count-encontro").innerHTML = c2.totalDays;
+            }
+
+            // Card 3: Eu te amo (Exibe dias totais)
+            let c3 = calcTimeDiff(D3_EU_TE_AMO);
+            if(document.getElementById("count-euteamo")) {
+                document.getElementById("count-euteamo").innerHTML = c3.totalDays;
+            }
+
+            // Card 4: Namoro (Exibe Meses e Dias detalhados)
+            let c4 = calcTimeDiff(D4_NAMORO);
+            if(document.getElementById("count-namoro")) {
+                let htmlNamoro = "";
+                if(c4.totalMonths > 0) {
+                    htmlNamoro += `${c4.totalMonths}M e `;
+                }
+                htmlNamoro += `${c4.days}D`;
+                document.getElementById("count-namoro").innerHTML = htmlNamoro;
+            }
+        }
+        
+        setInterval(updateAllCounters, 1000);
+        updateAllCounters(); // Roda a primeira vez imediatamente
+
+        // ==========================================
+        // ANIMAÇÕES E FLUXO GERAL
         // ==========================================
         function startHeartBalloons() {
             setInterval(createHeartBalloon, 1200); 
@@ -449,22 +499,17 @@
         function createHeartBalloon() {
             const heart = document.createElement('div');
             heart.classList.add('floating-heart');
-            
-            // A MÁGICA ACONTECE AQUI: O &#xFE0E; bloqueia o emoji vermelho do celular!
             heart.innerHTML = '&#x2665;&#xFE0E;'; 
-            
             const startX = Math.random() * 95; 
             const drift = (Math.random() - 0.5) * 150; 
             const rotation = (Math.random() - 0.5) * 60; 
             const duration = Math.random() * 10 + 15; 
             const size = Math.random() * 30 + 15;
-            
             heart.style.left = `${startX}vw`;
             heart.style.fontSize = `${size}px`;
             heart.style.setProperty('--drift', `${drift}px`);
             heart.style.setProperty('--rotation', `${rotation}deg`);
             heart.style.animationDuration = `${duration}s`;
-            
             document.body.appendChild(heart);
             setTimeout(() => { heart.remove(); }, duration * 1000);
         }
@@ -476,7 +521,11 @@
                 const showEl = document.getElementById(showId);
                 showEl.style.display = 'flex';
                 setTimeout(() => showEl.classList.remove('hidden'), 50); 
-            }, 400); 
+                if(showId === 'main-content') {
+                    document.getElementById('main-content').style.display = 'block';
+                    updateScrollState();
+                }
+            }, 600); 
         }
 
         function checkPassword() {
@@ -502,66 +551,26 @@
 
         function enterWrapped() {
             document.getElementById('screen-4').classList.add('hidden');
-            
             setTimeout(() => {
                 document.getElementById('screen-4').style.display = 'none';
                 const mainContent = document.getElementById('main-content');
                 mainContent.style.display = 'block';
-                
-                // Mostra as bolinhas de progresso na lateral
-                document.getElementById('progress-dots').classList.add('visible');
-
-                mainContent.scrollTo(0, 0); 
+                window.scrollTo(0, 0); 
                 updateScrollState(); 
-            }, 400);
+            }, 600);
         }
 
-        // ==========================================
-        // LÓGICA DO CONTADOR E ROLAGEM (SCROLL)
-        // ==========================================
-        function updateCounter() {
-            const diff = new Date() - DATA_INICIO;
-            const targetElement = document.getElementById("time-together");
-            if(!targetElement) return;
-
-            if (diff < 0) {
-                targetElement.innerHTML = "0 <span style='font-size:18px; font-weight:400;'>dias</span>";
-                return;
-            }
-
-            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-            targetElement.innerHTML = `${days} <span style='font-size:24px; font-weight:600; opacity: 0.9;'>Dias</span><br>${hours} <span style='font-size:24px; font-weight:600; opacity: 0.9;'>Horas</span>`;
-        }
-        setInterval(updateCounter, 1000);
-
-        // Controla as animações de texto e as bolinhas de progresso
         function updateScrollState() {
-            const slides = document.querySelectorAll('.slide');
+            const reveals = document.querySelectorAll('.reveal');
             const windowHeight = window.innerHeight;
 
-            slides.forEach((slide, index) => {
-                const rect = slide.getBoundingClientRect();
-                
-                // 1. Lógica CORRIGIDA para animar os textos
-                // Agora ele usa a altura real da tela para saber se o slide ainda está visível
-                const reveals = slide.querySelectorAll('.reveal');
-                if (rect.top > -windowHeight + 100 && rect.top < windowHeight - 100) {
-                    reveals.forEach(el => el.classList.add('active'));
-                } else {
-                    reveals.forEach(el => el.classList.remove('active')); 
-                }
-
-                // 2. Lógica para acender a bolinha correta
-                if (rect.top >= -windowHeight / 2 && rect.top < windowHeight / 2) {
-                    document.querySelectorAll('.dot').forEach(d => d.classList.remove('active'));
-                    const activeDot = document.getElementById(`dot-${index}`);
-                    if (activeDot) activeDot.classList.add('active');
-                }
+            reveals.forEach(el => {
+                const rect = el.getBoundingClientRect();
+                if (rect.top < windowHeight * 0.85) { el.classList.add('active'); }
             });
         }
         
-        document.getElementById('main-content').addEventListener('scroll', updateScrollState);
+        window.addEventListener('scroll', updateScrollState);
     </script>
 </body>
 </html>
