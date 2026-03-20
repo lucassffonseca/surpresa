@@ -14,6 +14,15 @@
             --orange-glow: rgba(255, 106, 0, 0.4);
             --text-main: #ffffff;
             --text-muted: #a0a0a0;
+            transition: all 1s ease; 
+        }
+
+        /* --- TEMA MODO SAUDADE (AZUL MEIA-NOITE) --- */
+        body.modo-saudade {
+            --dark-bg: #03040a; 
+            --orange-main: #4facfe; 
+            --orange-light: #A0BFF8; 
+            --orange-glow: rgba(79, 172, 254, 0.5);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -24,245 +33,131 @@
             font-family: 'Inter', sans-serif;
             overflow-x: hidden; 
             -webkit-font-smoothing: antialiased;
+            transition: background-color 1s ease;
         }
 
         h1, h2, h3 { font-family: 'Montserrat', sans-serif; letter-spacing: -1px; line-height: 1.2; }
 
         /* --- TELAS DE FLUXO --- */
         .screen {
-            position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
-            background-color: var(--dark-bg);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            transition: opacity 0.6s ease, visibility 0.6s;
-            padding: 20px;
-            text-align: center;
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background-color: var(--dark-bg); display: flex; flex-direction: column;
+            justify-content: center; align-items: center; z-index: 9999;
+            transition: opacity 0.6s ease, visibility 0.6s; padding: 20px; text-align: center;
         }
-
-        .intro-bg { 
-            background: radial-gradient(circle at top right, rgba(255, 106, 0, 0.15) 0%, var(--dark-bg) 60%); 
-        }
-        
+        .intro-bg { background: radial-gradient(circle at top right, var(--orange-glow) 0%, var(--dark-bg) 60%); }
         .hidden { opacity: 0; visibility: hidden; pointer-events: none; }
 
         .btn {
             background: linear-gradient(135deg, var(--orange-main), var(--orange-light));
-            color: #ffffff;
-            border: none;
-            padding: 16px 36px;
-            font-size: 16px;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: transform 0.3s, box-shadow 0.3s;
-            font-family: 'Inter', sans-serif;
-            margin-top: 30px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            width: 100%;
-            max-width: 300px;
+            color: #ffffff; border: none; padding: 16px 36px; font-size: 16px; border-radius: 50px;
+            cursor: pointer; transition: transform 0.3s, box-shadow 0.3s, background 1s ease;
+            font-family: 'Inter', sans-serif; margin-top: 30px; font-weight: 600;
+            text-transform: uppercase; letter-spacing: 2px; width: 100%; max-width: 300px;
             box-shadow: 0 10px 30px var(--orange-glow);
         }
+        .btn:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 15px 40px var(--orange-glow); }
 
-        .btn:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 15px 40px rgba(255, 153, 0, 0.5); }
-
-        .card-container { width: 100%; max-width: 400px; position: relative; z-index: 10000; }
-        
         .letter-container {
-            width: 100%;
-            max-width: 500px;
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            padding: 40px 30px;
-            border-radius: 24px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            text-align: left;
-            position: relative;
-            z-index: 10000;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.8);
-            max-height: 85vh; 
-            display: flex;
-            flex-direction: column;
+            width: 100%; max-width: 500px; background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            padding: 40px 30px; border-radius: 24px; border: 1px solid rgba(255, 255, 255, 0.05);
+            text-align: left; position: relative; z-index: 10000;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.8); max-height: 85vh; display: flex; flex-direction: column;
         }
-
-        .letter-content {
-            color: #cccccc;
-            font-size: 16px;
-            line-height: 1.8;
-            margin-bottom: 20px;
-            overflow-y: auto; 
-            padding-right: 15px; 
-            font-weight: 300;
-        }
-        
+        .letter-content { color: #cccccc; font-size: 16px; line-height: 1.8; margin-bottom: 20px; overflow-y: auto; padding-right: 15px; font-weight: 300; }
         .letter-content::-webkit-scrollbar { width: 4px; }
         .letter-content::-webkit-scrollbar-thumb { background: var(--orange-main); border-radius: 4px; }
         .letter-content p { margin-bottom: 15px; }
 
         input[type="password"] {
-            width: 100%;
-            padding: 18px;
-            margin-top: 25px;
-            background-color: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: white;
-            border-radius: 12px;
-            font-size: 20px;
-            text-align: center;
-            outline: none;
-            font-family: 'Inter', sans-serif;
-            transition: all 0.3s;
-            letter-spacing: 2px;
+            width: 100%; padding: 18px; margin-top: 25px; background-color: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1); color: white; border-radius: 12px;
+            font-size: 20px; text-align: center; outline: none; font-family: 'Inter', sans-serif;
+            transition: all 0.3s; letter-spacing: 2px;
         }
-
         input[type="password"]:focus { border-color: var(--orange-main); background-color: rgba(255, 255, 255, 0.1); box-shadow: 0 0 20px var(--orange-glow); }
         .error-msg { color: #ff453a; font-size: 14px; margin-top: 15px; display: none; font-weight: 600; }
 
-        /* --- O NOVO DIÁRIO --- */
+        /* --- O DIÁRIO --- */
         #main-content {
-            display: none; 
-            width: 100%;
-            max-width: 600px; 
-            margin: 0 auto;
-            min-height: 100vh;
-            padding-bottom: 100px;
-            position: relative;
-            z-index: 10; 
+            display: none; width: 100%; max-width: 600px; margin: 0 auto; min-height: 100vh;
+            padding-bottom: 100px; position: relative; z-index: 10;
         }
 
-        /* --- NOVO: MINI-PAINEL FIXO DE VIDRO --- */
+        /* Esfumaça apenas o conteúdo do diário no Modo Saudade, para manter o mini-painel nítido */
+        #big-header, .timeline, .final-section { transition: filter 1s ease, opacity 1s ease; }
+        body.modo-saudade #big-header, 
+        body.modo-saudade .timeline, 
+        body.modo-saudade .final-section {
+            filter: blur(15px) brightness(0.4); opacity: 0.3; pointer-events: none;
+        }
+
+        /* --- MINI-PAINEL FIXO DE VIDRO --- */
         .mini-header {
-            position: fixed;
-            top: 0;
-            left: 50%;
-            transform: translate(-50%, -100%);
-            width: 100%;
-            max-width: 600px;
-            background: rgba(10, 10, 10, 0.85);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            border-bottom: 1px solid rgba(255, 106, 0, 0.3);
-            display: flex;
-            justify-content: space-around;
-            padding: 15px 10px;
-            z-index: 9999;
-            transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.4s ease;
-            opacity: 0;
+            position: fixed; top: 0; left: 50%; transform: translate(-50%, -100%); width: 100%; max-width: 600px;
+            background: rgba(10, 10, 10, 0.85); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            border-bottom: 1px solid var(--orange-glow); display: flex; justify-content: space-around;
+            padding: 15px 10px; z-index: 10001; transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), background 1s ease;
             box-shadow: 0 10px 30px rgba(0,0,0,0.8);
         }
-
-        .mini-header.visible {
-            transform: translate(-50%, 0);
-            opacity: 1;
+        
+        /* No Modo Saudade, ele é forçado a descer e muda sutilmente a cor para combinar com o vídeo */
+        body.modo-saudade .mini-header { 
+            transform: translate(-50%, 0) !important; 
+            background: rgba(3, 4, 10, 0.85); 
+            border-bottom: 1px solid rgba(79, 172, 254, 0.3);
         }
+        .mini-header.visible { transform: translate(-50%, 0); }
+        .mini-stat { display: flex; align-items: center; gap: 6px; font-family: 'Montserrat', sans-serif; font-size: 15px; font-weight: 700; color: #ffffff; }
 
-        .mini-stat {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-family: 'Montserrat', sans-serif;
-            font-size: 15px;
-            font-weight: 700;
-            color: #ffffff;
-        }
-
-        .mini-stat span { font-size: 16px; }
-
-        /* --- PAINEL GRANDE (FLUIDO) --- */
-        .diary-header {
-            padding: 50px 20px 20px;
-            text-align: center;
-            position: relative;
-        }
-
-        .counters-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            padding-bottom: 20px;
-            margin-top: 20px;
-        }
-
+        .diary-header { padding: 40px 20px 20px; text-align: center; position: relative; }
+        .counters-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; padding-bottom: 20px; margin-top: 10px; }
         .counter-card {
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 16px;
-            padding: 15px 10px;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
+            background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px; padding: 15px 10px; backdrop-filter: blur(10px); box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; transition: all 1s ease;
         }
-
-        .counter-icon { font-size: 20px; margin-bottom: 5px; }
-        .counter-title { font-size: 11px; font-weight: 600; text-transform: uppercase; color: var(--orange-light); letter-spacing: 1px; margin-bottom: 8px; }
+        .counter-title { font-size: 11px; font-weight: 600; text-transform: uppercase; color: var(--orange-light); letter-spacing: 1px; margin-bottom: 8px; transition: color 1s ease; }
         .counter-value { font-family: 'Montserrat', sans-serif; font-size: 22px; font-weight: 800; line-height: 1.1; }
         .counter-sub { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+        .card-namoro { background: var(--orange-glow); border-color: var(--orange-main); transition: all 1s ease; }
+        .card-namoro .counter-value { color: var(--orange-main); transition: color 1s ease;}
 
-        .card-namoro { background: rgba(255, 106, 0, 0.1); border-color: rgba(255, 106, 0, 0.3); }
-        .card-namoro .counter-value { color: var(--orange-main); }
-
-        /* --- Estrutura da Timeline --- */
         .timeline { position: relative; padding: 0 20px; padding-top: 10px; }
-
         .timeline::before {
             content: ''; position: absolute; top: 0; left: 35px; height: 100%; width: 2px;
-            background: linear-gradient(to bottom, var(--orange-main), rgba(255, 106, 0, 0.1)); border-radius: 2px;
+            background: linear-gradient(to bottom, var(--orange-main), rgba(255, 106, 0, 0.1)); border-radius: 2px; transition: background 1s ease;
         }
-
-        .timeline-item { position: relative; margin-bottom: 60px; padding-left: 45px; }
-
+        .timeline-item { position: relative; margin-bottom: 60px; padding-left: 45px; transition: all 0.5s ease; }
         .timeline-dot {
             position: absolute; left: 10px; top: 0; width: 12px; height: 12px;
             background: var(--orange-light); border-radius: 50%;
-            box-shadow: 0 0 15px var(--orange-main), 0 0 30px var(--orange-main); z-index: 2;
+            box-shadow: 0 0 15px var(--orange-main), 0 0 30px var(--orange-main); z-index: 2; transition: all 1s ease;
         }
-
-        .timeline-date {
-            font-family: 'Montserrat', sans-serif; font-size: 20px; color: var(--text-main);
-            margin-bottom: 20px; padding-top: -5px; text-shadow: 0 0 10px rgba(255,255,255,0.2);
-        }
-
-        .memory-card {
-            position: relative; width: 100%; border-radius: 24px; overflow: hidden;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.5); background: #1a1a1a;
-        }
-
+        .timeline-date { font-family: 'Montserrat', sans-serif; font-size: 20px; color: var(--text-main); margin-bottom: 20px; padding-top: -5px; text-shadow: 0 0 10px rgba(255,255,255,0.2); }
+        .memory-card { position: relative; width: 100%; border-radius: 24px; overflow: hidden; box-shadow: 0 25px 50px rgba(0,0,0,0.5); background: #1a1a1a; }
         .memory-card img { width: 100%; height: auto; display: block; transition: transform 0.7s ease; }
         .timeline-item.active .memory-card img { transform: scale(1.05); }
-
         .memory-glass {
-            position: absolute; bottom: 0; left: 0; width: 100%; padding: 30px 20px 20px;
+            position: absolute; bottom: 0; left: 0; width: 100%; padding: 40px 20px 20px;
             background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.5) 60%, transparent 100%); text-align: left;
         }
-
-        .memory-glass h3 { font-size: 22px; color: var(--orange-light); margin-bottom: 8px; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
+        .memory-glass h3 { font-size: 22px; color: var(--orange-light); margin-bottom: 8px; text-shadow: 0 2px 4px rgba(0,0,0,0.8); transition: color 1s ease; }
         .memory-glass p { font-size: 15px; color: #eaeaea; line-height: 1.5; text-shadow: 0 1px 3px rgba(0,0,0,0.8); font-weight: 400; }
 
-        /* Seção Final */
         .final-section { padding: 80px 30px; text-align: center; position: relative; }
         .final-content {
             background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255,255,255,0.05);
-            border-radius: 24px; padding: 40px 25px; box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-            backdrop-filter: blur(10px); margin-top: 30px;
+            border-radius: 24px; padding: 40px 25px; backdrop-filter: blur(10px); margin-top: 30px;
         }
         .final-content p { font-size: 16px; line-height: 1.8; color: #cccccc; font-weight: 300; }
-
         .reveal { opacity: 0; transform: translateY(40px); transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1); }
         .reveal.active { opacity: 1; transform: translateY(0); }
 
-        .floating-heart {
-            position: fixed; color: rgba(255, 106, 0, 0.25); pointer-events: none; 
-            z-index: 1; bottom: -50px; animation: balloonFloatUp linear forwards; filter: blur(1px); 
-        }
+        /* Removemos as estrelas, deixando apenas os corações no modo normal */
+        .floating-element { position: fixed; pointer-events: none; z-index: 1; bottom: -50px; animation: balloonFloatUp linear forwards; color: rgba(255, 106, 0, 0.25); filter: blur(1px); }
+        body.modo-saudade .floating-element { display: none; } /* Esconde no modo saudade */
 
         @keyframes balloonFloatUp {
             0% { transform: translateY(0) translateX(0) scale(1) rotate(0deg); opacity: 0; }
@@ -270,6 +165,68 @@
             90% { opacity: 1; }
             100% { transform: translateY(-120vh) translateX(var(--drift)) scale(1.5) rotate(var(--rotation)); opacity: 0; }
         }
+
+        /* --- BOTÃO FLUTUANTE MODO SAUDADE --- */
+        .saudade-fab {
+            position: fixed; bottom: 30px; right: 20px; width: 60px; height: 60px;
+            border-radius: 50%; background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            display: flex; justify-content: center; align-items: center; font-size: 28px;
+            cursor: pointer; z-index: 10002; box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            opacity: 0; visibility: hidden; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); outline: none;
+        }
+        .saudade-fab.visible { opacity: 1; visibility: visible; }
+        .saudade-fab:hover { transform: scale(1.1); }
+        body.modo-saudade .saudade-fab { border-color: var(--orange-main); box-shadow: 0 0 35px var(--orange-glow); background: rgba(79, 172, 254, 0.25); }
+
+        /* --- DICA DO CORAÇÃO (TIP BUBBLE) --- */
+        #saudade-tip {
+            position: fixed; bottom: 100px; right: 20px;
+            background: rgba(255, 255, 255, 0.05); border: 1px solid var(--orange-glow);
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            color: #ffffff; padding: 12px 18px; border-radius: 15px;
+            font-size: 13px; font-weight: 600; text-align: center;
+            z-index: 10002; box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+            opacity: 0; visibility: hidden; transform: translateY(15px);
+            transition: all 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+            pointer-events: none;
+        }
+        #saudade-tip.visible { opacity: 1; visibility: visible; transform: translateY(0); animation: pulseTip 2s infinite; }
+        @keyframes pulseTip { 0% { box-shadow: 0 0 10px rgba(255,106,0,0); } 50% { box-shadow: 0 0 25px var(--orange-glow); } 100% { box-shadow: 0 0 10px rgba(255,106,0,0); } }
+
+        /* --- O PORTA-RETRATO CINEMATOGRÁFICO --- */
+        #saudade-cinema-overlay {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: 10000; background: rgba(3, 4, 10, 0.5); 
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            opacity: 0; visibility: hidden; transform: scale(1.05); pointer-events: none;
+            transition: opacity 1.2s ease, transform 1.2s ease, visibility 1.2s ease;
+            padding: 20px; padding-bottom: 80px; padding-top: 60px; /* Espaço para o mini-painel e o botão */
+        }
+        
+        body.modo-saudade #saudade-cinema-overlay { opacity: 1; visibility: visible; transform: scale(1); pointer-events: auto; }
+
+        .cinema-wrapper {
+            position: relative; width: 100%; max-width: 360px; aspect-ratio: 4/5;
+            border-radius: 32px; box-shadow: 0 30px 80px rgba(79, 172, 254, 0.4), inset 0 0 0 1px rgba(255,255,255,0.15);
+            overflow: hidden; animation: floatCinema 6s ease-in-out infinite;
+        }
+
+        @keyframes floatCinema { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+
+        #saudade-video-immersive { width: 100%; height: 100%; object-fit: cover; }
+
+        #saudade-text-overlay {
+            position: relative; z-index: 10001; width: 90%; max-width: 400px;
+            padding: 25px 20px; text-align: center;
+            background: rgba(255,255,255,0.05); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+            border-radius: 24px; border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6); margin-top: -40px; 
+            opacity: 0; transform: translateY(30px); transition: all 1s ease 0.8s; pointer-events: none;
+        }
+        body.modo-saudade #saudade-text-overlay { opacity: 1; transform: translateY(0); }
+        #saudade-text-overlay h3 { font-family: 'Dancing Script', cursive; font-size: 34px; color: var(--orange-main); margin-bottom: 10px; text-shadow: 0 2px 5px rgba(0,0,0,0.5); }
+        #saudade-text-overlay p { font-size: 14px; line-height: 1.6; color: #f0f0f0; font-weight: 300; }
     </style>
 </head>
 <body>
@@ -277,6 +234,27 @@
     <audio id="bg-music" loop>
         <source src="musica.mp3" type="audio/mpeg">
     </audio>
+    <audio id="saudade-music" loop>
+        <source src="musica-saudade.mp3" type="audio/mpeg">
+    </audio>
+
+    <div id="saudade-cinema-overlay">
+        <div class="cinema-wrapper">
+            <video loop muted playsinline id="saudade-video-immersive">
+                <source src="video-saudade.mp4" type="video/mp4">
+            </video>
+        </div>
+        <div id="saudade-text-overlay">
+            <h3>Sinta o meu abraço</h3>
+            <p>Meu amor, minha namorada. Sempre que a saudade apertar, lembre-se que eu estou exatamente aqui. Feche os olhos, ouça a música e sinta que nada no mundo pode diminuir o que sentimos um pelo outro. Te amo!</p>
+        </div>
+    </div>
+
+    <div id="saudade-tip">Bateu a saudade? Clique no 🧡</div>
+
+    <button id="saudade-float-btn" class="saudade-fab" title="Ativar Modo Saudade">
+        <span id="saudade-fab-icon">🧡</span>
+    </button>
 
     <div id="screen-1" class="screen intro-bg">
         <div class="card-container">
@@ -285,7 +263,6 @@
             <button class="btn" onclick="nextScreen('screen-1', 'screen-2')">Acessar Agora</button>
         </div>
     </div>
-
     <div id="screen-2" class="screen intro-bg hidden" style="display: none;">
         <div class="card-container">
             <h2 style="font-size: 28px; margin-bottom: 10px; color: var(--orange-main);">Acesso Restrito</h2>
@@ -295,7 +272,6 @@
             <button class="btn" onclick="checkPassword()">Desbloquear</button>
         </div>
     </div>
-
     <div id="screen-3" class="screen intro-bg hidden" style="display: none;">
         <div class="card-container">
             <h2 style="font-size: 32px; margin-bottom: 20px; color: var(--orange-light);">Ajuste o Som 🔊</h2>
@@ -303,7 +279,6 @@
             <button class="btn" onclick="playMusicAndShowLetter()">Dar o Play ▶</button>
         </div>
     </div>
-
     <div id="screen-4" class="screen intro-bg hidden" style="display: none;">
         <div class="letter-container">
             <h2 style="font-size: 32px; margin-bottom: 20px; color: var(--orange-light); font-family: 'Dancing Script', cursive;">Thayna, meu amor!</h2>
@@ -316,14 +291,40 @@
         </div>
     </div>
 
-    <div id="main-content"></div>
+    <div id="main-content">
+        
+        <div id="mini-header" class="mini-header">
+            <div class="mini-stat"><span>🤝</span> <b id="mini-amizade">-</b></div>
+            <div class="mini-stat"><span>✨</span> <b id="mini-encontro">-</b></div>
+            <div class="mini-stat"><span>💌</span> <b id="mini-euteamo">-</b></div>
+            <div class="mini-stat" style="color: var(--orange-main);"><span>💍</span> <b id="mini-namoro">-</b></div>
+        </div>
+
+        <div class="diary-header reveal" id="big-header">
+            <h2 style="color: var(--orange-main); font-family: 'Dancing Script', cursive; font-size: 42px; text-shadow: 0 0 20px rgba(255,106,0,0.3); transition: color 1s ease;">Baú de Memórias</h2>
+            <div class="counters-grid">
+                <div class="counter-card"><div class="counter-icon">🤝</div><div class="counter-title">Nossa Amizade</div><div id="count-amizade" class="counter-value">-</div><div class="counter-sub">Dias Atrás</div></div>
+                <div class="counter-card"><div class="counter-icon">✨</div><div class="counter-title">1º Encontro</div><div id="count-encontro" class="counter-value">-</div><div class="counter-sub">Dias Atrás</div></div>
+                <div class="counter-card"><div class="counter-icon">💌</div><div class="counter-title">1º "Eu te Amo"</div><div id="count-euteamo" class="counter-value">-</div><div class="counter-sub">Dias Atrás</div></div>
+                <div class="counter-card card-namoro"><div class="counter-icon">💍</div><div class="counter-title">Nosso Namoro</div><div id="count-namoro" class="counter-value">-</div><div class="counter-sub">Oficialmente</div></div>
+            </div>
+        </div>
+        
+        <div class="timeline" id="timeline-container">
+            </div>
+
+        <div class="final-section reveal">
+            <h1 style="color: var(--orange-light); font-size: 36px; margin-bottom: 30px; transition: color 1s ease;">Continua...</h1>
+            <div class="final-content">
+                <p>Sei que palavras nunca conseguem traduzir completamente aquilo que o coração sente, mas espero que cada momento desta carta consiga mostrar um pouco do quanto você é importante para mim. Obrigado por trazer tanta luz, carinho e significado para os meus dias. Estar ao seu lado é um presente que eu valorizo profundamente. Que a nossa história continue sendo escrita com leveza, companheirismo, sorrisos e muito amor. E que cada novo capítulo seja ainda mais bonito do que o anterior.<br><br>Eu te amo muito!</p>
+            </div>
+            <p style="font-family: 'Dancing Script', cursive; font-size: 45px; color: var(--orange-main); margin-top: 30px; margin-bottom: 40px; transition: color 1s ease;">Lucas Fonseca</p>
+        </div>
+    </div>
 
     <script>
         const SENHA_CORRETA = "tivoli"; 
         
-        // ==========================================
-        // DATAS DOS 4 MOMENTOS IMPORTANTES
-        // ==========================================
         const D1_AMIZADE = new Date("2025-11-02T00:00:00");
         const D2_ENCONTRO = new Date("2026-01-10T00:00:00");
         const D3_EU_TE_AMO = new Date("2026-01-18T00:00:00");
@@ -372,53 +373,8 @@
         ];
 
         function gerarTimeline() {
-            const container = document.getElementById('main-content');
-            
-            // --- O MINI-PAINEL INTELIGENTE (ESCONDIDO) ---
-            let htmlHTML = `
-                <div id="mini-header" class="mini-header">
-                    <div class="mini-stat"><span>🤝</span> <b id="mini-amizade">-</b></div>
-                    <div class="mini-stat"><span>✨</span> <b id="mini-encontro">-</b></div>
-                    <div class="mini-stat"><span>💌</span> <b id="mini-euteamo">-</b></div>
-                    <div class="mini-stat" style="color: var(--orange-main);"><span>💍</span> <b id="mini-namoro">-</b></div>
-                </div>
-            `;
-
-            // --- O CABEÇALHO GRANDE ---
-            htmlHTML += `
-                <div class="diary-header reveal" id="big-header">
-                    <h2 style="color: var(--orange-main); font-family: 'Dancing Script', cursive; font-size: 42px; text-shadow: 0 0 20px rgba(255,106,0,0.3);">Baú de Memórias</h2>
-                    
-                    <div class="counters-grid">
-                        <div class="counter-card">
-                            <div class="counter-icon">🤝</div>
-                            <div class="counter-title">Nossa Amizade</div>
-                            <div id="count-amizade" class="counter-value">-</div>
-                            <div class="counter-sub">Dias Atrás</div>
-                        </div>
-                        <div class="counter-card">
-                            <div class="counter-icon">✨</div>
-                            <div class="counter-title">1º Encontro</div>
-                            <div id="count-encontro" class="counter-value">-</div>
-                            <div class="counter-sub">Dias Atrás</div>
-                        </div>
-                        <div class="counter-card">
-                            <div class="counter-icon">💌</div>
-                            <div class="counter-title">1º "Eu te Amo"</div>
-                            <div id="count-euteamo" class="counter-value">-</div>
-                            <div class="counter-sub">Dias Atrás</div>
-                        </div>
-                        <div class="counter-card card-namoro">
-                            <div class="counter-icon">💍</div>
-                            <div class="counter-title">Nosso Namoro</div>
-                            <div id="count-namoro" class="counter-value">-</div>
-                            <div class="counter-sub">Oficialmente</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="timeline">
-            `;
-
+            const container = document.getElementById('timeline-container');
+            let htmlHTML = "";
             let dataAnterior = "";
 
             listaDeFotos.forEach((foto) => {
@@ -428,200 +384,124 @@
                     dataAnterior = foto.label;
                 }
                 let tituloHTML = foto.titulo ? `<h3>${foto.titulo}</h3>` : ``;
-
-                htmlHTML += `
-                    <div class="timeline-item reveal">
-                        <div class="timeline-dot"></div>
-                        ${mostraDataHTML}
-                        <div class="memory-card">
-                            <img src="${foto.arquivo}" alt="Memória">
-                            <div class="memory-glass">
-                                ${tituloHTML}
-                                <p>${foto.legenda}</p>
-                            </div>
-                        </div>
-                    </div>
-                `;
+                htmlHTML += `<div class="timeline-item reveal"><div class="timeline-dot"></div>${mostraDataHTML}<div class="memory-card"><img src="${foto.arquivo}" alt="Memória"><div class="memory-glass">${tituloHTML}<p>${foto.legenda}</p></div></div></div>`;
             });
 
-            htmlHTML += `</div>`; 
-
-            // --- SESSÃO FINAL ---
-            htmlHTML += `
-                <div class="final-section reveal">
-                    <h1 style="color: var(--orange-light); font-size: 36px; margin-bottom: 30px;">Continua...</h1>
-                    
-                    <div class="final-content">
-                        <p>
-                            Sei que palavras nunca conseguem traduzir completamente aquilo que o coração sente, mas espero que cada momento desta carta consiga mostrar um pouco do quanto você é importante para mim. Obrigado por trazer tanta luz, carinho e significado para os meus dias. Estar ao seu lado é um presente que eu valorizo profundamente. Que a nossa história continue sendo escrita com leveza, companheirismo, sorrisos e muito amor. E que cada novo capítulo seja ainda mais bonito do que o anterior.<br><br>Eu te amo muito!
-                        </p>
-                    </div>
-
-                    <p style="font-family: 'Dancing Script', cursive; font-size: 45px; color: var(--orange-main); margin-top: 30px; margin-bottom: 40px;">
-                        Lucas Fonseca
-                    </p>
-                </div>
-            `;
-
             container.innerHTML = htmlHTML;
+            setupSaudadeFloatButton();
+        }
+
+        function setupSaudadeFloatButton() {
+            const btn = document.getElementById('saudade-float-btn');
+            const icon = document.getElementById('saudade-fab-icon');
+            const tip = document.getElementById('saudade-tip');
+            const bgMusic = document.getElementById('bg-music');
+            const saudadeMusic = document.getElementById('saudade-music');
+            const immersiveVideo = document.getElementById('saudade-video-immersive');
+            let isSaudade = false;
+
+            btn.addEventListener('click', function() {
+                isSaudade = !isSaudade;
+                
+                // Esconde a dica permanentemente assim que clicar
+                tip.classList.remove('visible');
+
+                if(isSaudade) {
+                    // ATIVA MODO SAUDADE
+                    document.body.classList.add('modo-saudade');
+                    icon.innerHTML = '💙'; btn.title = "Voltar ao Diário";
+                    
+                    bgMusic.pause();
+                    saudadeMusic.play().catch(err => console.log("Erro áudio:", err));
+                    immersiveVideo.play().catch(err => console.log("Erro vídeo:", err));
+
+                    // Bloqueia rolagem do fundo para focar no vídeo e no mini painel
+                    document.documentElement.style.overflow = 'hidden'; 
+                } else {
+                    // VOLTA AO MODO NORMAL
+                    document.body.classList.remove('modo-saudade');
+                    icon.innerHTML = '🧡'; btn.title = "Ativar Modo Saudade";
+                    
+                    saudadeMusic.pause();
+                    bgMusic.play().catch(err => console.log("Erro áudio:", err));
+                    immersiveVideo.pause();
+
+                    document.documentElement.style.overflow = '';
+                }
+            });
         }
 
         gerarTimeline();
 
-        // ==========================================
-        // LÓGICA MATEMÁTICA DOS CONTADORES (GRANDES E MINIS)
-        // ==========================================
         function calcTimeDiff(startDate) {
             const now = new Date();
-            if (now < startDate) return { totalMonths: 0, days: 0, hours: 0 };
-            
-            let years = now.getFullYear() - startDate.getFullYear();
-            let months = now.getMonth() - startDate.getMonth();
-            let days = now.getDate() - startDate.getDate();
-            let hours = now.getHours() - startDate.getHours();
-
+            if (now < startDate) return { totalMonths: 0, days: 0, hours: 0, totalDays: 0 };
+            let years = now.getFullYear() - startDate.getFullYear(), months = now.getMonth() - startDate.getMonth(), days = now.getDate() - startDate.getDate(), hours = now.getHours() - startDate.getHours();
             if (hours < 0) { hours += 24; days--; }
-            if (days < 0) {
-                let prevMonth = new Date(now.getFullYear(), now.getMonth(), 0);
-                days += prevMonth.getDate(); months--;
-            }
+            if (days < 0) { let prevMonth = new Date(now.getFullYear(), now.getMonth(), 0); days += prevMonth.getDate(); months--; }
             if (months < 0) { months += 12; years--; }
-
-            let totalMonths = (years * 12) + months;
-            
-            let diffTime = Math.abs(now - startDate);
-            let totalDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-
-            return { totalMonths, days, hours, totalDays };
+            return { totalMonths: (years * 12) + months, days, hours, totalDays: Math.floor(Math.abs(now - startDate) / 86400000) };
         }
 
         function updateAllCounters() {
-            let c1 = calcTimeDiff(D1_AMIZADE);
+            let c1 = calcTimeDiff(D1_AMIZADE), c2 = calcTimeDiff(D2_ENCONTRO), c3 = calcTimeDiff(D3_EU_TE_AMO), c4 = calcTimeDiff(D4_NAMORO);
             if(document.getElementById("count-amizade")) document.getElementById("count-amizade").innerHTML = c1.totalDays;
             if(document.getElementById("mini-amizade")) document.getElementById("mini-amizade").innerHTML = c1.totalDays + "d";
-
-            let c2 = calcTimeDiff(D2_ENCONTRO);
             if(document.getElementById("count-encontro")) document.getElementById("count-encontro").innerHTML = c2.totalDays;
             if(document.getElementById("mini-encontro")) document.getElementById("mini-encontro").innerHTML = c2.totalDays + "d";
-
-            let c3 = calcTimeDiff(D3_EU_TE_AMO);
             if(document.getElementById("count-euteamo")) document.getElementById("count-euteamo").innerHTML = c3.totalDays;
             if(document.getElementById("mini-euteamo")) document.getElementById("mini-euteamo").innerHTML = c3.totalDays + "d";
-
-            let c4 = calcTimeDiff(D4_NAMORO);
-            if(document.getElementById("count-namoro")) {
-                let htmlNamoro = "";
-                if(c4.totalMonths > 0) { htmlNamoro += `${c4.totalMonths}M e `; }
-                htmlNamoro += `${c4.days}D`;
-                document.getElementById("count-namoro").innerHTML = htmlNamoro;
-            }
-            if(document.getElementById("mini-namoro")) {
-                let htmlMini = "";
-                if(c4.totalMonths > 0) { htmlMini += `${c4.totalMonths}M `; }
-                htmlMini += `${c4.days}d`;
-                document.getElementById("mini-namoro").innerHTML = htmlMini;
-            }
+            if(document.getElementById("count-namoro")) { document.getElementById("count-namoro").innerHTML = (c4.totalMonths > 0 ? c4.totalMonths + "M e " : "") + c4.days + "D"; }
+            if(document.getElementById("mini-namoro")) { document.getElementById("mini-namoro").innerHTML = (c4.totalMonths > 0 ? c4.totalMonths + "M " : "") + c4.days + "d"; }
         }
-        
-        setInterval(updateAllCounters, 1000);
-        updateAllCounters(); 
+        setInterval(updateAllCounters, 1000); updateAllCounters(); 
 
-        // ==========================================
-        // ANIMAÇÕES E FLUXO GERAL
-        // ==========================================
-        function startHeartBalloons() {
-            setInterval(createHeartBalloon, 1200); 
-            for(let i = 0; i < 4; i++) { setTimeout(createHeartBalloon, i * 400); }
-        }
-
+        function startHeartBalloons() { setInterval(createHeartBalloon, 1200); for(let i = 0; i < 4; i++) { setTimeout(createHeartBalloon, i * 400); } }
         function createHeartBalloon() {
-            const heart = document.createElement('div');
-            heart.classList.add('floating-heart');
-            heart.innerHTML = '&#x2665;&#xFE0E;'; 
-            const startX = Math.random() * 95; 
-            const drift = (Math.random() - 0.5) * 150; 
-            const rotation = (Math.random() - 0.5) * 60; 
-            const duration = Math.random() * 10 + 15; 
-            const size = Math.random() * 30 + 15;
-            heart.style.left = `${startX}vw`;
-            heart.style.fontSize = `${size}px`;
-            heart.style.setProperty('--drift', `${drift}px`);
-            heart.style.setProperty('--rotation', `${rotation}deg`);
-            heart.style.animationDuration = `${duration}s`;
-            document.body.appendChild(heart);
-            setTimeout(() => { heart.remove(); }, duration * 1000);
+            const isSaudade = document.body.classList.contains('modo-saudade');
+            if (isSaudade) return; // SEM ESTRELAS NO MODO SAUDADE
+
+            const el = document.createElement('div'); el.classList.add('floating-element');
+            el.innerHTML = '&#x2665;&#xFE0E;'; el.classList.add('heart-style'); 
+            el.style.left = `${Math.random() * 95}vw`; el.style.fontSize = `${Math.random() * 25 + 15}px`;
+            el.style.setProperty('--drift', `${(Math.random() - 0.5) * 150}px`); el.style.setProperty('--rotation', `${(Math.random() - 0.5) * 60}deg`);
+            const duration = Math.random() * 10 + 15; el.style.animationDuration = `${duration}s`;
+            document.body.appendChild(el); setTimeout(() => { el.remove(); }, duration * 1000);
         }
 
         function nextScreen(hideId, showId) {
             document.getElementById(hideId).classList.add('hidden');
             setTimeout(() => {
                 document.getElementById(hideId).style.display = 'none';
-                const showEl = document.getElementById(showId);
-                showEl.style.display = 'flex';
+                const showEl = document.getElementById(showId); showEl.style.display = 'flex';
                 setTimeout(() => showEl.classList.remove('hidden'), 50); 
-                if(showId === 'main-content') {
-                    document.getElementById('main-content').style.display = 'block';
-                    updateScrollState();
-                }
+                if(showId === 'main-content') { document.getElementById('main-content').style.display = 'block'; updateScrollState(); }
             }, 600); 
         }
 
-        function checkPassword() {
-            const input = document.getElementById('secret-code').value.toLowerCase();
-            if (input === SENHA_CORRETA) {
-                document.getElementById('error-msg').style.display = 'none';
-                nextScreen('screen-2', 'screen-3');
-            } else {
-                document.getElementById('error-msg').style.display = 'block';
-            }
-        }
+        function checkPassword() { if (document.getElementById('secret-code').value.toLowerCase() === SENHA_CORRETA) { document.getElementById('error-msg').style.display = 'none'; nextScreen('screen-2', 'screen-3'); } else { document.getElementById('error-msg').style.display = 'block'; } }
+        document.getElementById('secret-code').addEventListener('keypress', function (e) { if (e.key === 'Enter') checkPassword(); });
 
-        document.getElementById('secret-code').addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') checkPassword();
-        });
-
-        function playMusicAndShowLetter() {
-            const bgMusic = document.getElementById('bg-music');
-            bgMusic.play().catch(e => console.log("Áudio pendente:", e)); 
-            startHeartBalloons();
-            nextScreen('screen-3', 'screen-4');
-        }
+        function playMusicAndShowLetter() { document.getElementById('bg-music').play().catch(e => console.log(e)); startHeartBalloons(); nextScreen('screen-3', 'screen-4'); }
 
         function enterWrapped() {
             document.getElementById('screen-4').classList.add('hidden');
             setTimeout(() => {
-                document.getElementById('screen-4').style.display = 'none';
-                const mainContent = document.getElementById('main-content');
-                mainContent.style.display = 'block';
-                window.scrollTo(0, 0); 
-                updateScrollState(); 
+                document.getElementById('screen-4').style.display = 'none'; document.getElementById('main-content').style.display = 'block'; window.scrollTo(0, 0); updateScrollState(); 
+                document.getElementById('saudade-float-btn').classList.add('visible');
+                
+                // Mostra a dica do coração de forma garantida após entrar
+                setTimeout(() => { document.getElementById('saudade-tip').classList.add('visible'); }, 2000);
             }, 600);
         }
 
-        // --- CONTROLE DE ROLAGEM E STICKY DASHBOARD ---
         function updateScrollState() {
-            const reveals = document.querySelectorAll('.reveal');
-            const windowHeight = window.innerHeight;
-            const scrollY = window.scrollY;
-
-            // Animação das fotos
-            reveals.forEach(el => {
-                const rect = el.getBoundingClientRect();
-                if (rect.top < windowHeight * 0.85) { el.classList.add('active'); }
-            });
-
-            // Lógica para mostrar/esconder o Mini Painel
+            const reveals = document.querySelectorAll('.reveal'), windowHeight = window.innerHeight, scrollY = window.scrollY;
+            if(document.body.classList.contains('modo-saudade')) return;
+            reveals.forEach(el => { if (el.getBoundingClientRect().top < windowHeight * 0.85) { el.classList.add('active'); } });
             const miniHeader = document.getElementById('mini-header');
-            if (miniHeader) {
-                // Se o usuário rolou mais de 280px (o tamanho do painel grande), o pequeno desce
-                if (scrollY > 280) {
-                    miniHeader.classList.add('visible');
-                } else {
-                    miniHeader.classList.remove('visible');
-                }
-            }
+            if (miniHeader) { if (scrollY > 320) { miniHeader.classList.add('visible'); } else { miniHeader.classList.remove('visible'); } }
         }
-        
         window.addEventListener('scroll', updateScrollState);
     </script>
 </body>
