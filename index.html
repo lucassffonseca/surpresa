@@ -3,34 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nossos Momentos ❤️</title>
+    <title>Nossos Momentos❤️</title>
+    
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Nosso Diário">
     <link rel="apple-touch-icon" href="icone.png">
     
     <meta name="mobile-web-app-capable" content="yes">
-    <meta name="theme-color" content="#0a0a0a">
+    <meta name="theme-color" content="#050505">
     
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&family=Inter:wght@300;400;600;800&family=Dancing+Script:wght@700&display=swap');
 
         :root {
-            --dark-bg: #0a0a0a; 
+            --dark-bg: #050505; 
             --orange-main: #FF6A00;
             --orange-light: #FF9900;
-            --orange-glow: rgba(255, 106, 0, 0.4);
+            --orange-glow: rgba(255, 106, 0, 0.6);
             --text-main: #ffffff;
             --text-muted: #a0a0a0;
+            
+            /* Cores das luzes líquidas do fundo (Modo Normal) */
+            --ambient-1: rgba(255, 106, 0, 0.3);
+            --ambient-2: rgba(255, 153, 0, 0.2);
             transition: all 1s ease; 
         }
 
-        /* --- TEMA MODO SAUDADE (AZUL MEIA-NOITE) --- */
+        /* --- TEMA MODO SAUDADE --- */
         body.modo-saudade {
-            --dark-bg: #03040a; 
+            --dark-bg: #020308; 
             --orange-main: #4facfe; 
             --orange-light: #A0BFF8; 
-            --orange-glow: rgba(79, 172, 254, 0.5);
+            --orange-glow: rgba(79, 172, 254, 0.6);
+            
+            /* Cores das luzes líquidas do fundo (Modo Saudade) */
+            --ambient-1: rgba(79, 172, 254, 0.25);
+            --ambient-2: rgba(160, 191, 248, 0.15);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -46,14 +55,64 @@
 
         h1, h2, h3 { font-family: 'Montserrat', sans-serif; letter-spacing: -1px; line-height: 1.2; }
 
+        /* ==========================================
+           O FUNDO DE LUZ LÍQUIDA (A MÁGICA REAL)
+           ========================================== */
+        .ambient-background {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .ambient-light {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(90px); 
+            transition: background-color 1.5s ease;
+            animation: liquidFloat 20s infinite alternate ease-in-out;
+        }
+
+        .light-1 {
+            width: 60vw; height: 60vw;
+            background-color: var(--ambient-1);
+            top: -10%; left: -10%;
+        }
+
+        .light-2 {
+            width: 50vw; height: 50vw;
+            background-color: var(--ambient-2);
+            bottom: -10%; right: -10%;
+            animation-delay: -5s;
+            animation-duration: 25s;
+        }
+
+        @keyframes liquidFloat {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(10vw, 15vh) scale(1.2); }
+            100% { transform: translate(-10vw, 5vh) scale(0.9); }
+        }
+
+        /* ==========================================
+           O VIDRO PURO E CRISTALINO (GLASSMORPHISM)
+           ========================================== */
+        .pure-glass {
+            background: rgba(255, 255, 255, 0.03); 
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08); 
+            box-shadow: 0 15px 35px rgba(0,0,0,0.4), inset 0 0 0 1px rgba(255,255,255,0.02);
+            border-radius: 24px;
+        }
+
         /* --- TELAS DE FLUXO --- */
         .screen {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background-color: var(--dark-bg); display: flex; flex-direction: column;
+            display: flex; flex-direction: column;
             justify-content: center; align-items: center; z-index: 9999;
             transition: opacity 0.6s ease, visibility 0.6s; padding: 20px; text-align: center;
         }
-        .intro-bg { background: radial-gradient(circle at top right, var(--orange-glow) 0%, var(--dark-bg) 60%); }
         .hidden { opacity: 0; visibility: hidden; pointer-events: none; }
 
         .btn {
@@ -63,17 +122,18 @@
             font-family: 'Inter', sans-serif; margin-top: 30px; font-weight: 600;
             text-transform: uppercase; letter-spacing: 2px; width: 100%; max-width: 300px;
             box-shadow: 0 10px 30px var(--orange-glow);
+            position: relative; z-index: 10;
         }
         .btn:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 15px 40px var(--orange-glow); }
 
+        .card-container { width: 100%; max-width: 400px; position: relative; z-index: 10; padding: 40px 30px;}
+        
         .letter-container {
-            width: 100%; max-width: 500px; background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            padding: 40px 30px; border-radius: 24px; border: 1px solid rgba(255, 255, 255, 0.05);
-            text-align: left; position: relative; z-index: 10000;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.8); max-height: 85vh; display: flex; flex-direction: column;
+            width: 100%; max-width: 500px; padding: 40px 30px; text-align: left; 
+            max-height: 85vh; display: flex; flex-direction: column; z-index: 10;
         }
-        .letter-content { color: #cccccc; font-size: 16px; line-height: 1.8; margin-bottom: 20px; overflow-y: auto; padding-right: 15px; font-weight: 300; }
+
+        .letter-content { color: #cccccc; font-size: 16px; line-height: 1.8; margin-bottom: 20px; overflow-y: auto; padding-right: 15px; font-weight: 300; position: relative; z-index: 10;}
         .letter-content::-webkit-scrollbar { width: 4px; }
         .letter-content::-webkit-scrollbar-thumb { background: var(--orange-main); border-radius: 4px; }
         .letter-content p { margin-bottom: 15px; }
@@ -82,7 +142,7 @@
             width: 100%; padding: 18px; margin-top: 25px; background-color: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.1); color: white; border-radius: 12px;
             font-size: 20px; text-align: center; outline: none; font-family: 'Inter', sans-serif;
-            transition: all 0.3s; letter-spacing: 2px;
+            transition: all 0.3s; letter-spacing: 2px; position: relative; z-index: 10;
         }
         input[type="password"]:focus { border-color: var(--orange-main); background-color: rgba(255, 255, 255, 0.1); box-shadow: 0 0 20px var(--orange-glow); }
         .error-msg { color: #ff453a; font-size: 14px; margin-top: 15px; display: none; font-weight: 600; }
@@ -93,7 +153,7 @@
             padding-bottom: 100px; position: relative; z-index: 10;
         }
 
-        /* Esfumaça apenas o conteúdo do diário no Modo Saudade, para manter o mini-painel nítido */
+        /* Esfumaça o diário no Modo Saudade */
         #big-header, .timeline, .final-section { transition: filter 1s ease, opacity 1s ease; }
         body.modo-saudade #big-header, 
         body.modo-saudade .timeline, 
@@ -101,41 +161,37 @@
             filter: blur(15px) brightness(0.4); opacity: 0.3; pointer-events: none;
         }
 
-        /* --- MINI-PAINEL FIXO DE VIDRO --- */
+        /* --- MINI-PAINEL FIXO --- */
         .mini-header {
             position: fixed; top: 0; left: 50%; transform: translate(-50%, -100%); width: 100%; max-width: 600px;
-            background: rgba(10, 10, 10, 0.85); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-            border-bottom: 1px solid var(--orange-glow); display: flex; justify-content: space-around;
-            padding: 15px 10px; z-index: 10001; transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), background 1s ease;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            display: flex; justify-content: space-around; padding: 15px 10px; z-index: 10001; 
+            transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), background 1s ease;
+            border-radius: 0 0 24px 24px; border-top: none;
         }
         
-        /* No Modo Saudade, ele é forçado a descer e muda sutilmente a cor para combinar com o vídeo */
-        body.modo-saudade .mini-header { 
-            transform: translate(-50%, 0) !important; 
-            background: rgba(3, 4, 10, 0.85); 
-            border-bottom: 1px solid rgba(79, 172, 254, 0.3);
-        }
+        body.modo-saudade .mini-header { transform: translate(-50%, 0) !important; }
         .mini-header.visible { transform: translate(-50%, 0); }
         .mini-stat { display: flex; align-items: center; gap: 6px; font-family: 'Montserrat', sans-serif; font-size: 15px; font-weight: 700; color: #ffffff; }
 
         .diary-header { padding: 40px 20px 20px; text-align: center; position: relative; }
         .counters-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; padding-bottom: 20px; margin-top: 10px; }
+        
         .counter-card {
-            background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 16px; padding: 15px 10px; backdrop-filter: blur(10px); box-shadow: 0 10px 20px rgba(0,0,0,0.3);
             display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; transition: all 1s ease;
+            padding: 15px 10px;
         }
         .counter-title { font-size: 11px; font-weight: 600; text-transform: uppercase; color: var(--orange-light); letter-spacing: 1px; margin-bottom: 8px; transition: color 1s ease; }
         .counter-value { font-family: 'Montserrat', sans-serif; font-size: 22px; font-weight: 800; line-height: 1.1; }
         .counter-sub { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
-        .card-namoro { background: var(--orange-glow); border-color: var(--orange-main); transition: all 1s ease; }
+        
+        .card-namoro { background: rgba(255, 106, 0, 0.05); border-color: rgba(255, 106, 0, 0.2); transition: all 1s ease; }
+        body.modo-saudade .card-namoro { background: rgba(79, 172, 254, 0.05); border-color: rgba(79, 172, 254, 0.2); }
         .card-namoro .counter-value { color: var(--orange-main); transition: color 1s ease;}
 
         .timeline { position: relative; padding: 0 20px; padding-top: 10px; }
         .timeline::before {
             content: ''; position: absolute; top: 0; left: 35px; height: 100%; width: 2px;
-            background: linear-gradient(to bottom, var(--orange-main), rgba(255, 106, 0, 0.1)); border-radius: 2px; transition: background 1s ease;
+            background: linear-gradient(to bottom, var(--orange-main), transparent); border-radius: 2px; transition: background 1s ease;
         }
         .timeline-item { position: relative; margin-bottom: 60px; padding-left: 45px; transition: all 0.5s ease; }
         .timeline-dot {
@@ -144,60 +200,45 @@
             box-shadow: 0 0 15px var(--orange-main), 0 0 30px var(--orange-main); z-index: 2; transition: all 1s ease;
         }
         .timeline-date { font-family: 'Montserrat', sans-serif; font-size: 20px; color: var(--text-main); margin-bottom: 20px; padding-top: -5px; text-shadow: 0 0 10px rgba(255,255,255,0.2); }
-        .memory-card { position: relative; width: 100%; border-radius: 24px; overflow: hidden; box-shadow: 0 25px 50px rgba(0,0,0,0.5); background: #1a1a1a; }
-        .memory-card img { width: 100%; height: auto; display: block; transition: transform 0.7s ease; }
+        
+        .memory-card {
+            position: relative; width: 100%; overflow: hidden; background: transparent;
+        }
+        .memory-card img { width: 100%; height: auto; display: block; transition: transform 0.7s ease; border-radius: 24px; }
         .timeline-item.active .memory-card img { transform: scale(1.05); }
+        
         .memory-glass {
             position: absolute; bottom: 0; left: 0; width: 100%; padding: 40px 20px 20px;
             background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.5) 60%, transparent 100%); text-align: left;
+            border-radius: 0 0 24px 24px;
         }
         .memory-glass h3 { font-size: 22px; color: var(--orange-light); margin-bottom: 8px; text-shadow: 0 2px 4px rgba(0,0,0,0.8); transition: color 1s ease; }
         .memory-glass p { font-size: 15px; color: #eaeaea; line-height: 1.5; text-shadow: 0 1px 3px rgba(0,0,0,0.8); font-weight: 400; }
 
         .final-section { padding: 80px 30px; text-align: center; position: relative; }
-        .final-content {
-            background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255,255,255,0.05);
-            border-radius: 24px; padding: 40px 25px; backdrop-filter: blur(10px); margin-top: 30px;
-        }
+        .final-content { padding: 40px 25px; margin-top: 30px; }
         .final-content p { font-size: 16px; line-height: 1.8; color: #cccccc; font-weight: 300; }
         .reveal { opacity: 0; transform: translateY(40px); transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1); }
         .reveal.active { opacity: 1; transform: translateY(0); }
 
-        /* Removemos as estrelas, deixando apenas os corações no modo normal */
-        .floating-element { position: fixed; pointer-events: none; z-index: 1; bottom: -50px; animation: balloonFloatUp linear forwards; color: rgba(255, 106, 0, 0.25); filter: blur(1px); }
-        body.modo-saudade .floating-element { display: none; } /* Esconde no modo saudade */
-
-        @keyframes balloonFloatUp {
-            0% { transform: translateY(0) translateX(0) scale(1) rotate(0deg); opacity: 0; }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
-            100% { transform: translateY(-120vh) translateX(var(--drift)) scale(1.5) rotate(var(--rotation)); opacity: 0; }
-        }
-
         /* --- BOTÃO FLUTUANTE MODO SAUDADE --- */
         .saudade-fab {
             position: fixed; bottom: 30px; right: 20px; width: 60px; height: 60px;
-            border-radius: 50%; background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
             display: flex; justify-content: center; align-items: center; font-size: 28px;
-            cursor: pointer; z-index: 10002; box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            cursor: pointer; z-index: 10002; 
             opacity: 0; visibility: hidden; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); outline: none;
         }
         .saudade-fab.visible { opacity: 1; visibility: visible; }
         .saudade-fab:hover { transform: scale(1.1); }
-        body.modo-saudade .saudade-fab { border-color: var(--orange-main); box-shadow: 0 0 35px var(--orange-glow); background: rgba(79, 172, 254, 0.25); }
+        body.modo-saudade .saudade-fab { border-color: rgba(79, 172, 254, 0.3); box-shadow: 0 0 35px var(--orange-glow); }
 
-        /* --- DICA DO CORAÇÃO (TIP BUBBLE) --- */
+        /* --- DICA DO CORAÇÃO --- */
         #saudade-tip {
             position: fixed; bottom: 100px; right: 20px;
-            background: rgba(255, 255, 255, 0.05); border: 1px solid var(--orange-glow);
-            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
             color: #ffffff; padding: 12px 18px; border-radius: 15px;
             font-size: 13px; font-weight: 600; text-align: center;
-            z-index: 10002; box-shadow: 0 8px 20px rgba(0,0,0,0.5);
-            opacity: 0; visibility: hidden; transform: translateY(15px);
-            transition: all 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
-            pointer-events: none;
+            z-index: 10002; opacity: 0; visibility: hidden; transform: translateY(15px);
+            transition: all 0.6s cubic-bezier(0.2, 0.8, 0.2, 1); pointer-events: none;
         }
         #saudade-tip.visible { opacity: 1; visibility: visible; transform: translateY(0); animation: pulseTip 2s infinite; }
         @keyframes pulseTip { 0% { box-shadow: 0 0 10px rgba(255,106,0,0); } 50% { box-shadow: 0 0 25px var(--orange-glow); } 100% { box-shadow: 0 0 10px rgba(255,106,0,0); } }
@@ -209,15 +250,13 @@
             display: flex; flex-direction: column; justify-content: center; align-items: center;
             opacity: 0; visibility: hidden; transform: scale(1.05); pointer-events: none;
             transition: opacity 1.2s ease, transform 1.2s ease, visibility 1.2s ease;
-            padding: 20px; padding-bottom: 80px; padding-top: 60px; /* Espaço para o mini-painel e o botão */
+            padding: 20px; padding-bottom: 80px; padding-top: 60px; 
         }
-        
         body.modo-saudade #saudade-cinema-overlay { opacity: 1; visibility: visible; transform: scale(1); pointer-events: auto; }
 
         .cinema-wrapper {
             position: relative; width: 100%; max-width: 360px; aspect-ratio: 4/5;
-            border-radius: 32px; box-shadow: 0 30px 80px rgba(79, 172, 254, 0.4), inset 0 0 0 1px rgba(255,255,255,0.15);
-            overflow: hidden; animation: floatCinema 6s ease-in-out infinite;
+            border-radius: 32px; overflow: hidden; animation: floatCinema 6s ease-in-out infinite;
         }
 
         @keyframes floatCinema { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
@@ -227,17 +266,31 @@
         #saudade-text-overlay {
             position: relative; z-index: 10001; width: 90%; max-width: 400px;
             padding: 25px 20px; text-align: center;
-            background: rgba(255,255,255,0.05); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
-            border-radius: 24px; border: 1px solid rgba(255,255,255,0.1);
-            box-shadow: 0 20px 50px rgba(0,0,0,0.6); margin-top: -40px; 
+            margin-top: -40px; 
             opacity: 0; transform: translateY(30px); transition: all 1s ease 0.8s; pointer-events: none;
         }
         body.modo-saudade #saudade-text-overlay { opacity: 1; transform: translateY(0); }
         #saudade-text-overlay h3 { font-family: 'Dancing Script', cursive; font-size: 34px; color: var(--orange-main); margin-bottom: 10px; text-shadow: 0 2px 5px rgba(0,0,0,0.5); }
-        #saudade-text-overlay p { font-size: 14px; line-height: 1.6; color: #f0f0f0; font-weight: 300; }
+        #saudade-text-overlay p { font-size: 14px; line-height: 1.6; color: #f0f0f0; font-weight: 300; text-shadow: 0 1px 3px rgba(0,0,0,0.8); }
+
+        /* --- CORAÇÕES FLUTUANTES --- */
+        .floating-element { position: fixed; pointer-events: none; z-index: 1; bottom: -50px; animation: balloonFloatUp linear forwards; color: rgba(255, 106, 0, 0.25); filter: blur(1px); }
+        body.modo-saudade .floating-element { display: none; } 
+
+        @keyframes balloonFloatUp {
+            0% { transform: translateY(0) translateX(0) scale(1) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-120vh) translateX(var(--drift)) scale(1.5) rotate(var(--rotation)); opacity: 0; }
+        }
     </style>
 </head>
 <body>
+
+    <div class="ambient-background">
+        <div class="ambient-light light-1"></div>
+        <div class="ambient-light light-2"></div>
+    </div>
 
     <audio id="bg-music" loop>
         <source src="musica.mp3" type="audio/mpeg">
@@ -247,32 +300,33 @@
     </audio>
 
     <div id="saudade-cinema-overlay">
-        <div class="cinema-wrapper">
+        <div class="cinema-wrapper pure-glass">
             <video loop muted playsinline id="saudade-video-immersive">
                 <source src="video-saudade.mp4" type="video/mp4">
             </video>
         </div>
-        <div id="saudade-text-overlay">
+        <div id="saudade-text-overlay" class="pure-glass">
             <h3>Sinta o meu abraço</h3>
             <p>Meu amor, minha namorada. Sempre que a saudade apertar, lembre-se que eu estou exatamente aqui. Feche os olhos, ouça a música e sinta que nada no mundo pode diminuir o que sentimos um pelo outro. Te amo!</p>
         </div>
     </div>
 
-    <div id="saudade-tip">Deu saudade? Clique no 🧡</div>
+    <div id="saudade-tip" class="pure-glass">Deu saudade? Clique no 🧡</div>
 
-    <button id="saudade-float-btn" class="saudade-fab" title="Ativar Modo Saudade">
+    <button id="saudade-float-btn" class="saudade-fab pure-glass" title="Ativar Modo Saudade">
         <span id="saudade-fab-icon">🧡</span>
     </button>
 
-    <div id="screen-1" class="screen intro-bg">
-        <div class="card-container">
+    <div id="screen-1" class="screen">
+        <div class="card-container pure-glass">
             <h1 style="font-size: 42px; margin-bottom: 10px; color: var(--orange-main);">Nossos momentos</h1>
             <p style="color: var(--text-muted); font-size: 16px; margin-bottom: 40px;">Amor, preparei uma pequena surpresa pra você!</p>
             <button class="btn" onclick="nextScreen('screen-1', 'screen-2')">Acessar Agora</button>
         </div>
     </div>
-    <div id="screen-2" class="screen intro-bg hidden" style="display: none;">
-        <div class="card-container">
+
+    <div id="screen-2" class="screen hidden" style="display: none;">
+        <div class="card-container pure-glass">
             <h2 style="font-size: 28px; margin-bottom: 10px; color: var(--orange-main);">Acesso Restrito</h2>
             <p style="color: var(--text-muted); font-size: 14px;">Qual é o nosso código secreto?</p>
             <input type="password" id="secret-code" placeholder="****">
@@ -280,15 +334,17 @@
             <button class="btn" onclick="checkPassword()">Desbloquear</button>
         </div>
     </div>
-    <div id="screen-3" class="screen intro-bg hidden" style="display: none;">
-        <div class="card-container">
+
+    <div id="screen-3" class="screen hidden" style="display: none;">
+        <div class="card-container pure-glass">
             <h2 style="font-size: 32px; margin-bottom: 20px; color: var(--orange-light);">Ajuste o Som 🔊</h2>
             <p style="color: var(--text-muted); font-size: 16px; margin-bottom: 30px; line-height: 1.6;">Acesso Liberado! ✨<br>Aumente o volume do seu celular para a experiência completa.</p>
             <button class="btn" onclick="playMusicAndShowLetter()">Dar o Play ▶</button>
         </div>
     </div>
-    <div id="screen-4" class="screen intro-bg hidden" style="display: none;">
-        <div class="letter-container">
+
+    <div id="screen-4" class="screen hidden" style="display: none;">
+        <div class="letter-container pure-glass">
             <h2 style="font-size: 32px; margin-bottom: 20px; color: var(--orange-light); font-family: 'Dancing Script', cursive;">Thayna, meu amor!</h2>
             <div class="letter-content">
                 <p>Existem pessoas que entram na nossa vida e, de alguma forma inexplicável, fazem tudo parecer mais leve, mais bonito e mais cheio de sentido. Você é assim para mim. Desde que nossos caminhos se cruzaram, meus dias ganharam mais cor, mais calma e um motivo a mais para sorrir. Essa carta é apenas uma pequena forma de expressar o quanto você é especial para mim e o quanto sou grato por ter você ao meu lado. Que possamos continuar construindo momentos lindos, colecionando sorrisos e escrevendo juntos uma história cheia de carinho, cumplicidade e amor. Cada segundo com você é um presente.</p>
@@ -301,7 +357,7 @@
 
     <div id="main-content">
         
-        <div id="mini-header" class="mini-header">
+        <div id="mini-header" class="mini-header pure-glass">
             <div class="mini-stat"><span>🤝</span> <b id="mini-amizade">-</b></div>
             <div class="mini-stat"><span>✨</span> <b id="mini-encontro">-</b></div>
             <div class="mini-stat"><span>💌</span> <b id="mini-euteamo">-</b></div>
@@ -311,10 +367,10 @@
         <div class="diary-header reveal" id="big-header">
             <h2 style="color: var(--orange-main); font-family: 'Dancing Script', cursive; font-size: 42px; text-shadow: 0 0 20px rgba(255,106,0,0.3); transition: color 1s ease;">Baú de Memórias</h2>
             <div class="counters-grid">
-                <div class="counter-card"><div class="counter-icon">🤝</div><div class="counter-title">Nossa Amizade</div><div id="count-amizade" class="counter-value">-</div><div class="counter-sub">Dias Atrás</div></div>
-                <div class="counter-card"><div class="counter-icon">✨</div><div class="counter-title">1º Encontro</div><div id="count-encontro" class="counter-value">-</div><div class="counter-sub">Dias Atrás</div></div>
-                <div class="counter-card"><div class="counter-icon">💌</div><div class="counter-title">1º "Eu te Amo"</div><div id="count-euteamo" class="counter-value">-</div><div class="counter-sub">Dias Atrás</div></div>
-                <div class="counter-card card-namoro"><div class="counter-icon">💍</div><div class="counter-title">Nosso Namoro</div><div id="count-namoro" class="counter-value">-</div><div class="counter-sub">Oficialmente</div></div>
+                <div class="counter-card pure-glass"><div class="counter-icon">🤝</div><div class="counter-title">Nossa Amizade</div><div id="count-amizade" class="counter-value">-</div><div class="counter-sub">Dias Atrás</div></div>
+                <div class="counter-card pure-glass"><div class="counter-icon">✨</div><div class="counter-title">1º Encontro</div><div id="count-encontro" class="counter-value">-</div><div class="counter-sub">Dias Atrás</div></div>
+                <div class="counter-card pure-glass"><div class="counter-icon">💌</div><div class="counter-title">1º "Eu te Amo"</div><div id="count-euteamo" class="counter-value">-</div><div class="counter-sub">Dias Atrás</div></div>
+                <div class="counter-card card-namoro pure-glass"><div class="counter-icon">💍</div><div class="counter-title">Nosso Namoro</div><div id="count-namoro" class="counter-value">-</div><div class="counter-sub">Oficialmente</div></div>
             </div>
         </div>
         
@@ -323,7 +379,7 @@
 
         <div class="final-section reveal">
             <h1 style="color: var(--orange-light); font-size: 36px; margin-bottom: 30px; transition: color 1s ease;">Continua...</h1>
-            <div class="final-content">
+            <div class="final-content pure-glass">
                 <p>Sei que palavras nunca conseguem traduzir completamente aquilo que o coração sente, mas espero que cada momento desta carta consiga mostrar um pouco do quanto você é importante para mim. Obrigado por trazer tanta luz, carinho e significado para os meus dias. Estar ao seu lado é um presente que eu valorizo profundamente. Que a nossa história continue sendo escrita com leveza, companheirismo, sorrisos e muito amor. E que cada novo capítulo seja ainda mais bonito do que o anterior.<br><br>Eu te amo muito!</p>
             </div>
             <p style="font-family: 'Dancing Script', cursive; font-size: 45px; color: var(--orange-main); margin-top: 30px; margin-bottom: 40px; transition: color 1s ease;">Lucas Fonseca</p>
@@ -392,7 +448,7 @@
                     dataAnterior = foto.label;
                 }
                 let tituloHTML = foto.titulo ? `<h3>${foto.titulo}</h3>` : ``;
-                htmlHTML += `<div class="timeline-item reveal"><div class="timeline-dot"></div>${mostraDataHTML}<div class="memory-card"><img src="${foto.arquivo}" alt="Memória"><div class="memory-glass">${tituloHTML}<p>${foto.legenda}</p></div></div></div>`;
+                htmlHTML += `<div class="timeline-item reveal"><div class="timeline-dot"></div>${mostraDataHTML}<div class="memory-card pure-glass" style="padding:0; border-radius:24px;"><img src="${foto.arquivo}" alt="Memória" style="border-radius:24px;"><div class="memory-glass">${tituloHTML}<p>${foto.legenda}</p></div></div></div>`;
             });
 
             container.innerHTML = htmlHTML;
@@ -411,11 +467,9 @@
             btn.addEventListener('click', function() {
                 isSaudade = !isSaudade;
                 
-                // Esconde a dica permanentemente assim que clicar
                 tip.classList.remove('visible');
 
                 if(isSaudade) {
-                    // ATIVA MODO SAUDADE
                     document.body.classList.add('modo-saudade');
                     icon.innerHTML = '💙'; btn.title = "Voltar ao Diário";
                     
@@ -423,10 +477,8 @@
                     saudadeMusic.play().catch(err => console.log("Erro áudio:", err));
                     immersiveVideo.play().catch(err => console.log("Erro vídeo:", err));
 
-                    // Bloqueia rolagem do fundo para focar no vídeo e no mini painel
                     document.documentElement.style.overflow = 'hidden'; 
                 } else {
-                    // VOLTA AO MODO NORMAL
                     document.body.classList.remove('modo-saudade');
                     icon.innerHTML = '🧡'; btn.title = "Ativar Modo Saudade";
                     
@@ -467,10 +519,10 @@
         function startHeartBalloons() { setInterval(createHeartBalloon, 1200); for(let i = 0; i < 4; i++) { setTimeout(createHeartBalloon, i * 400); } }
         function createHeartBalloon() {
             const isSaudade = document.body.classList.contains('modo-saudade');
-            if (isSaudade) return; // SEM ESTRELAS NO MODO SAUDADE
+            if (isSaudade) return;
 
             const el = document.createElement('div'); el.classList.add('floating-element');
-            el.innerHTML = '&#x2665;&#xFE0E;'; el.classList.add('heart-style'); 
+            el.innerHTML = '&#x2665;&#xFE0E;'; 
             el.style.left = `${Math.random() * 95}vw`; el.style.fontSize = `${Math.random() * 25 + 15}px`;
             el.style.setProperty('--drift', `${(Math.random() - 0.5) * 150}px`); el.style.setProperty('--rotation', `${(Math.random() - 0.5) * 60}deg`);
             const duration = Math.random() * 10 + 15; el.style.animationDuration = `${duration}s`;
@@ -498,7 +550,6 @@
                 document.getElementById('screen-4').style.display = 'none'; document.getElementById('main-content').style.display = 'block'; window.scrollTo(0, 0); updateScrollState(); 
                 document.getElementById('saudade-float-btn').classList.add('visible');
                 
-                // Mostra a dica do coração de forma garantida após entrar
                 setTimeout(() => { document.getElementById('saudade-tip').classList.add('visible'); }, 2000);
             }, 600);
         }
