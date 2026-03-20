@@ -4,6 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nossos Momentos ❤️</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Nosso Diário">
+    <link rel="apple-touch-icon" href="icone.png">
+    
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#0a0a0a">
+    
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&family=Inter:wght@300;400;600;800&family=Dancing+Script:wght@700&display=swap');
 
@@ -227,6 +235,56 @@
         body.modo-saudade #saudade-text-overlay { opacity: 1; transform: translateY(0); }
         #saudade-text-overlay h3 { font-family: 'Dancing Script', cursive; font-size: 34px; color: var(--orange-main); margin-bottom: 10px; text-shadow: 0 2px 5px rgba(0,0,0,0.5); }
         #saudade-text-overlay p { font-size: 14px; line-height: 1.6; color: #f0f0f0; font-weight: 300; }
+        
+        /* --- AVISO INTELIGENTE DE INSTALAÇÃO (iOS) --- */
+        #ios-install-prompt {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            width: 90%;
+            max-width: 350px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 106, 0, 0.4);
+            border-radius: 16px;
+            padding: 15px;
+            color: #fff;
+            text-align: center;
+            z-index: 10005;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        #ios-install-prompt.visible {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* A setinha apontando para baixo (para o botão de compartilhar do Safari) */
+        #ios-install-prompt::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 10px 10px 0;
+            border-style: solid;
+            border-color: rgba(255, 255, 255, 0.1) transparent transparent transparent;
+            display: block;
+            width: 0;
+        }
+
+        .install-title { font-weight: 700; color: var(--orange-main); margin-bottom: 5px; font-size: 15px; }
+        .install-text { font-size: 13px; line-height: 1.4; color: #e0e0e0; }
+        .install-close {
+            position: absolute; top: 5px; right: 10px; font-size: 18px; color: #888;
+            cursor: pointer; background: none; border: none; padding: 5px;
+        }
     </style>
 </head>
 <body>
@@ -237,6 +295,14 @@
     <audio id="saudade-music" loop>
         <source src="musica-saudade.mp3" type="audio/mpeg">
     </audio>
+
+    <div id="ios-install-prompt">
+        <button class="install-close" onclick="fecharAvisoInstalacao()">&times;</button>
+        <div class="install-title">Instale nosso Diário 📱</div>
+        <div class="install-text">
+            Toque no botão <b>Compartilhar</b> (o quadrado com a setinha para cima aqui embaixo) e depois em <b>"Adicionar à Tela de Início"</b> para guardar nosso app para sempre.
+        </div>
+    </div>
 
     <div id="saudade-cinema-overlay">
         <div class="cinema-wrapper">
@@ -250,7 +316,7 @@
         </div>
     </div>
 
-    <div id="saudade-tip">Bateu a saudade? Clique no 🧡</div>
+    <div id="saudade-tip">Deu saudade? Clique no 🧡</div>
 
     <button id="saudade-float-btn" class="saudade-fab" title="Ativar Modo Saudade">
         <span id="saudade-fab-icon">🧡</span>
@@ -503,6 +569,36 @@
             if (miniHeader) { if (scrollY > 320) { miniHeader.classList.add('visible'); } else { miniHeader.classList.remove('visible'); } }
         }
         window.addEventListener('scroll', updateScrollState);
+
+        // ==========================================
+        // DETECTOR DE IPHONE PARA INSTALAÇÃO (PWA)
+        // ==========================================
+        function checarInstalacao() {
+            // Verifica se é um dispositivo iOS (iPhone, iPad, iPod)
+            const isIos = () => {
+                const userAgent = window.navigator.userAgent.toLowerCase();
+                return /iphone|ipad|ipod/.test(userAgent);
+            };
+            
+            // Verifica se o site já está rodando como um App Nativo (Standalone)
+            const isStandalone = () => window.navigator.standalone === true;
+
+            // Se for iPhone e AINDA NÃO estiver instalado, mostra o aviso
+            if (isIos() && !isStandalone()) {
+                // Dá um tempinho (2 segundos) após abrir o link para a bolha subir
+                setTimeout(() => {
+                    document.getElementById('ios-install-prompt').classList.add('visible');
+                }, 2000);
+            }
+        }
+
+        function fecharAvisoInstalacao() {
+            document.getElementById('ios-install-prompt').classList.remove('visible');
+        }
+
+        // Executa a checagem assim que a tela abre
+        checarInstalacao();
+
     </script>
 </body>
 </html>
