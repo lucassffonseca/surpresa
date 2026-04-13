@@ -14,6 +14,7 @@
             --dark-bg: #050505; 
             --orange-main: #FF6A00;
             --orange-light: #FF9900;
+            --gold-ribbon: #FFD700;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -42,19 +43,94 @@
             100% { transform: translate(5vw, 10vh) scale(1.1); }
         }
 
-        /* --- CARTÃO --- */
+        /* ==========================================
+           TELA DA CAIXA DE PRESENTE (NOVA!)
+           ========================================== */
+        #gift-screen {
+            position: fixed; inset: 0; z-index: 50000;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            background-color: var(--dark-bg);
+            transition: opacity 1s ease, visibility 1s;
+        }
+
+        .gift-container {
+            position: relative;
+            cursor: pointer;
+            animation: floatGift 3s ease-in-out infinite;
+            display: flex; flex-direction: column; align-items: center;
+        }
+
+        @keyframes floatGift { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+
+        /* Corpo da caixa */
+        .gift-box-body {
+            width: 160px; height: 130px;
+            background: linear-gradient(135deg, #e65c00, #ff7a1a);
+            border-radius: 5px 5px 15px 15px;
+            position: relative;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.8), inset 0 -10px 20px rgba(0,0,0,0.3);
+            transition: all 1s ease;
+        }
+
+        /* Fitas da caixa */
+        .gift-box-body::before {
+            content: ''; position: absolute; width: 30px; height: 100%;
+            background: linear-gradient(to right, #e6c200, var(--gold-ribbon), #e6c200);
+            left: 50%; transform: translateX(-50%); box-shadow: 0 0 10px rgba(0,0,0,0.3);
+        }
+        .gift-box-body::after {
+            content: ''; position: absolute; width: 100%; height: 30px;
+            background: linear-gradient(to bottom, #e6c200, var(--gold-ribbon), #e6c200);
+            top: 50%; transform: translateY(-50%); box-shadow: 0 0 10px rgba(0,0,0,0.3);
+        }
+
+        /* Tampa da caixa */
+        .gift-lid {
+            width: 180px; height: 45px;
+            background: linear-gradient(135deg, #ff8c33, #e65c00);
+            border-radius: 8px;
+            position: absolute; top: -20px; 
+            box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+            transition: all 1s cubic-bezier(0.2, 0.8, 0.2, 1);
+            z-index: 2;
+        }
+        .gift-lid::before {
+            content: ''; position: absolute; width: 30px; height: 100%;
+            background: linear-gradient(to right, #e6c200, var(--gold-ribbon), #e6c200);
+            left: 50%; transform: translateX(-50%); box-shadow: 0 0 5px rgba(0,0,0,0.3);
+        }
+
+        /* Texto de instrução */
+        .gift-text {
+            margin-top: 40px; font-family: 'Dancing Script', cursive; font-size: 36px; color: var(--orange-main); 
+            text-align: center; text-shadow: 0 2px 10px rgba(255,106,0,0.4); transition: opacity 0.5s;
+        }
+        .gift-sub { font-family: 'Inter', sans-serif; font-size: 15px; color: #aaa; margin-top: 5px; font-weight: 300; transition: opacity 0.5s;}
+
+        /* Animação ao clicar (Abrir Caixa) */
+        .gift-container.open { animation: none; }
+        .gift-container.open .gift-lid { transform: translateY(-100px) rotate(-15deg) scale(1.1); opacity: 0; }
+        .gift-container.open .gift-box-body { transform: translateY(60px) scale(0.9); opacity: 0; transition: all 1s ease 0.2s; }
+        .gift-container.open .gift-text, .gift-container.open .gift-sub { opacity: 0; }
+
+
+        /* ==========================================
+           CARTÃO PRINCIPAL (ESCONDIDO NO INÍCIO)
+           ========================================== */
         .card-wrapper {
             position: relative;
-            width: 90%;
-            max-width: 360px;
-            height: 85vh;
-            max-height: 600px;
+            width: 90%; max-width: 360px;
+            height: 85vh; max-height: 600px;
             border-radius: 24px;
             z-index: 10;
             box-shadow: 0 25px 50px rgba(0,0,0,0.9);
             overflow: hidden;
             animation: floatCard 6s ease-in-out infinite;
+            
+            /* Estado Inicial (Escondido) */
+            opacity: 0; transform: scale(0.8); pointer-events: none; transition: all 1.5s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
+        .card-wrapper.visible { opacity: 1; transform: scale(1); pointer-events: auto; }
 
         @keyframes floatCard { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
 
@@ -69,17 +145,20 @@
             border-radius: 24px;
             border: 1px solid rgba(255, 255, 255, 0.1);
             height: 100%; width: 100%;
-            padding: 30px 25px;
-            display: flex; flex-direction: column; justify-content: space-between; align-items: center; text-align: center;
+            padding: 20px 25px; /* Reduzido levemente para o texto maior respirar */
+            
+            /* Ajuste de alinhamento: centralizado e com espaço harmonioso */
+            display: flex; flex-direction: column; justify-content: center; gap: 25px; align-items: center; text-align: center;
+            
             position: absolute; top: 0; left: 0; z-index: 10; 
         }
 
-        .card-title { font-family: 'Dancing Script', cursive; font-size: 36px; color: var(--orange-main); margin-bottom: 10px; }
-        .card-text { font-size: 18px; line-height: 1.7; color: #f0f0f0; font-weight: 300; font-style: italic; }
+        .card-title { font-family: 'Dancing Script', cursive; font-size: 38px; color: var(--orange-main); margin-bottom: 5px; }
+        .card-text { font-size: 16px; line-height: 1.6; color: #f0f0f0; font-weight: 300; font-style: italic; }
         
-        .signature-box { margin-top: 15px; }
-        .names { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 20px; letter-spacing: 2px; color: #fff; text-transform: uppercase; }
-        .date { font-size: 12px; color: var(--orange-light); margin-top: 5px; font-weight: 400; opacity: 0.8; }
+        .signature-box { margin-top: 5px; }
+        .names { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 18px; letter-spacing: 2px; color: #fff; text-transform: uppercase; }
+        .date { font-size: 13px; color: var(--orange-light); margin-top: 5px; font-weight: 400; opacity: 0.8; }
 
         .counter-box {
             background: rgba(0, 0, 0, 0.5); 
@@ -104,6 +183,15 @@
         <div class="ambient-light light-2"></div>
     </div>
 
+    <div id="gift-screen">
+        <div class="gift-container" id="gift-btn" onclick="openGift()">
+            <div class="gift-box-body"></div>
+            <div class="gift-lid"></div>
+            <div class="gift-text">Tem um presente pra você...</div>
+            <div class="gift-sub">Toque na caixa para abrir ✨</div>
+        </div>
+    </div>
+
     <div class="card-wrapper" id="card-wrapper">
         <div class="photo-background" id="photo-bg">
             <img src="foto06.jpeg" class="active">
@@ -115,15 +203,16 @@
         </div>
 
         <div class="pure-glass" id="card-content">
-            <div style="margin-top: 10px;">
+            <div>
                 <h1 class="card-title">Dois meses de nós...</h1>
                 <p class="card-text">
                     "Feliz 2 meses, minha namorada! Sessenta dias em que a vida ganhou um novo ritmo e o meu coração encontrou o seu verdadeiro lar. A distância e a saudade podem tentar nos desafiar, mas a cada reencontro, a cada sorriso e a cada 'eu te amo', tenho a certeza de que nascemos para dar certo. Que este seja apenas o início de uma vida inteira de nós dois."
                 </p>
-                <div class="signature-box">
-                    <div class="names">Lucas 🧡 Thayna</div>
-                    <div class="date">15 de Abril de 2026</div>
-                </div>
+            </div>
+            
+            <div class="signature-box">
+                <div class="names">Lucas 🧡 Thayna</div>
+                <div class="date">15 de Abril de 2026</div>
             </div>
             
             <div class="counter-box">
@@ -139,7 +228,40 @@
     </audio>
 
     <script>
-        // Slideshow
+        const bgMusic = document.getElementById('bg-music');
+        let audioUnlocked = false;
+
+        // ==========================================
+        // LÓGICA DE ABRIR O PRESENTE
+        // ==========================================
+        function openGift() {
+            const giftContainer = document.getElementById('gift-btn');
+            const giftScreen = document.getElementById('gift-screen');
+            const cardWrapper = document.getElementById('card-wrapper');
+
+            // 1. Anima a caixa abrindo
+            giftContainer.classList.add('open');
+
+            // 2. Destrava a música instantaneamente no clique
+            if (!audioUnlocked) {
+                bgMusic.play().then(() => { audioUnlocked = true; }).catch(e => console.log(e));
+            }
+
+            // 3. Revela o cartão após 1.2s
+            setTimeout(() => {
+                giftScreen.style.opacity = '0';
+                giftScreen.style.visibility = 'hidden';
+                
+                cardWrapper.classList.add('visible');
+                
+                // Prepara a raspadinha com o tamanho correto
+                resizeCanvas(); 
+            }, 1200);
+        }
+
+        // ==========================================
+        // SLIDESHOW DE FOTOS
+        // ==========================================
         function setupPhotoAlbum() {
             const photos = document.querySelectorAll('#photo-bg img');
             if (photos.length === 0) return;
@@ -152,16 +274,16 @@
         }
         setupPhotoAlbum();
 
-        // Raspadinha
+        // ==========================================
+        // RASPADINHA MÁGICA
+        // ==========================================
         const canvas = document.getElementById('scratch-canvas');
         const ctx = canvas.getContext('2d');
         const wrapper = document.getElementById('card-wrapper');
-        const bgMusic = document.getElementById('bg-music');
-        let audioUnlocked = false;
 
         function resizeCanvas() {
-            canvas.width = wrapper.clientWidth;
-            canvas.height = wrapper.clientHeight;
+            canvas.width = wrapper.clientWidth || 360;
+            canvas.height = wrapper.clientHeight || 600;
             fillCanvas();
         }
 
@@ -172,13 +294,13 @@
                 ctx.fillStyle = Math.random() > 0.5 ? 'rgba(255,106,0,0.03)' : 'rgba(255,255,255,0.02)';
                 ctx.fillRect(Math.random() * canvas.width, Math.random() * canvas.height, 1, 1);
             }
-            ctx.font = "600 15px 'Inter', sans-serif";
+            ctx.font = "600 16px 'Inter', sans-serif";
             ctx.fillStyle = "#FF9900";
             ctx.textAlign = "center";
-            ctx.fillText("Toque e desembaça nosso amor ✨", canvas.width / 2, canvas.height / 2);
+            ctx.fillText("Passe o dedo para desembaçar ✨", canvas.width / 2, canvas.height / 2);
         }
 
-        window.addEventListener('load', resizeCanvas);
+        window.addEventListener('resize', resizeCanvas);
 
         let isDrawing = false;
         function getMousePos(e) {
@@ -188,20 +310,7 @@
             return { x: clientX - rect.left, y: clientY - rect.top };
         }
 
-        // FUNÇÃO QUE LIBERA O ÁUDIO NO MOBILE
-        function unlockAudio() {
-            if (!audioUnlocked) {
-                bgMusic.play().then(() => {
-                    audioUnlocked = true;
-                }).catch(e => console.log("Aguardando interação profunda"));
-            }
-        }
-
-        function startDraw(e) { 
-            isDrawing = true; 
-            unlockAudio(); 
-            draw(e); 
-        }
+        function startDraw(e) { isDrawing = true; draw(e); }
         function stopDraw() { isDrawing = false; checkReveal(); }
 
         function draw(e) {
@@ -245,7 +354,9 @@
             setTimeout(() => sparkle.remove(), 800);
         }
 
-        // Contador
+        // ==========================================
+        // CONTADOR
+        // ==========================================
         const dataNamoro = new Date("2026-02-15T00:00:00");
         function atualizarContador() {
             const agora = new Date();
@@ -255,7 +366,7 @@
             const minutos = Math.floor((diff / 60000) % 60);
             const segundos = Math.floor((diff / 1000) % 60);
             document.getElementById("live-counter").innerHTML = 
-                `${dias}d : ${horas}h : ${minutos}m : ${segundos}s`;
+                `${dias}d : ${horas.toString().padStart(2, '0')}h : ${minutos.toString().padStart(2, '0')}m : ${segundos.toString().padStart(2, '0')}s`;
         }
         setInterval(atualizarContador, 1000);
         atualizarContador();
