@@ -43,9 +43,7 @@
             100% { transform: translate(5vw, 10vh) scale(1.1); }
         }
 
-        /* ==========================================
-           TELA DE BLOQUEIO (SAVE THE DATE)
-           ========================================== */
+        /* --- TELA DE BLOQUEIO / DESBLOQUEIO --- */
         #locked-screen {
             position: fixed; inset: 0; z-index: 60000;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
@@ -54,120 +52,89 @@
         }
 
         .lock-card {
-            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.8)); 
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01)); 
             backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-            border-radius: 24px; border: 1px solid rgba(255, 106, 0, 0.2);
-            width: 90%; max-width: 360px; padding: 40px 30px;
+            border-radius: 24px; border: 1px solid rgba(255, 255, 255, 0.1);
+            width: 90%; max-width: 360px; padding: 40px 25px;
             display: flex; flex-direction: column; align-items: center; text-align: center;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.9), 0 0 30px rgba(255, 106, 0, 0.1);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.9);
         }
 
-        .lock-icon { font-size: 50px; margin-bottom: 15px; animation: pulseLock 2s infinite; }
-        @keyframes pulseLock { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+        .lock-icon { font-size: 50px; margin-bottom: 20px; transition: transform 0.5s ease; }
+        .lock-title { font-family: 'Dancing Script', cursive; font-size: 40px; color: var(--orange-main); margin-bottom: 15px; }
+        .lock-text { font-size: 15px; line-height: 1.6; color: #ccc; margin-bottom: 30px; font-weight: 300;}
 
-        .lock-title { font-family: 'Dancing Script', cursive; font-size: 38px; color: var(--orange-main); margin-bottom: 15px; }
-        .lock-text { font-size: 15px; line-height: 1.6; color: #ccc; margin-bottom: 25px; font-weight: 300;}
-
-        .countdown-timer {
-            display: flex; gap: 15px; justify-content: center;
-        }
+        .countdown-timer { display: flex; gap: 12px; justify-content: center; }
         .time-box {
             display: flex; flex-direction: column; align-items: center;
-            background: rgba(255, 106, 0, 0.1); border: 1px solid rgba(255, 106, 0, 0.3);
-            border-radius: 12px; padding: 10px; width: 65px;
+            background: rgba(255, 106, 0, 0.1); border: 1px solid rgba(255, 106, 0, 0.2);
+            border-radius: 12px; padding: 10px; width: 60px;
         }
-        .time-val { font-family: 'Montserrat', sans-serif; font-size: 22px; font-weight: 800; color: #fff; }
-        .time-label { font-size: 9px; text-transform: uppercase; letter-spacing: 1px; color: var(--orange-light); margin-top: 5px; }
+        .time-val { font-family: 'Montserrat', sans-serif; font-size: 20px; font-weight: 800; color: #fff; }
+        .time-label { font-size: 8px; text-transform: uppercase; letter-spacing: 1px; color: var(--orange-light); margin-top: 4px; }
 
+        /* Estilo para quando desbloquear */
+        .unlocked-celebration { animation: celebrate 0.5s ease infinite alternate; }
+        @keyframes celebrate { from { transform: scale(1); } to { transform: scale(1.1); } }
 
-        /* ==========================================
-           TELA DA CAIXA DE PRESENTE (INICIAL APÓS DESBLOQUEIO)
-           ========================================== */
+        /* --- BOTÕES --- */
+        .btn {
+            background: linear-gradient(135deg, var(--orange-main), var(--orange-light));
+            color: #ffffff; border: none; padding: 16px 36px; font-size: 16px; border-radius: 50px;
+            cursor: pointer; transition: all 0.3s; font-family: 'Inter', sans-serif; font-weight: 600;
+            text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 10px 20px var(--orange-glow);
+        }
+        .btn:hover { transform: translateY(-3px); box-shadow: 0 15px 30px var(--orange-glow); }
+
+        /* --- TELA DA CAIXA DE PRESENTE --- */
         #gift-screen {
             position: fixed; inset: 0; z-index: 50000;
-            display: none; /* Começa escondido, o JS decide se mostra */
-            flex-direction: column; justify-content: center; align-items: center;
+            display: none; flex-direction: column; justify-content: center; align-items: center;
             background-color: var(--dark-bg);
-            transition: opacity 1.5s ease, visibility 1.5s;
+            transition: opacity 1.2s ease, visibility 1.2s;
         }
 
-        .gift-container {
-            position: relative; cursor: pointer;
-            animation: floatGift 3s ease-in-out infinite;
-            display: flex; flex-direction: column; align-items: center;
-        }
-
-        @keyframes floatGift { 0%, 100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-15px) scale(1.02); } }
+        .gift-container { position: relative; cursor: pointer; animation: floatGift 3s ease-in-out infinite; display: flex; flex-direction: column; align-items: center; }
+        @keyframes floatGift { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
 
         .gift-box-body {
-            width: 160px; height: 130px;
-            background: linear-gradient(135deg, #e65c00, #ff7a1a);
+            width: 160px; height: 130px; background: linear-gradient(135deg, #e65c00, #ff7a1a);
             border-radius: 5px 5px 15px 15px; position: relative;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.8), inset 0 -10px 20px rgba(0,0,0,0.3);
-            transition: all 1s ease;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.8);
         }
-
-        .gift-box-body::before {
-            content: ''; position: absolute; width: 30px; height: 100%;
-            background: linear-gradient(to right, #e6c200, var(--gold-ribbon), #e6c200);
-            left: 50%; transform: translateX(-50%); box-shadow: 0 0 10px rgba(0,0,0,0.3);
-        }
-        .gift-box-body::after {
-            content: ''; position: absolute; width: 100%; height: 30px;
-            background: linear-gradient(to bottom, #e6c200, var(--gold-ribbon), #e6c200);
-            top: 50%; transform: translateY(-50%); box-shadow: 0 0 10px rgba(0,0,0,0.3);
-        }
+        .gift-box-body::before { content: ''; position: absolute; width: 30px; height: 100%; background: linear-gradient(to right, #e6c200, var(--gold-ribbon), #e6c200); left: 50%; transform: translateX(-50%); }
+        .gift-box-body::after { content: ''; position: absolute; width: 100%; height: 30px; background: linear-gradient(to bottom, #e6c200, var(--gold-ribbon), #e6c200); top: 50%; transform: translateY(-50%); }
 
         .gift-lid {
             width: 180px; height: 45px; background: linear-gradient(135deg, #ff8c33, #e65c00);
-            border-radius: 8px; position: absolute; top: -20px; 
-            box-shadow: 0 8px 20px rgba(0,0,0,0.5); transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 2;
+            border-radius: 8px; position: absolute; top: -20px; z-index: 2;
+            transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-        .gift-lid::before {
-            content: ''; position: absolute; width: 30px; height: 100%;
-            background: linear-gradient(to right, #e6c200, var(--gold-ribbon), #e6c200);
-            left: 50%; transform: translateX(-50%); box-shadow: 0 0 5px rgba(0,0,0,0.3);
-        }
+        .gift-lid::before { content: ''; position: absolute; width: 30px; height: 100%; background: linear-gradient(to right, #e6c200, var(--gold-ribbon), #e6c200); left: 50%; transform: translateX(-50%); }
 
-        .gift-text {
-            margin-top: 40px; font-family: 'Dancing Script', cursive; font-size: 36px; color: var(--orange-main); 
-            text-align: center; text-shadow: 0 2px 10px rgba(255,106,0,0.4); transition: opacity 0.5s;
-        }
-        .gift-sub { font-family: 'Inter', sans-serif; font-size: 15px; color: #aaa; margin-top: 5px; font-weight: 300; transition: opacity 0.5s;}
+        .gift-text { margin-top: 40px; font-family: 'Dancing Script', cursive; font-size: 32px; color: var(--orange-main); text-align: center; }
+        
+        .gift-container.open .gift-lid { transform: translateY(-150px) rotate(-20deg); opacity: 0; }
+        .gift-container.open .gift-box-body { transform: translateY(50px); opacity: 0; transition: all 0.8s ease 0.1s; }
 
-        .gift-container.open { animation: none; pointer-events: none; }
-        .gift-container.open .gift-lid { transform: translateY(-150px) rotate(-25deg) scale(1.2); opacity: 0; }
-        .gift-container.open .gift-box-body { transform: translateY(80px) scale(0.8); opacity: 0; transition: all 0.8s ease 0.1s; }
-        .gift-container.open .gift-text, .gift-container.open .gift-sub { opacity: 0; }
-
-        /* ==========================================
-           REVOADA DE BALÕES (CORAÇÕES)
-           ========================================== */
-        .balloon-heart {
-            position: fixed; bottom: -100px; z-index: 55000; pointer-events: none;
-            animation: flyBalloon forwards ease-in; text-shadow: 0 5px 15px rgba(0,0,0,0.4);
-        }
-
+        /* --- REVOADA DE BALÕES --- */
+        .balloon-heart { position: fixed; bottom: -100px; z-index: 55000; pointer-events: none; animation: flyBalloon forwards ease-in; }
         @keyframes flyBalloon {
             0% { transform: translateY(0) scale(0.5) rotate(0deg); opacity: 0; }
-            10% { opacity: 1; transform: translateY(-10vh) scale(1) rotate(var(--rot1)); }
-            80% { opacity: 0.9; }
-            100% { transform: translateY(-120vh) scale(1.5) rotate(var(--rot2)); opacity: 0; }
+            10% { opacity: 1; }
+            100% { transform: translateY(-120vh) scale(1.5) rotate(40deg); opacity: 0; }
         }
 
-        /* ==========================================
-           CARTÃO PRINCIPAL
-           ========================================== */
+        /* --- CARTÃO PRINCIPAL --- */
         .card-wrapper {
             position: relative; width: 90%; max-width: 360px; height: 85vh; max-height: 600px;
             border-radius: 24px; z-index: 100; box-shadow: 0 25px 50px rgba(0,0,0,0.9);
             overflow: hidden; animation: floatCard 6s ease-in-out infinite;
-            opacity: 0; transform: scale(0.6) translateY(30px); pointer-events: none; 
-            transition: all 2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            display: none; /* Começa escondido */
+            opacity: 0; transform: scale(0.8) translateY(30px); pointer-events: none; 
+            transition: all 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: none;
         }
-        
-        .card-wrapper.visible { opacity: 1; transform: scale(1) translateY(0); pointer-events: auto; }
+        .card-wrapper.visible { opacity: 1; transform: scale(1) translateY(0); pointer-events: auto; display: block; }
+        @keyframes floatCard { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
 
         .photo-background { position: absolute; inset: 0; z-index: 5; }
         .photo-background img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 1.5s ease-in-out; filter: brightness(0.65); }
@@ -176,26 +143,16 @@
         .pure-glass {
             background: linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.8) 90%); 
             backdrop-filter: blur(1px); -webkit-backdrop-filter: blur(1px);
-            border-radius: 24px; border: 1px solid rgba(255, 255, 255, 0.1);
-            height: 100%; width: 100%; padding: 20px 25px; 
+            height: 100%; width: 100%; padding: 25px; 
             display: flex; flex-direction: column; justify-content: center; gap: 20px; align-items: center; text-align: center;
-            position: absolute; top: 0; left: 0; z-index: 10; 
         }
 
-        .card-title { font-family: 'Dancing Script', cursive; font-size: 38px; color: var(--orange-main); margin-bottom: 5px; }
+        .card-title { font-family: 'Dancing Script', cursive; font-size: 38px; color: var(--orange-main); }
         .card-text { font-size: 16px; line-height: 1.6; color: #f0f0f0; font-weight: 300; font-style: italic; }
-        
-        .signature-box { margin-top: 5px; }
-        .names { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 18px; letter-spacing: 2px; color: #fff; text-transform: uppercase; }
-        .date { font-size: 13px; color: var(--orange-light); margin-top: 5px; font-weight: 400; opacity: 0.8; }
-
-        .counter-box {
-            background: rgba(0, 0, 0, 0.5); border: 1px solid rgba(255, 106, 0, 0.3);
-            border-radius: 15px; padding: 15px 10px; width: 100%; display: flex; flex-direction: column; gap: 8px;
-        }
-        .counter-label { font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: #ccc; font-weight: 600;}
-        .counter-val { font-family: 'Montserrat', sans-serif; font-size: 19px; font-weight: 800; color: #fff; }
-
+        .names { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 18px; letter-spacing: 2px; text-transform: uppercase; }
+        .counter-box { background: rgba(0, 0, 0, 0.5); border: 1px solid rgba(255, 106, 0, 0.3); border-radius: 15px; padding: 15px; width: 100%; }
+        .counter-label { font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: #ccc; margin-bottom: 5px; }
+        .counter-val { font-family: 'Montserrat', sans-serif; font-size: 19px; font-weight: 800; }
     </style>
 </head>
 <body>
@@ -207,25 +164,32 @@
 
     <div id="locked-screen">
         <div class="lock-card">
-            <div class="lock-icon">🔒</div>
-            <h1 class="lock-title">Ansiosa?</h1>
-            <p class="lock-text">O seu presente foi trancado a sete chaves e só estará disponível na data certa. Volte aqui em:</p>
+            <div class="lock-icon" id="lock-icon">🔒</div>
             
-            <div class="countdown-timer">
-                <div class="time-box"><div class="time-val" id="lock-dias">00</div><div class="time-label">Dias</div></div>
-                <div class="time-box"><div class="time-val" id="lock-horas">00</div><div class="time-label">Horas</div></div>
-                <div class="time-box"><div class="time-val" id="lock-min">00</div><div class="time-label">Min</div></div>
-                <div class="time-box"><div class="time-val" id="lock-seg">00</div><div class="time-label">Seg</div></div>
+            <div id="state-locked">
+                <h1 class="lock-title">Ansiosa?</h1>
+                <p class="lock-text">O seu presente foi trancado a sete chaves. Ele será revelado automaticamente em:</p>
+                <div class="countdown-timer">
+                    <div class="time-box"><div class="time-val" id="lock-dias">00</div><div class="time-label">Dias</div></div>
+                    <div class="time-box"><div class="time-val" id="lock-horas">00</div><div class="time-label">Hrs</div></div>
+                    <div class="time-box"><div class="time-val" id="lock-min">00</div><div class="time-label">Min</div></div>
+                    <div class="time-box"><div class="time-val" id="lock-seg">00</div><div class="time-label">Seg</div></div>
+                </div>
+            </div>
+
+            <div id="state-unlocked" style="display: none;">
+                <h1 class="lock-title">O dia chegou!</h1>
+                <p class="lock-text">Finalmente, amor! Seu presente de 2 meses foi desbloqueado com sucesso. ❤️</p>
+                <button class="btn" onclick="startSurprise()">Ver Surpresa</button>
             </div>
         </div>
     </div>
 
     <div id="gift-screen">
-        <div class="gift-container" id="gift-btn" onclick="openGift()">
+        <div class="gift-container" id="gift-btn" onclick="revealCard()">
             <div class="gift-lid"></div>
             <div class="gift-box-body"></div>
-            <div class="gift-text">Tem um presente pra você...</div>
-            <div class="gift-sub">Toque na caixa para abrir ✨</div>
+            <div class="gift-text">Clique para abrir ✨</div>
         </div>
     </div>
 
@@ -238,20 +202,10 @@
             <img src="foto39.jpeg">
             <img src="foto29.jpeg">
         </div>
-
-        <div class="pure-glass" id="card-content">
-            <div>
-                <h1 class="card-title">Dois meses de nós...</h1>
-                <p class="card-text">
-                    "Feliz 2 meses, minha namorada! Sessenta dias em que a vida ganhou um novo ritmo e o meu coração encontrou o seu verdadeiro lar. A distância e a saudade podem tentar nos desafiar, mas a cada reencontro, a cada sorriso e a cada 'eu te amo', tenho a certeza de que nascemos para dar certo. Que este seja apenas o início de uma vida inteira de nós dois."
-                </p>
-            </div>
-            
-            <div class="signature-box">
-                <div class="names">Lucas 🧡 Thayna</div>
-                <div class="date">15 de Abril de 2026</div>
-            </div>
-            
+        <div class="pure-glass">
+            <h1 class="card-title">Dois meses de nós...</h1>
+            <p class="card-text">"Feliz 2 meses, minha namorada! Sessenta dias em que a vida ganhou um novo ritmo e o meu coração encontrou o seu verdadeiro lar. Que este seja apenas o início de uma vida inteira de nós dois."</p>
+            <div class="names">Lucas 🧡 Thayna</div>
             <div class="counter-box">
                 <div class="counter-label">Oficialmente juntos há:</div>
                 <div class="counter-val" id="live-counter">...</div>
@@ -264,130 +218,88 @@
     </audio>
 
     <script>
-        // ==========================================
-        // LÓGICA DE BLOQUEIO (SAVE THE DATE)
-        // ==========================================
-        // DATA EXATA DA LIBERAÇÃO: 15 de Abril de 2026 à meia-noite (00:00:00)
-        const dataDesbloqueio = new Date("2026-04-15T00:00:00");
-        let timerLockInterval;
-
-        function checkLockStatus() {
+        // DATA DE DESBLOQUEIO: 15 de Abril de 2026 à meia-noite
+        const dataTarget = new Date("2026-04-15T00:00:00");
+        const dataStartNamoro = new Date("2026-02-15T00:00:00");
+        
+        function updateLock() {
             const agora = new Date();
-            const diff = dataDesbloqueio - agora;
+            const diff = dataTarget - agora;
 
             if (diff <= 0) {
-                // JÁ PASSOU DA DATA! Desbloquear presente
-                document.getElementById('locked-screen').style.display = 'none';
-                document.getElementById('gift-screen').style.display = 'flex';
-                document.getElementById('card-wrapper').style.display = 'flex';
-                clearInterval(timerLockInterval); // Para o contador de bloqueio
+                document.getElementById('state-locked').style.display = 'none';
+                document.getElementById('state-unlocked').style.display = 'block';
+                document.getElementById('lock-icon').innerHTML = '🎁';
+                document.getElementById('lock-icon').classList.add('unlocked-celebration');
             } else {
-                // AINDA ESTÁ BLOQUEADO! Atualiza os números na tela
-                document.getElementById('locked-screen').style.display = 'flex';
-                document.getElementById('gift-screen').style.display = 'none';
-                document.getElementById('card-wrapper').style.display = 'none';
-                
                 const dias = Math.floor(diff / 86400000);
                 const horas = Math.floor((diff / 3600000) % 24);
                 const minutos = Math.floor((diff / 60000) % 60);
                 const segundos = Math.floor((diff / 1000) % 60);
-
                 document.getElementById("lock-dias").innerHTML = dias.toString().padStart(2, '0');
                 document.getElementById("lock-horas").innerHTML = horas.toString().padStart(2, '0');
                 document.getElementById("lock-min").innerHTML = minutos.toString().padStart(2, '0');
                 document.getElementById("lock-seg").innerHTML = segundos.toString().padStart(2, '0');
             }
         }
+        setInterval(updateLock, 1000);
+        updateLock();
 
-        // Checa imediatamente e depois a cada 1 segundo
-        checkLockStatus();
-        timerLockInterval = setInterval(checkLockStatus, 1000);
-
-        // ==========================================
-        // SISTEMA DE BALÕES (CORAÇÕES)
-        // ==========================================
-        function releaseBalloons() {
-            const numBalloons = 120; 
-            const colors = ['#FF6A00', '#FF9900', '#FF4500', '#ff8c33']; 
-            
-            for (let i = 0; i < numBalloons; i++) {
-                setTimeout(() => {
-                    const heart = document.createElement('div');
-                    heart.classList.add('balloon-heart');
-                    heart.innerHTML = '&#x2665;&#xFE0E;'; 
-                    
-                    heart.style.left = (Math.random() * 100) + 'vw';
-                    heart.style.fontSize = (Math.random() * 35 + 25) + 'px';
-                    heart.style.color = colors[Math.floor(Math.random() * colors.length)];
-                    heart.style.setProperty('--rot1', (Math.random() * 40 - 20) + 'deg');
-                    heart.style.setProperty('--rot2', (Math.random() * 80 - 40) + 'deg');
-                    
-                    const duration = Math.random() * 3 + 3;
-                    heart.style.animationDuration = duration + 's';
-                    
-                    document.body.appendChild(heart);
-                    setTimeout(() => heart.remove(), duration * 1000);
-                }, i * 25); 
-            }
+        function startSurprise() {
+            document.getElementById('locked-screen').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('locked-screen').style.display = 'none';
+                document.getElementById('gift-screen').style.display = 'flex';
+            }, 1000);
         }
 
-        // ==========================================
-        // LÓGICA DE ABRIR O PRESENTE
-        // ==========================================
-        const bgMusic = document.getElementById('bg-music');
-        let audioUnlocked = false;
-
-        function openGift() {
-            const giftContainer = document.getElementById('gift-btn');
-            const giftScreen = document.getElementById('gift-screen');
-            const cardWrapper = document.getElementById('card-wrapper');
-
-            giftContainer.classList.add('open');
-
-            if (!audioUnlocked) {
-                bgMusic.play().then(() => { audioUnlocked = true; }).catch(e => console.log(e));
+        function revealCard() {
+            document.getElementById('gift-btn').classList.add('open');
+            document.getElementById('bg-music').play().catch(e => console.log(e));
+            
+            // Lógica dos Balões
+            for (let i = 0; i < 100; i++) {
+                setTimeout(() => {
+                    const b = document.createElement('div');
+                    b.classList.add('balloon-heart');
+                    b.innerHTML = '🧡';
+                    b.style.left = Math.random() * 100 + 'vw';
+                    b.style.fontSize = (Math.random() * 30 + 20) + 'px';
+                    const dur = Math.random() * 3 + 2;
+                    b.style.animationDuration = dur + 's';
+                    document.body.appendChild(b);
+                    setTimeout(() => b.remove(), dur * 1000);
+                }, i * 30);
             }
-
-            setTimeout(() => { releaseBalloons(); }, 400);
 
             setTimeout(() => {
-                giftScreen.style.opacity = '0';
-                setTimeout(() => { giftScreen.style.display = 'none'; }, 1500);
-                cardWrapper.classList.add('visible');
-            }, 2800); 
+                document.getElementById('gift-screen').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('gift-screen').style.display = 'none';
+                    const cw = document.getElementById('card-wrapper');
+                    cw.style.display = 'block';
+                    setTimeout(() => cw.classList.add('visible'), 50);
+                }, 1000);
+            }, 2500);
         }
 
-        // ==========================================
-        // SLIDESHOW DE FOTOS
-        // ==========================================
-        function setupPhotoAlbum() {
-            const photos = document.querySelectorAll('#photo-bg img');
-            if (photos.length === 0) return;
-            let currentPhoto = 0;
-            setInterval(() => {
-                photos[currentPhoto].classList.remove('active');
-                currentPhoto = (currentPhoto + 1) % photos.length;
-                photos[currentPhoto].classList.add('active');
-            }, 4500);
-        }
-        setupPhotoAlbum();
+        // Slideshow
+        setInterval(() => {
+            const active = document.querySelector('#photo-bg img.active');
+            let next = active.nextElementSibling || document.querySelector('#photo-bg img:first-child');
+            active.classList.remove('active');
+            next.classList.add('active');
+        }, 4500);
 
-        // ==========================================
-        // CONTADOR DE TEMPO JUNTOS
-        // ==========================================
-        const dataNamoro = new Date("2026-02-15T00:00:00");
-        function atualizarContador() {
-            const agora = new Date();
-            const diff = Math.abs(agora - dataNamoro);
-            const dias = Math.floor(diff / 86400000);
-            const horas = Math.floor((diff / 3600000) % 24);
-            const minutos = Math.floor((diff / 60000) % 60);
-            const segundos = Math.floor((diff / 1000) % 60);
-            document.getElementById("live-counter").innerHTML = 
-                `${dias}d : ${horas.toString().padStart(2, '0')}h : ${minutos.toString().padStart(2, '0')}m : ${segundos.toString().padStart(2, '0')}s`;
-        }
-        setInterval(atualizarContador, 1000);
-        atualizarContador();
+        // Contador
+        setInterval(() => {
+            const diff = new Date() - dataStartNamoro;
+            const d = Math.floor(diff / 86400000);
+            const h = Math.floor((diff / 3600000) % 24);
+            const m = Math.floor((diff / 60000) % 60);
+            const s = Math.floor((diff / 1000) % 60);
+            document.getElementById("live-counter").innerHTML = `${d}d : ${h}h : ${m}m : ${s}s`;
+        }, 1000);
     </script>
 </body>
 </html>
