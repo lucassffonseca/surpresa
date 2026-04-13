@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Feliz 2 Meses ❤️</title>
     
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -18,83 +18,77 @@
             --orange-light: #FF9900;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body, html {
             background-color: var(--dark-bg);
             color: #ffffff;
             font-family: 'Inter', sans-serif;
             overflow: hidden; 
-            height: 100vh;
-            width: 100vw;
+            height: 100%;
+            width: 100%;
             display: flex;
             justify-content: center;
             align-items: center;
             -webkit-font-smoothing: antialiased;
         }
 
-        /* --- O FUNDO LÍQUIDO --- */
-        .ambient-background { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 0; pointer-events: none; overflow: hidden; }
-        .ambient-light { position: absolute; border-radius: 50%; filter: blur(90px); animation: liquidFloat 20s infinite alternate ease-in-out; }
-        .light-1 { width: 70vw; height: 70vw; background-color: rgba(255, 106, 0, 0.25); top: -10%; left: -10%; }
-        .light-2 { width: 60vw; height: 60vw; background-color: rgba(255, 153, 0, 0.15); bottom: -10%; right: -10%; animation-delay: -5s; animation-duration: 25s; }
+        /* --- FUNDO LÍQUIDO --- */
+        .ambient-background { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 0; pointer-events: none; }
+        .ambient-light { position: absolute; border-radius: 50%; filter: blur(80px); animation: liquidFloat 20s infinite alternate ease-in-out; opacity: 0.6; }
+        .light-1 { width: 80vw; height: 80vw; background-color: rgba(255, 106, 0, 0.2); top: -10%; left: -10%; }
+        .light-2 { width: 70vw; height: 70vw; background-color: rgba(255, 153, 0, 0.1); bottom: -10%; right: -10%; animation-delay: -5s; }
 
         @keyframes liquidFloat {
             0% { transform: translate(0, 0) scale(1); }
-            50% { transform: translate(10vw, 15vh) scale(1.2); }
-            100% { transform: translate(-10vw, 5vh) scale(0.9); }
+            100% { transform: translate(5vw, 10vh) scale(1.1); }
         }
 
-        /* --- O CONTÊINER DO CARTÃO --- */
+        /* --- CONTÊINER PRINCIPAL (RESPONSIVO) --- */
         .card-wrapper {
             position: relative;
             width: 90%;
-            max-width: 380px;
-            aspect-ratio: 3/4; 
+            max-width: 360px;
+            height: 80vh; /* Ajusta conforme a altura da tela do celular */
+            max-height: 550px;
             border-radius: 24px;
             z-index: 10;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.8), inset 0 0 0 1px rgba(255,255,255,0.05);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.9);
+            overflow: hidden;
             animation: floatCard 6s ease-in-out infinite;
-            overflow: hidden; 
         }
 
         @keyframes floatCard { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
 
-        /* --- O ÁLBUM DE FOTOS DE FUNDO --- */
+        /* --- ÁLBUM DE FOTOS --- */
         .photo-background {
             position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
+            inset: 0;
             z-index: 5;
-            border-radius: 24px;
-            overflow: hidden;
         }
 
         .photo-background img {
             position: absolute;
-            top: 0; left: 0;
+            inset: 0;
             width: 100%; height: 100%;
             object-fit: cover; 
             opacity: 0; 
             transition: opacity 1.5s ease-in-out; 
-            filter: brightness(0.85) contrast(1.05); /* Fotos mais claras e vivas */
+            filter: brightness(0.8);
         }
 
-        .photo-background img.active {
-            opacity: 1; 
-        }
+        .photo-background img.active { opacity: 1; }
 
-        /* --- O VIDRO CRISTALINO (Com desfoque reduzido) --- */
+        /* --- VIDRO ULTRA CLEAR (BLUR 1PX) --- */
         .pure-glass {
-            /* Gradiente que escurece levemente embaixo para garantir a leitura do texto */
-            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.5)); 
-            backdrop-filter: blur(3px); /* Reduzido de 10px para 3px! Fotos super nítidas */
-            -webkit-backdrop-filter: blur(3px);
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.6) 80%); 
+            backdrop-filter: blur(1px); /* DESFOQUE MÍNIMO PARA MÁXIMA NITIDEZ */
+            -webkit-backdrop-filter: blur(1px);
             border-radius: 24px;
-            border: 1px solid rgba(255, 255, 255, 0.15); /* Borda mais marcadinha pra dar efeito de vidro */
+            border: 1px solid rgba(255, 255, 255, 0.1);
             height: 100%;
             width: 100%;
-            padding: 40px 30px;
+            padding: 25px 20px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
@@ -105,36 +99,33 @@
             z-index: 10; 
         }
 
-        .card-title { font-family: 'Dancing Script', cursive; font-size: 42px; color: var(--orange-main); line-height: 1; margin-bottom: 15px; text-shadow: 0 2px 10px rgba(0,0,0,0.8); }
-        .card-text { font-size: 15px; line-height: 1.6; color: #ffffff; font-weight: 400; margin-bottom: 20px; text-shadow: 0 1px 5px rgba(0,0,0,0.9); }
+        .card-title { font-family: 'Dancing Script', cursive; font-size: 38px; color: var(--orange-main); margin-bottom: 10px; text-shadow: 0 2px 10px rgba(0,0,0,1); }
+        .card-text { font-size: 14px; line-height: 1.5; color: #ffffff; font-weight: 400; text-shadow: 0 1px 8px rgba(0,0,0,1); }
         
+        /* --- CONTADOR AJUSTADO --- */
         .counter-box {
-            background: rgba(0, 0, 0, 0.4); /* Fundo um pouco mais opaco pro contador dar leitura em cima das fotos */
+            background: rgba(0, 0, 0, 0.6); 
             border: 1px solid rgba(255, 106, 0, 0.4);
-            backdrop-filter: blur(5px);
-            border-radius: 12px;
-            padding: 15px;
+            border-radius: 15px;
+            padding: 12px 10px;
             width: 100%;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            margin-top: 10px;
         }
-        .counter-val { font-family: 'Montserrat', sans-serif; font-size: 20px; font-weight: 800; color: var(--orange-light); text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
-        .counter-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #ccc; margin-top: 5px; }
+        .counter-val { font-family: 'Montserrat', sans-serif; font-size: 17px; font-weight: 800; color: var(--orange-light); letter-spacing: 0.5px; }
+        .counter-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: #ccc; margin-top: 4px; }
 
-        /* --- A CAMADA DA RASPADINHA --- */
+        /* --- RASPADINHA --- */
         #scratch-canvas {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border-radius: 24px;
+            inset: 0;
             z-index: 20; 
             cursor: pointer;
             touch-action: none; 
+            border-radius: 24px;
         }
 
-        .sparkle { position: absolute; font-size: 20px; color: var(--orange-main); opacity: 0; pointer-events: none; z-index: 30;}
-        @keyframes flyUp { 0% { transform: translateY(0) scale(1); opacity: 1; } 100% { transform: translateY(-100px) scale(1.5); opacity: 0; } }
+        .sparkle { position: absolute; font-size: 20px; z-index: 30; pointer-events: none; }
+        @keyframes flyUp { 0% { transform: translateY(0) scale(1); opacity: 1; } 100% { transform: translateY(-80px) scale(1.5); opacity: 0; } }
 
     </style>
 </head>
@@ -155,7 +146,7 @@
         </div>
 
         <div class="pure-glass" id="card-content">
-            <div>
+            <div style="margin-top: 10px;">
                 <h1 class="card-title">Feliz 02 Meses!</h1>
                 <p class="card-text">
                     Amor, o tempo voa quando a vida é leve. Desde aquele 15 de fevereiro, os meus dias ganharam uma nova luz.<br><br>
@@ -164,7 +155,7 @@
             </div>
             
             <div class="counter-box">
-                <div class="counter-val" id="live-counter">Carregando...</div>
+                <div class="counter-val" id="live-counter">...</div>
                 <div class="counter-label">Oficialmente Juntos</div>
             </div>
         </div>
@@ -174,29 +165,24 @@
     </div>
 
     <audio id="bg-music" loop>
-        <source src="musica.mp3" type="audio/mpeg">
+        <source src="musica-cartao.mp3" type="audio/mpeg">
     </audio>
 
     <script>
-        // ==========================================
-        // 1. LÓGICA DO ÁLBUM DE FOTOS (CROSS-FADE)
-        // ==========================================
+        // Slideshow
         function setupPhotoAlbum() {
             const photos = document.querySelectorAll('#photo-bg img');
             if (photos.length === 0) return;
             let currentPhoto = 0;
-
             setInterval(() => {
                 photos[currentPhoto].classList.remove('active');
                 currentPhoto = (currentPhoto + 1) % photos.length;
                 photos[currentPhoto].classList.add('active');
-            }, 5000); // Troca a cada 5 segundos
+            }, 4500);
         }
         setupPhotoAlbum();
 
-        // ==========================================
-        // 2. LÓGICA DA RASPADINHA (CANVAS)
-        // ==========================================
+        // Raspadinha
         const canvas = document.getElementById('scratch-canvas');
         const ctx = canvas.getContext('2d');
         const wrapper = document.getElementById('card-wrapper');
@@ -204,31 +190,28 @@
         let musicStarted = false;
 
         function resizeCanvas() {
-            canvas.width = wrapper.offsetWidth;
-            canvas.height = wrapper.offsetHeight;
+            canvas.width = wrapper.clientWidth;
+            canvas.height = wrapper.clientHeight;
             fillCanvas();
         }
 
         function fillCanvas() {
-            ctx.fillStyle = "#050505";
+            ctx.fillStyle = "#0a0a0a";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            for (let i = 0; i < 5000; i++) {
-                ctx.fillStyle = Math.random() > 0.5 ? 'rgba(255,106,0,0.03)' : 'rgba(0,0,0,0.1)';
-                ctx.fillRect(Math.random() * canvas.width, Math.random() * canvas.height, 2, 2);
+            for (let i = 0; i < 4000; i++) {
+                ctx.fillStyle = Math.random() > 0.5 ? 'rgba(255,106,0,0.03)' : 'rgba(255,255,255,0.02)';
+                ctx.fillRect(Math.random() * canvas.width, Math.random() * canvas.height, 1, 1);
             }
-
-            ctx.font = "600 16px 'Inter', sans-serif";
+            ctx.font = "600 15px 'Inter', sans-serif";
             ctx.fillStyle = "#FF9900";
             ctx.textAlign = "center";
-            ctx.fillText("Passe o dedo para desembaçar ✨", canvas.width / 2, canvas.height / 2);
+            ctx.fillText("Desembaça aqui ✨", canvas.width / 2, canvas.height / 2);
         }
 
         window.addEventListener('load', resizeCanvas);
         window.addEventListener('resize', resizeCanvas);
 
         let isDrawing = false;
-
         function getMousePos(e) {
             let rect = canvas.getBoundingClientRect();
             let clientX = e.touches ? e.touches[0].clientX : e.clientX;
@@ -236,35 +219,27 @@
             return { x: clientX - rect.left, y: clientY - rect.top };
         }
 
-        function startDraw(e) {
-            isDrawing = true;
-            if (!musicStarted) {
-                bgMusic.play().catch(err => console.log("Áudio bloqueado"));
-                musicStarted = true;
-            }
-            draw(e);
+        function startDraw(e) { 
+            isDrawing = true; 
+            if (!musicStarted) { bgMusic.play().catch(e => {}); musicStarted = true; }
+            draw(e); 
         }
-
         function stopDraw() { isDrawing = false; checkReveal(); }
 
         function draw(e) {
             if (!isDrawing) return;
             e.preventDefault(); 
             let pos = getMousePos(e);
-            
             ctx.globalCompositeOperation = 'destination-out';
             ctx.beginPath();
-            ctx.arc(pos.x, pos.y, 45, 0, 2 * Math.PI); 
+            ctx.arc(pos.x, pos.y, 35, 0, 2 * Math.PI); 
             ctx.fill();
-
-            if(Math.random() > 0.8) createSparkle(pos.x, pos.y);
+            if(Math.random() > 0.85) createSparkle(pos.x, pos.y);
         }
 
         canvas.addEventListener('mousedown', startDraw);
         canvas.addEventListener('mousemove', draw);
         canvas.addEventListener('mouseup', stopDraw);
-        canvas.addEventListener('mouseleave', stopDraw);
-
         canvas.addEventListener('touchstart', startDraw, { passive: false });
         canvas.addEventListener('touchmove', draw, { passive: false });
         canvas.addEventListener('touchend', stopDraw);
@@ -273,18 +248,11 @@
             const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
             const pixels = imageData.data;
             let transparentPixels = 0;
-            
-            for (let i = 3; i < pixels.length; i += 4) {
-                if (pixels[i] === 0) transparentPixels++;
-            }
-            
-            const clearPercentage = (transparentPixels / (pixels.length / 4)) * 100;
-            
-            if (clearPercentage > 40) {
-                canvas.style.transition = "opacity 1.5s ease, visibility 1.5s";
+            for (let i = 3; i < pixels.length; i += 4) { if (pixels[i] === 0) transparentPixels++; }
+            if ((transparentPixels / (pixels.length / 4)) * 100 > 35) {
+                canvas.style.transition = "opacity 1s ease";
                 canvas.style.opacity = "0";
-                canvas.style.visibility = "hidden";
-                setTimeout(() => canvas.remove(), 1500); 
+                setTimeout(() => canvas.remove(), 1000); 
             }
         }
 
@@ -294,32 +262,25 @@
             sparkle.innerHTML = '✨';
             sparkle.style.left = (x + wrapper.getBoundingClientRect().left) + 'px';
             sparkle.style.top = (y + wrapper.getBoundingClientRect().top) + 'px';
-            sparkle.style.animation = `flyUp 1s ease-out forwards`;
+            sparkle.style.animation = `flyUp 0.8s ease-out forwards`;
             document.body.appendChild(sparkle);
-            setTimeout(() => sparkle.remove(), 1000);
+            setTimeout(() => sparkle.remove(), 800);
         }
 
-        // ==========================================
-        // 3. LÓGICA DO CONTADOR (15 DE FEVEREIRO)
-        // ==========================================
+        // Contador
         const dataNamoro = new Date("2026-02-15T00:00:00");
-
         function atualizarContador() {
             const agora = new Date();
             const diff = Math.abs(agora - dataNamoro);
-            
-            const dias = Math.floor(diff / (1000 * 60 * 60 * 24));
-            const horas = Math.floor((diff / (1000 * 60 * 60)) % 24);
-            const minutos = Math.floor((diff / 1000 / 60) % 60);
+            const dias = Math.floor(diff / 86400000);
+            const horas = Math.floor((diff / 3600000) % 24);
+            const minutos = Math.floor((diff / 60000) % 60);
             const segundos = Math.floor((diff / 1000) % 60);
-
             document.getElementById("live-counter").innerHTML = 
-                `${dias}d : ${horas.toString().padStart(2, '0')}h : ${minutos.toString().padStart(2, '0')}m : ${segundos.toString().padStart(2, '0')}s`;
+                `${dias}d : ${horas}h : ${minutos}m : ${segundos}s`;
         }
-
         setInterval(atualizarContador, 1000);
         atualizarContador();
-
     </script>
 </body>
 </html>
