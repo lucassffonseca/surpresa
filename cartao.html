@@ -43,8 +43,16 @@
             100% { transform: translate(5vw, 10vh) scale(1.1); }
         }
 
+        /* --- FOGOS DE ARTIFÍCIO --- */
+        #fireworks-canvas {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: 50; /* Fica acima do fundo, mas atrás do cartão/caixa */
+            pointer-events: none;
+        }
+
         /* ==========================================
-           TELA DA CAIXA DE PRESENTE (NOVA!)
+           TELA DA CAIXA DE PRESENTE
            ========================================== */
         #gift-screen {
             position: fixed; inset: 0; z-index: 50000;
@@ -60,7 +68,7 @@
             display: flex; flex-direction: column; align-items: center;
         }
 
-        @keyframes floatGift { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+        @keyframes floatGift { 0%, 100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-15px) scale(1.02); } }
 
         /* Corpo da caixa */
         .gift-box-body {
@@ -91,7 +99,7 @@
             border-radius: 8px;
             position: absolute; top: -20px; 
             box-shadow: 0 8px 20px rgba(0,0,0,0.5);
-            transition: all 1s cubic-bezier(0.2, 0.8, 0.2, 1);
+            transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             z-index: 2;
         }
         .gift-lid::before {
@@ -108,29 +116,29 @@
         .gift-sub { font-family: 'Inter', sans-serif; font-size: 15px; color: #aaa; margin-top: 5px; font-weight: 300; transition: opacity 0.5s;}
 
         /* Animação ao clicar (Abrir Caixa) */
-        .gift-container.open { animation: none; }
-        .gift-container.open .gift-lid { transform: translateY(-100px) rotate(-15deg) scale(1.1); opacity: 0; }
-        .gift-container.open .gift-box-body { transform: translateY(60px) scale(0.9); opacity: 0; transition: all 1s ease 0.2s; }
+        .gift-container.open { animation: none; pointer-events: none; }
+        .gift-container.open .gift-lid { transform: translateY(-150px) rotate(-25deg) scale(1.2); opacity: 0; }
+        .gift-container.open .gift-box-body { transform: translateY(80px) scale(0.8); opacity: 0; transition: all 0.8s ease 0.1s; }
         .gift-container.open .gift-text, .gift-container.open .gift-sub { opacity: 0; }
 
-
         /* ==========================================
-           CARTÃO PRINCIPAL (ESCONDIDO NO INÍCIO)
+           CARTÃO PRINCIPAL
            ========================================== */
         .card-wrapper {
             position: relative;
             width: 90%; max-width: 360px;
             height: 85vh; max-height: 600px;
             border-radius: 24px;
-            z-index: 10;
+            z-index: 100; /* Acima dos fogos */
             box-shadow: 0 25px 50px rgba(0,0,0,0.9);
             overflow: hidden;
             animation: floatCard 6s ease-in-out infinite;
             
-            /* Estado Inicial (Escondido) */
-            opacity: 0; transform: scale(0.8); pointer-events: none; transition: all 1.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+            /* Estado Inicial (Escondido e menor) */
+            opacity: 0; transform: scale(0.5) translateY(50px); pointer-events: none; 
+            transition: all 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-        .card-wrapper.visible { opacity: 1; transform: scale(1); pointer-events: auto; }
+        .card-wrapper.visible { opacity: 1; transform: scale(1) translateY(0); pointer-events: auto; }
 
         @keyframes floatCard { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
 
@@ -140,16 +148,12 @@
 
         .pure-glass {
             background: linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.8) 90%); 
-            backdrop-filter: blur(1px);
-            -webkit-backdrop-filter: blur(1px);
-            border-radius: 24px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(1px); -webkit-backdrop-filter: blur(1px);
+            border-radius: 24px; border: 1px solid rgba(255, 255, 255, 0.1);
             height: 100%; width: 100%;
-            padding: 20px 25px; /* Reduzido levemente para o texto maior respirar */
+            padding: 20px 25px; 
             
-            /* Ajuste de alinhamento: centralizado e com espaço harmonioso */
             display: flex; flex-direction: column; justify-content: center; gap: 25px; align-items: center; text-align: center;
-            
             position: absolute; top: 0; left: 0; z-index: 10; 
         }
 
@@ -161,18 +165,10 @@
         .date { font-size: 13px; color: var(--orange-light); margin-top: 5px; font-weight: 400; opacity: 0.8; }
 
         .counter-box {
-            background: rgba(0, 0, 0, 0.5); 
-            border: 1px solid rgba(255, 106, 0, 0.3);
-            border-radius: 15px;
-            padding: 12px 10px;
-            width: 100%;
+            background: rgba(0, 0, 0, 0.5); border: 1px solid rgba(255, 106, 0, 0.3);
+            border-radius: 15px; padding: 12px 10px; width: 100%;
         }
         .counter-val { font-family: 'Montserrat', sans-serif; font-size: 18px; font-weight: 800; color: #fff; }
-
-        /* --- RASPADINHA --- */
-        #scratch-canvas { position: absolute; inset: 0; z-index: 20; cursor: pointer; touch-action: none; border-radius: 24px; }
-        .sparkle { position: absolute; font-size: 20px; z-index: 30; pointer-events: none; }
-        @keyframes flyUp { 0% { transform: translateY(0) scale(1); opacity: 1; } 100% { transform: translateY(-80px) scale(1.5); opacity: 0; } }
 
     </style>
 </head>
@@ -183,10 +179,12 @@
         <div class="ambient-light light-2"></div>
     </div>
 
+    <canvas id="fireworks-canvas"></canvas>
+
     <div id="gift-screen">
         <div class="gift-container" id="gift-btn" onclick="openGift()">
-            <div class="gift-box-body"></div>
             <div class="gift-lid"></div>
+            <div class="gift-box-body"></div>
             <div class="gift-text">Tem um presente pra você...</div>
             <div class="gift-sub">Toque na caixa para abrir ✨</div>
         </div>
@@ -219,8 +217,6 @@
                 <div class="counter-val" id="live-counter">...</div>
             </div>
         </div>
-
-        <canvas id="scratch-canvas"></canvas>
     </div>
 
     <audio id="bg-music" loop preload="auto">
@@ -230,6 +226,82 @@
     <script>
         const bgMusic = document.getElementById('bg-music');
         let audioUnlocked = false;
+
+        // ==========================================
+        // SISTEMA DE FOGOS DE ARTIFÍCIO (CANVAS)
+        // ==========================================
+        const fwCanvas = document.getElementById('fireworks-canvas');
+        const fwCtx = fwCanvas.getContext('2d');
+        let particles = [];
+        const colors = ['#FF6A00', '#FF9900', '#FFD700', '#FFFFFF', '#FF4500'];
+
+        function resizeFwCanvas() {
+            fwCanvas.width = window.innerWidth;
+            fwCanvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeFwCanvas);
+        resizeFwCanvas();
+
+        class Particle {
+            constructor(x, y, color) {
+                this.x = x;
+                this.y = y;
+                this.color = color;
+                // Velocidade explosiva para todas as direções
+                const angle = Math.random() * Math.PI * 2;
+                const speed = Math.random() * 8 + 2;
+                this.velocity = {
+                    x: Math.cos(angle) * speed,
+                    y: Math.sin(angle) * speed
+                };
+                this.alpha = 1;
+                this.friction = 0.96; // Desaceleração
+                this.gravity = 0.08; // Caimento leve
+                this.size = Math.random() * 3 + 1;
+            }
+            draw() {
+                fwCtx.globalAlpha = this.alpha;
+                fwCtx.beginPath();
+                fwCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
+                fwCtx.fillStyle = this.color;
+                fwCtx.fill();
+            }
+            update() {
+                this.velocity.x *= this.friction;
+                this.velocity.y *= this.friction;
+                this.velocity.y += this.gravity;
+                this.x += this.velocity.x;
+                this.y += this.velocity.y;
+                this.alpha -= 0.015; // Velocidade em que a partícula some
+            }
+        }
+
+        function explodeFireworks(x, y) {
+            const particleCount = 120; // Quantidade de faíscas por explosão
+            for (let i = 0; i < particleCount; i++) {
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                particles.push(new Particle(x, y, color));
+            }
+        }
+
+        function animateFireworks() {
+            requestAnimationFrame(animateFireworks);
+            // Limpa o canvas suavemente para deixar rastro
+            fwCtx.globalAlpha = 0.2;
+            fwCtx.fillStyle = '#050505';
+            fwCtx.fillRect(0, 0, fwCanvas.width, fwCanvas.height);
+            
+            particles.forEach((particle, index) => {
+                if (particle.alpha <= 0) {
+                    particles.splice(index, 1);
+                } else {
+                    particle.update();
+                    particle.draw();
+                }
+            });
+        }
+        animateFireworks(); // Inicia o loop (vazio até clicar na caixa)
+
 
         // ==========================================
         // LÓGICA DE ABRIR O PRESENTE
@@ -242,22 +314,30 @@
             // 1. Anima a caixa abrindo
             giftContainer.classList.add('open');
 
-            // 2. Destrava a música instantaneamente no clique
+            // 2. Toca a música IMEDIATAMENTE (solução do celular)
             if (!audioUnlocked) {
                 bgMusic.play().then(() => { audioUnlocked = true; }).catch(e => console.log(e));
             }
 
-            // 3. Revela o cartão após 1.2s
+            // 3. Dispara as explosões de fogos (do centro da tela)
+            const centerX = window.innerWidth / 2;
+            const centerY = window.innerHeight / 2;
+            
+            explodeFireworks(centerX, centerY);
+            setTimeout(() => explodeFireworks(centerX - 80, centerY - 50), 300);
+            setTimeout(() => explodeFireworks(centerX + 80, centerY - 20), 600);
+            setTimeout(() => explodeFireworks(centerX, centerY - 100), 1000);
+
+            // 4. Esconde a tela de fundo preta da caixa e revela o cartão
             setTimeout(() => {
                 giftScreen.style.opacity = '0';
-                giftScreen.style.visibility = 'hidden';
+                setTimeout(() => { giftScreen.style.visibility = 'hidden'; }, 1000);
                 
+                // Surge o cartão majestosamente
                 cardWrapper.classList.add('visible');
-                
-                // Prepara a raspadinha com o tamanho correto
-                resizeCanvas(); 
-            }, 1200);
+            }, 800); // Aparece mais rápido, junto com os fogos
         }
+
 
         // ==========================================
         // SLIDESHOW DE FOTOS
@@ -274,85 +354,6 @@
         }
         setupPhotoAlbum();
 
-        // ==========================================
-        // RASPADINHA MÁGICA
-        // ==========================================
-        const canvas = document.getElementById('scratch-canvas');
-        const ctx = canvas.getContext('2d');
-        const wrapper = document.getElementById('card-wrapper');
-
-        function resizeCanvas() {
-            canvas.width = wrapper.clientWidth || 360;
-            canvas.height = wrapper.clientHeight || 600;
-            fillCanvas();
-        }
-
-        function fillCanvas() {
-            ctx.fillStyle = "#0a0a0a";
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            for (let i = 0; i < 4000; i++) {
-                ctx.fillStyle = Math.random() > 0.5 ? 'rgba(255,106,0,0.03)' : 'rgba(255,255,255,0.02)';
-                ctx.fillRect(Math.random() * canvas.width, Math.random() * canvas.height, 1, 1);
-            }
-            ctx.font = "600 16px 'Inter', sans-serif";
-            ctx.fillStyle = "#FF9900";
-            ctx.textAlign = "center";
-            ctx.fillText("Passe o dedo para desembaçar ✨", canvas.width / 2, canvas.height / 2);
-        }
-
-        window.addEventListener('resize', resizeCanvas);
-
-        let isDrawing = false;
-        function getMousePos(e) {
-            let rect = canvas.getBoundingClientRect();
-            let clientX = e.touches ? e.touches[0].clientX : e.clientX;
-            let clientY = e.touches ? e.touches[0].clientY : e.clientY;
-            return { x: clientX - rect.left, y: clientY - rect.top };
-        }
-
-        function startDraw(e) { isDrawing = true; draw(e); }
-        function stopDraw() { isDrawing = false; checkReveal(); }
-
-        function draw(e) {
-            if (!isDrawing) return;
-            e.preventDefault(); 
-            let pos = getMousePos(e);
-            ctx.globalCompositeOperation = 'destination-out';
-            ctx.beginPath();
-            ctx.arc(pos.x, pos.y, 40, 0, 2 * Math.PI); 
-            ctx.fill();
-            if(Math.random() > 0.85) createSparkle(pos.x, pos.y);
-        }
-
-        canvas.addEventListener('mousedown', startDraw);
-        canvas.addEventListener('mousemove', draw);
-        canvas.addEventListener('mouseup', stopDraw);
-        canvas.addEventListener('touchstart', startDraw, { passive: false });
-        canvas.addEventListener('touchmove', draw, { passive: false });
-        canvas.addEventListener('touchend', stopDraw);
-
-        function checkReveal() {
-            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-            const pixels = imageData.data;
-            let transparentPixels = 0;
-            for (let i = 3; i < pixels.length; i += 4) { if (pixels[i] === 0) transparentPixels++; }
-            if ((transparentPixels / (pixels.length / 4)) * 100 > 35) {
-                canvas.style.transition = "opacity 1.2s ease";
-                canvas.style.opacity = "0";
-                setTimeout(() => canvas.remove(), 1200); 
-            }
-        }
-
-        function createSparkle(x, y) {
-            const sparkle = document.createElement('div');
-            sparkle.classList.add('sparkle');
-            sparkle.innerHTML = '✨';
-            sparkle.style.left = (x + wrapper.getBoundingClientRect().left) + 'px';
-            sparkle.style.top = (y + wrapper.getBoundingClientRect().top) + 'px';
-            sparkle.style.animation = `flyUp 0.8s ease-out forwards`;
-            document.body.appendChild(sparkle);
-            setTimeout(() => sparkle.remove(), 800);
-        }
 
         // ==========================================
         // CONTADOR
