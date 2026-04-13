@@ -3,14 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Feliz 2 Meses ❤️</title>
+    <title>Nossos 2 Meses ❤️</title>
     
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#050505">
     
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&family=Inter:wght@300;400;600&family=Dancing+Script:wght@700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&family=Inter:wght@300;400;600;800&family=Dancing+Script:wght@700&display=swap');
 
         :root {
             --dark-bg: #050505; 
@@ -33,24 +31,24 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* --- FUNDO LÍQUIDO --- */
+        /* --- FUNDO AMBIENTE --- */
         .ambient-background { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 0; pointer-events: none; }
-        .ambient-light { position: absolute; border-radius: 50%; filter: blur(80px); animation: liquidFloat 20s infinite alternate ease-in-out; opacity: 0.6; }
-        .light-1 { width: 80vw; height: 80vw; background-color: rgba(255, 106, 0, 0.2); top: -10%; left: -10%; }
-        .light-2 { width: 70vw; height: 70vw; background-color: rgba(255, 153, 0, 0.1); bottom: -10%; right: -10%; animation-delay: -5s; }
+        .ambient-light { position: absolute; border-radius: 50%; filter: blur(80px); animation: liquidFloat 20s infinite alternate ease-in-out; opacity: 0.5; }
+        .light-1 { width: 80vw; height: 80vw; background-color: rgba(255, 106, 0, 0.15); top: -10%; left: -10%; }
+        .light-2 { width: 70vw; height: 70vw; background-color: rgba(255, 153, 0, 0.08); bottom: -10%; right: -10%; animation-delay: -5s; }
 
         @keyframes liquidFloat {
             0% { transform: translate(0, 0) scale(1); }
             100% { transform: translate(5vw, 10vh) scale(1.1); }
         }
 
-        /* --- CONTÊINER PRINCIPAL (RESPONSIVO) --- */
+        /* --- CARTÃO --- */
         .card-wrapper {
             position: relative;
             width: 90%;
             max-width: 360px;
-            height: 80vh; /* Ajusta conforme a altura da tela do celular */
-            max-height: 550px;
+            height: 85vh;
+            max-height: 600px;
             border-radius: 24px;
             z-index: 10;
             box-shadow: 0 25px 50px rgba(0,0,0,0.9);
@@ -60,70 +58,40 @@
 
         @keyframes floatCard { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
 
-        /* --- ÁLBUM DE FOTOS --- */
-        .photo-background {
-            position: absolute;
-            inset: 0;
-            z-index: 5;
-        }
-
-        .photo-background img {
-            position: absolute;
-            inset: 0;
-            width: 100%; height: 100%;
-            object-fit: cover; 
-            opacity: 0; 
-            transition: opacity 1.5s ease-in-out; 
-            filter: brightness(0.8);
-        }
-
+        .photo-background { position: absolute; inset: 0; z-index: 5; }
+        .photo-background img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 1.5s ease-in-out; filter: brightness(0.7); }
         .photo-background img.active { opacity: 1; }
 
-        /* --- VIDRO ULTRA CLEAR (BLUR 1PX) --- */
         .pure-glass {
-            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.6) 80%); 
-            backdrop-filter: blur(1px); /* DESFOQUE MÍNIMO PARA MÁXIMA NITIDEZ */
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.8) 90%); 
+            backdrop-filter: blur(1px);
             -webkit-backdrop-filter: blur(1px);
             border-radius: 24px;
             border: 1px solid rgba(255, 255, 255, 0.1);
-            height: 100%;
-            width: 100%;
-            padding: 25px 20px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            align-items: center;
-            text-align: center;
-            position: absolute;
-            top: 0; left: 0;
-            z-index: 10; 
+            height: 100%; width: 100%;
+            padding: 30px 25px;
+            display: flex; flex-direction: column; justify-content: space-between; align-items: center; text-align: center;
+            position: absolute; top: 0; left: 0; z-index: 10; 
         }
 
-        .card-title { font-family: 'Dancing Script', cursive; font-size: 38px; color: var(--orange-main); margin-bottom: 10px; text-shadow: 0 2px 10px rgba(0,0,0,1); }
-        .card-text { font-size: 14px; line-height: 1.5; color: #ffffff; font-weight: 400; text-shadow: 0 1px 8px rgba(0,0,0,1); }
+        .card-title { font-family: 'Dancing Script', cursive; font-size: 36px; color: var(--orange-main); margin-bottom: 10px; }
+        .card-text { font-size: 14px; line-height: 1.7; color: #f0f0f0; font-weight: 300; font-style: italic; }
         
-        /* --- CONTADOR AJUSTADO --- */
+        .signature-box { margin-top: 15px; }
+        .names { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 16px; letter-spacing: 2px; color: #fff; text-transform: uppercase; }
+        .date { font-size: 12px; color: var(--orange-light); margin-top: 5px; font-weight: 400; opacity: 0.8; }
+
         .counter-box {
-            background: rgba(0, 0, 0, 0.6); 
-            border: 1px solid rgba(255, 106, 0, 0.4);
+            background: rgba(0, 0, 0, 0.5); 
+            border: 1px solid rgba(255, 106, 0, 0.3);
             border-radius: 15px;
             padding: 12px 10px;
             width: 100%;
-            margin-top: 10px;
         }
-        .counter-val { font-family: 'Montserrat', sans-serif; font-size: 17px; font-weight: 800; color: var(--orange-light); letter-spacing: 0.5px; }
-        .counter-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: #ccc; margin-top: 4px; }
+        .counter-val { font-family: 'Montserrat', sans-serif; font-size: 18px; font-weight: 800; color: #fff; }
 
         /* --- RASPADINHA --- */
-        #scratch-canvas {
-            position: absolute;
-            inset: 0;
-            z-index: 20; 
-            cursor: pointer;
-            touch-action: none; 
-            border-radius: 24px;
-        }
-
+        #scratch-canvas { position: absolute; inset: 0; z-index: 20; cursor: pointer; touch-action: none; border-radius: 24px; }
         .sparkle { position: absolute; font-size: 20px; z-index: 30; pointer-events: none; }
         @keyframes flyUp { 0% { transform: translateY(0) scale(1); opacity: 1; } 100% { transform: translateY(-80px) scale(1.5); opacity: 0; } }
 
@@ -137,33 +105,34 @@
     </div>
 
     <div class="card-wrapper" id="card-wrapper">
-        
         <div class="photo-background" id="photo-bg">
-            <img src="foto06.jpeg" class="active" alt="Foto 1">
-            <img src="foto14.jpeg" alt="Foto 2">
-            <img src="foto32.jpeg" alt="Foto 3">
-            <img src="foto38.jpeg" alt="Foto 4">
+            <img src="foto06.jpeg" class="active">
+            <img src="foto14.jpeg">
+            <img src="foto32.jpeg">
+            <img src="foto38.jpeg">
         </div>
 
         <div class="pure-glass" id="card-content">
             <div style="margin-top: 10px;">
-                <h1 class="card-title">Feliz 02 Meses!</h1>
+                <h1 class="card-title">Dois meses de nós...</h1>
                 <p class="card-text">
-                    "02 Meses, minha Namorada! 🧡 Dizem que quando encontramos a pessoa certa, a alma reconhece. E a minha encontrou o descanso perfeito no seu abraço. Obrigado por fazer os meus dias mais coloridos e por ser o meu lugar favorito no mundo. Que a nossa história continue sendo escrita com esse amor inexplicável. Te amo!"
+                    "Feliz 2 meses de nós! ✨ Sessenta dias em que a vida ganhou um novo ritmo e o meu coração encontrou o seu verdadeiro lar. A distância e a saudade podem tentar nos desafiar, mas a cada reencontro, a cada sorriso e a cada 'eu te amo', tenho a certeza de que nascemos para dar certo. Que este seja apenas o início de uma vida inteira de nós dois."
                 </p>
+                <div class="signature-box">
+                    <div class="names">Lucas 🧡 Thayna</div>
+                    <div class="date">15 de Abril de 2026</div>
+                </div>
             </div>
             
             <div class="counter-box">
                 <div class="counter-val" id="live-counter">...</div>
-                <div class="counter-label">Oficialmente Juntos</div>
             </div>
         </div>
 
         <canvas id="scratch-canvas"></canvas>
-
     </div>
 
-    <audio id="bg-music" loop>
+    <audio id="bg-music" loop preload="auto">
         <source src="musica-cartao.mp3" type="audio/mpeg">
     </audio>
 
@@ -186,7 +155,7 @@
         const ctx = canvas.getContext('2d');
         const wrapper = document.getElementById('card-wrapper');
         const bgMusic = document.getElementById('bg-music');
-        let musicStarted = false;
+        let audioUnlocked = false;
 
         function resizeCanvas() {
             canvas.width = wrapper.clientWidth;
@@ -204,11 +173,10 @@
             ctx.font = "600 15px 'Inter', sans-serif";
             ctx.fillStyle = "#FF9900";
             ctx.textAlign = "center";
-            ctx.fillText("Desembaça aqui ✨", canvas.width / 2, canvas.height / 2);
+            ctx.fillText("Toque e desembaça nosso amor ✨", canvas.width / 2, canvas.height / 2);
         }
 
         window.addEventListener('load', resizeCanvas);
-        window.addEventListener('resize', resizeCanvas);
 
         let isDrawing = false;
         function getMousePos(e) {
@@ -218,9 +186,18 @@
             return { x: clientX - rect.left, y: clientY - rect.top };
         }
 
+        // FUNÇÃO QUE LIBERA O ÁUDIO NO MOBILE
+        function unlockAudio() {
+            if (!audioUnlocked) {
+                bgMusic.play().then(() => {
+                    audioUnlocked = true;
+                }).catch(e => console.log("Aguardando interação profunda"));
+            }
+        }
+
         function startDraw(e) { 
             isDrawing = true; 
-            if (!musicStarted) { bgMusic.play().catch(e => {}); musicStarted = true; }
+            unlockAudio(); 
             draw(e); 
         }
         function stopDraw() { isDrawing = false; checkReveal(); }
@@ -231,7 +208,7 @@
             let pos = getMousePos(e);
             ctx.globalCompositeOperation = 'destination-out';
             ctx.beginPath();
-            ctx.arc(pos.x, pos.y, 35, 0, 2 * Math.PI); 
+            ctx.arc(pos.x, pos.y, 40, 0, 2 * Math.PI); 
             ctx.fill();
             if(Math.random() > 0.85) createSparkle(pos.x, pos.y);
         }
@@ -249,9 +226,9 @@
             let transparentPixels = 0;
             for (let i = 3; i < pixels.length; i += 4) { if (pixels[i] === 0) transparentPixels++; }
             if ((transparentPixels / (pixels.length / 4)) * 100 > 35) {
-                canvas.style.transition = "opacity 1s ease";
+                canvas.style.transition = "opacity 1.2s ease";
                 canvas.style.opacity = "0";
-                setTimeout(() => canvas.remove(), 1000); 
+                setTimeout(() => canvas.remove(), 1200); 
             }
         }
 
