@@ -43,7 +43,7 @@
             100% { transform: translate(5vw, 10vh) scale(1.1); }
         }
 
-        /* --- TELA DE BLOQUEIO / DESBLOQUEIO --- */
+        /* --- TELA DE BLOQUEIO (SAVE THE DATE) --- */
         #locked-screen {
             position: fixed; inset: 0; z-index: 60000;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
@@ -54,15 +54,15 @@
         .lock-card {
             background: linear-gradient(to bottom, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01)); 
             backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-            border-radius: 24px; border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px; border: 1px solid rgba(255, 106, 0, 0.2);
             width: 90%; max-width: 360px; padding: 40px 25px;
             display: flex; flex-direction: column; align-items: center; text-align: center;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.9);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.9), 0 0 30px rgba(255, 106, 0, 0.1);
         }
 
-        .lock-icon { font-size: 50px; margin-bottom: 20px; transition: transform 0.5s ease; }
-        .lock-title { font-family: 'Dancing Script', cursive; font-size: 40px; color: var(--orange-main); margin-bottom: 15px; }
-        .lock-text { font-size: 15px; line-height: 1.6; color: #ccc; margin-bottom: 30px; font-weight: 300;}
+        .lock-icon { font-size: 50px; margin-bottom: 15px; transition: transform 0.5s ease; }
+        .lock-title { font-family: 'Dancing Script', cursive; font-size: 36px; color: var(--orange-main); margin-bottom: 10px; }
+        .lock-text { font-size: 14px; line-height: 1.6; color: #ccc; margin-bottom: 25px; font-weight: 300;}
 
         .countdown-timer { display: flex; gap: 12px; justify-content: center; }
         .time-box {
@@ -71,18 +71,18 @@
             border-radius: 12px; padding: 10px; width: 60px;
         }
         .time-val { font-family: 'Montserrat', sans-serif; font-size: 20px; font-weight: 800; color: #fff; }
-        .time-label { font-size: 8px; text-transform: uppercase; letter-spacing: 1px; color: var(--orange-light); margin-top: 4px; }
+        .time-label { font-size: 9px; text-transform: uppercase; letter-spacing: 1px; color: var(--orange-light); margin-top: 4px; }
 
-        /* Estilo para quando desbloquear */
         .unlocked-celebration { animation: celebrate 0.5s ease infinite alternate; }
         @keyframes celebrate { from { transform: scale(1); } to { transform: scale(1.1); } }
 
-        /* --- BOTÕES --- */
+        /* --- BOTÃO --- */
         .btn {
             background: linear-gradient(135deg, var(--orange-main), var(--orange-light));
-            color: #ffffff; border: none; padding: 16px 36px; font-size: 16px; border-radius: 50px;
+            color: #ffffff; border: none; padding: 14px 30px; font-size: 15px; border-radius: 50px;
             cursor: pointer; transition: all 0.3s; font-family: 'Inter', sans-serif; font-weight: 600;
             text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 10px 20px var(--orange-glow);
+            margin-top: 25px; display: none; /* Começa escondido */
         }
         .btn:hover { transform: translateY(-3px); box-shadow: 0 15px 30px var(--orange-glow); }
 
@@ -116,9 +116,10 @@
         
         .gift-container.open .gift-lid { transform: translateY(-150px) rotate(-20deg); opacity: 0; }
         .gift-container.open .gift-box-body { transform: translateY(50px); opacity: 0; transition: all 0.8s ease 0.1s; }
+        .gift-container.open .gift-text { opacity: 0; }
 
         /* --- REVOADA DE BALÕES --- */
-        .balloon-heart { position: fixed; bottom: -100px; z-index: 55000; pointer-events: none; animation: flyBalloon forwards ease-in; }
+        .balloon-heart { position: fixed; bottom: -100px; z-index: 55000; pointer-events: none; animation: flyBalloon forwards ease-in; text-shadow: 0 5px 15px rgba(0,0,0,0.6); }
         @keyframes flyBalloon {
             0% { transform: translateY(0) scale(0.5) rotate(0deg); opacity: 0; }
             10% { opacity: 1; }
@@ -134,25 +135,27 @@
             transition: all 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: none;
         }
         .card-wrapper.visible { opacity: 1; transform: scale(1) translateY(0); pointer-events: auto; display: block; }
-        @keyframes floatCard { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
 
         .photo-background { position: absolute; inset: 0; z-index: 5; }
         .photo-background img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 1.5s ease-in-out; filter: brightness(0.65); }
         .photo-background img.active { opacity: 1; }
 
         .pure-glass {
-            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.8) 90%); 
-            backdrop-filter: blur(1px); -webkit-backdrop-filter: blur(1px);
-            height: 100%; width: 100%; padding: 25px; 
+            position: absolute; inset: 0; z-index: 10; /* CORREÇÃO APLICADA AQUI! */
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.85) 90%); 
+            backdrop-filter: blur(1.5px); -webkit-backdrop-filter: blur(1.5px);
+            padding: 25px 20px; 
             display: flex; flex-direction: column; justify-content: center; gap: 20px; align-items: center; text-align: center;
         }
 
-        .card-title { font-family: 'Dancing Script', cursive; font-size: 38px; color: var(--orange-main); }
-        .card-text { font-size: 16px; line-height: 1.6; color: #f0f0f0; font-weight: 300; font-style: italic; }
-        .names { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 18px; letter-spacing: 2px; text-transform: uppercase; }
-        .counter-box { background: rgba(0, 0, 0, 0.5); border: 1px solid rgba(255, 106, 0, 0.3); border-radius: 15px; padding: 15px; width: 100%; }
-        .counter-label { font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: #ccc; margin-bottom: 5px; }
-        .counter-val { font-family: 'Montserrat', sans-serif; font-size: 19px; font-weight: 800; }
+        .card-title { font-family: 'Dancing Script', cursive; font-size: 40px; color: var(--orange-main); margin-bottom: 5px; text-shadow: 0 2px 8px rgba(0,0,0,0.8); }
+        .card-text { font-size: 15px; line-height: 1.6; color: #f0f0f0; font-weight: 300; font-style: italic; text-shadow: 0 1px 5px rgba(0,0,0,0.8); }
+        .names { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 18px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: -5px; }
+        .date { font-size: 12px; color: var(--orange-light); font-weight: 400; opacity: 0.8; }
+        
+        .counter-box { background: rgba(0, 0, 0, 0.6); border: 1px solid rgba(255, 106, 0, 0.3); border-radius: 15px; padding: 12px; width: 100%; margin-top: 10px; }
+        .counter-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: #ccc; margin-bottom: 5px; }
+        .counter-val { font-family: 'Montserrat', sans-serif; font-size: 18px; font-weight: 800; color: #fff; }
     </style>
 </head>
 <body>
@@ -166,22 +169,17 @@
         <div class="lock-card">
             <div class="lock-icon" id="lock-icon">🔒</div>
             
-            <div id="state-locked">
-                <h1 class="lock-title">Ansiosa?</h1>
-                <p class="lock-text">O seu presente foi trancado a sete chaves. Ele será revelado automaticamente em:</p>
-                <div class="countdown-timer">
-                    <div class="time-box"><div class="time-val" id="lock-dias">00</div><div class="time-label">Dias</div></div>
-                    <div class="time-box"><div class="time-val" id="lock-horas">00</div><div class="time-label">Hrs</div></div>
-                    <div class="time-box"><div class="time-val" id="lock-min">00</div><div class="time-label">Min</div></div>
-                    <div class="time-box"><div class="time-val" id="lock-seg">00</div><div class="time-label">Seg</div></div>
-                </div>
+            <h1 class="lock-title" id="lock-title">Ansiosa?</h1>
+            <p class="lock-text" id="lock-text">O seu presente foi trancado a sete chaves. Ele será revelado automaticamente em:</p>
+            
+            <div class="countdown-timer">
+                <div class="time-box"><div class="time-val" id="lock-dias">00</div><div class="time-label">Dias</div></div>
+                <div class="time-box"><div class="time-val" id="lock-horas">00</div><div class="time-label">Hrs</div></div>
+                <div class="time-box"><div class="time-val" id="lock-min">00</div><div class="time-label">Min</div></div>
+                <div class="time-box"><div class="time-val" id="lock-seg">00</div><div class="time-label">Seg</div></div>
             </div>
 
-            <div id="state-unlocked" style="display: none;">
-                <h1 class="lock-title">O dia chegou!</h1>
-                <p class="lock-text">Finalmente, amor! Seu presente de 2 meses foi desbloqueado com sucesso. ❤️</p>
-                <button class="btn" onclick="startSurprise()">Ver Surpresa</button>
-            </div>
+            <button class="btn" id="unlock-btn" onclick="startSurprise()">Ver Surpresa</button>
         </div>
     </div>
 
@@ -189,7 +187,7 @@
         <div class="gift-container" id="gift-btn" onclick="revealCard()">
             <div class="gift-lid"></div>
             <div class="gift-box-body"></div>
-            <div class="gift-text">Clique para abrir ✨</div>
+            <div class="gift-text">Toque para abrir ✨</div>
         </div>
     </div>
 
@@ -204,8 +202,13 @@
         </div>
         <div class="pure-glass">
             <h1 class="card-title">Dois meses de nós...</h1>
-            <p class="card-text">"Feliz 2 meses, minha namorada! Sessenta dias em que a vida ganhou um novo ritmo e o meu coração encontrou o seu verdadeiro lar. Que este seja apenas o início de uma vida inteira de nós dois."</p>
-            <div class="names">Lucas 🧡 Thayna</div>
+            <p class="card-text">"Feliz 2 meses, minha namorada! Sessenta dias em que a vida ganhou um novo ritmo e o meu coração encontrou o seu verdadeiro lar. A distância e a saudade podem tentar nos desafiar, mas a cada reencontro, a cada sorriso e a cada 'eu te amo', tenho a certeza de que nascemos para dar certo. Que este seja apenas o início de uma vida inteira de nós dois."</p>
+            
+            <div>
+                <div class="names">Lucas 🧡 Thayna</div>
+                <div class="date">15 de Abril de 2026</div>
+            </div>
+
             <div class="counter-box">
                 <div class="counter-label">Oficialmente juntos há:</div>
                 <div class="counter-val" id="live-counter">...</div>
@@ -218,19 +221,33 @@
     </audio>
 
     <script>
-        // DATA DE DESBLOQUEIO: 15 de Abril de 2026 à meia-noite
+        // ==========================================
+        // LÓGICA DO SAVE THE DATE
+        // ==========================================
         const dataTarget = new Date("2026-04-15T00:00:00");
         const dataStartNamoro = new Date("2026-02-15T00:00:00");
         
+        let lockInterval = setInterval(updateLock, 1000);
+
         function updateLock() {
             const agora = new Date();
             const diff = dataTarget - agora;
 
             if (diff <= 0) {
-                document.getElementById('state-locked').style.display = 'none';
-                document.getElementById('state-unlocked').style.display = 'block';
+                // ZERA OS CONTADORES
+                document.getElementById("lock-dias").innerHTML = "00";
+                document.getElementById("lock-horas").innerHTML = "00";
+                document.getElementById("lock-min").innerHTML = "00";
+                document.getElementById("lock-seg").innerHTML = "00";
+
+                // MUDA OS TEXTOS E MOSTRA O BOTÃO
                 document.getElementById('lock-icon').innerHTML = '🎁';
                 document.getElementById('lock-icon').classList.add('unlocked-celebration');
+                document.getElementById('lock-title').innerHTML = 'O dia chegou!';
+                document.getElementById('lock-text').innerHTML = 'Finalmente, amor! Seu presente foi desbloqueado com sucesso. ❤️';
+                document.getElementById('unlock-btn').style.display = 'block';
+                
+                clearInterval(lockInterval); // Para de calcular, já chegou a hora!
             } else {
                 const dias = Math.floor(diff / 86400000);
                 const horas = Math.floor((diff / 3600000) % 24);
@@ -242,8 +259,7 @@
                 document.getElementById("lock-seg").innerHTML = segundos.toString().padStart(2, '0');
             }
         }
-        setInterval(updateLock, 1000);
-        updateLock();
+        updateLock(); // Executa imediatamente ao carregar
 
         function startSurprise() {
             document.getElementById('locked-screen').style.opacity = '0';
@@ -253,11 +269,20 @@
             }, 1000);
         }
 
+        // ==========================================
+        // LÓGICA DE ABRIR O PRESENTE (BALÕES + MÚSICA)
+        // ==========================================
+        const bgMusic = document.getElementById('bg-music');
+        let audioUnlocked = false;
+
         function revealCard() {
             document.getElementById('gift-btn').classList.add('open');
-            document.getElementById('bg-music').play().catch(e => console.log(e));
             
-            // Lógica dos Balões
+            if (!audioUnlocked) {
+                bgMusic.play().then(() => { audioUnlocked = true; }).catch(e => console.log(e));
+            }
+            
+            // Revoada de Balões
             for (let i = 0; i < 100; i++) {
                 setTimeout(() => {
                     const b = document.createElement('div');
@@ -272,18 +297,21 @@
                 }, i * 30);
             }
 
+            // Revela o Cartão
             setTimeout(() => {
                 document.getElementById('gift-screen').style.opacity = '0';
                 setTimeout(() => {
                     document.getElementById('gift-screen').style.display = 'none';
                     const cw = document.getElementById('card-wrapper');
-                    cw.style.display = 'block';
-                    setTimeout(() => cw.classList.add('visible'), 50);
+                    cw.style.display = 'block'; // Muda pra block pra poder ocupar espaço
+                    setTimeout(() => cw.classList.add('visible'), 50); // Dá um delay mínimo pro CSS entender e animar
                 }, 1000);
             }, 2500);
         }
 
-        // Slideshow
+        // ==========================================
+        // SLIDESHOW E CONTADOR DE NAMORO
+        // ==========================================
         setInterval(() => {
             const active = document.querySelector('#photo-bg img.active');
             let next = active.nextElementSibling || document.querySelector('#photo-bg img:first-child');
@@ -291,14 +319,13 @@
             next.classList.add('active');
         }, 4500);
 
-        // Contador
         setInterval(() => {
             const diff = new Date() - dataStartNamoro;
             const d = Math.floor(diff / 86400000);
             const h = Math.floor((diff / 3600000) % 24);
             const m = Math.floor((diff / 60000) % 60);
             const s = Math.floor((diff / 1000) % 60);
-            document.getElementById("live-counter").innerHTML = `${d}d : ${h}h : ${m}m : ${s}s`;
+            document.getElementById("live-counter").innerHTML = `${d}d : ${h.toString().padStart(2, '0')}h : ${m.toString().padStart(2, '0')}m : ${s.toString().padStart(2, '0')}s`;
         }, 1000);
     </script>
 </body>
