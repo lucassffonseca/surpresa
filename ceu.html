@@ -41,16 +41,24 @@
         .hud-title { font-family: 'Dancing Script', cursive; font-size: 36px; color: #fff; text-shadow: 0 2px 10px rgba(0,0,0,0.8); }
         .hud-sub { font-family: 'Montserrat', sans-serif; font-size: 10px; text-transform: uppercase; letter-spacing: 3px; color: #FF9900; opacity: 0.9;}
 
-        #click-layer { position: absolute; inset: 0; z-index: 5; cursor: pointer; }
-        .crosshair {
-            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 50px; height: 50px; border: 1px solid rgba(255,255,255,0.4); border-radius: 50%;
-            z-index: 10; pointer-events: none; display: flex; justify-content: center; align-items: center;
+        /* ÁREA DE CLIQUE (SEM MIRA) */
+        #click-layer { position: absolute; inset: 0; z-index: 5; }
+
+        /* Animação para instruir a olhar para cima */
+        .look-up-guide {
+            position: fixed; bottom: 15%; left: 50%; transform: translateX(-50%);
+            display: flex; flex-direction: column; align-items: center; z-index: 10;
+            opacity: 0; transition: opacity 1s; pointer-events: none;
         }
-        .crosshair::after { content: ''; width: 4px; height: 4px; background: rgba(255,106,0,1); border-radius: 50%; box-shadow: 0 0 10px rgba(255,106,0,1); }
+        .look-up-guide.visible { opacity: 1; animation: fadeOut 8s forwards; }
+        .arrow-up { font-size: 30px; animation: bounceUp 1.5s infinite; color: rgba(255,106,0,0.8); }
+        .guide-text { font-size: 12px; text-transform: uppercase; letter-spacing: 2px; margin-top: 5px; color: rgba(255,255,255,0.8); }
+        
+        @keyframes bounceUp { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+        @keyframes fadeOut { 0%, 80% { opacity: 1; } 100% { opacity: 0; visibility: hidden; } }
 
         /* ==========================================
-           PAINEL DA MEMÓRIA (CRISTAL COM FOTO!)
+           PAINEL DA MEMÓRIA
            ========================================== */
         #memory-overlay {
             position: fixed; inset: 0; z-index: 10000;
@@ -73,14 +81,9 @@
         .mem-month { font-family: 'Montserrat', sans-serif; font-size: 11px; color: #FF9900; text-transform: uppercase; letter-spacing: 3px; font-weight: 800; margin-bottom: 5px;}
         .mem-title { font-family: 'Dancing Script', cursive; font-size: 32px; color: #fff; text-shadow: 0 2px 5px rgba(0,0,0,0.5); margin-bottom: 15px;}
 
-        /* --- ESTILO DA FOTO --- */
         .mem-photo {
-            width: 100%; max-height: 200px; /* Mantém a proporção sem ocupar a tela inteira */
-            object-fit: cover; /* Recorta a imagem pra encaixar perfeitamente */
-            border-radius: 12px;
-            border: 2px solid rgba(255,106,0,0.3);
-            margin-bottom: 20px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+            width: 100%; max-height: 200px; object-fit: cover; border-radius: 12px;
+            border: 2px solid rgba(255,106,0,0.3); margin-bottom: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.5);
         }
 
         .mem-text { font-size: 14px; line-height: 1.6; color: #e0e0e0; font-weight: 300; font-style: italic; margin-bottom: 25px; padding: 0 5px;}
@@ -102,18 +105,22 @@
     <video id="ar-camera-feed" autoplay playsinline muted></video>
 
     <div id="start-screen">
-        <h1 class="start-title">Nosso Universo</h1>
-        <p class="start-text">Permita o acesso à câmera e aos sensores. Depois, aponte para o céu e procure as estrelas pulsantes da nossa história.</p>
+        <h1 class="start-title">Nosso Céu</h1>
+        <p class="start-text">Permita o acesso à câmera e aos sensores. Depois, olhe para cima e procure as constelações da nossa história.</p>
         <button class="start-btn" onclick="startExperience()">Permitir e Começar</button>
     </div>
 
     <div class="ui-hud" id="hud">
         <h2 class="hud-title">3 Meses Juntos</h2>
-        <div class="hud-sub">Aponte para cima e procure</div>
+        <div class="hud-sub">Toque nas estrelas para abrir</div>
     </div>
     
+    <div class="look-up-guide" id="guide">
+        <div class="arrow-up">⇧</div>
+        <div class="guide-text">Aponte para o alto</div>
+    </div>
+
     <div id="click-layer" style="display: none;"></div>
-    <div class="crosshair" id="crosshair" style="display: none;"></div>
 
     <canvas id="webgl-canvas"></canvas>
 
@@ -121,9 +128,7 @@
         <div class="memory-card">
             <div class="mem-month" id="mem-month">Março de 2026</div>
             <h2 class="mem-title" id="mem-title">O Começo</h2>
-            
             <img src="" alt="Nossa Memória" id="mem-photo" class="mem-photo">
-            
             <p class="mem-text" id="mem-text">Texto...</p>
             <button class="close-btn" onclick="closeMemory()">Voltar a Procurar</button>
         </div>
@@ -133,29 +138,28 @@
 
     <script>
         // ==========================================
-        // DADOS DAS MEMÓRIAS (COM FOTOS!)
+        // DADOS E POSIÇÕES AGRUPADAS (Z negativo, Y alto)
         // ==========================================
         const memorias = [
             {
                 id: 1, month: "Março de 2026", title: "O Início",
                 text: "Onde as cartinhas começaram e a distância percebeu que tinha arranjado um problema sério. Nosso primeiro mês provou que nossa conexão vai além da geografia.",
-                color: 0xFFD700, 
-                imageUrl: "foto01.jpeg", // <--- NOME DO ARQUIVO DA FOTO 1
-                pos: { x: -70, y: 160, z: -90 } // "Para cima"
+                color: 0xFFD700, imageUrl: "foto01.jpeg",
+                // Mais próximas entre si e levemente inclinadas para cima
+                pos: { x: -40, y: 120, z: -80 } 
             },
             {
                 id: 2, month: "Abril de 2026", title: "A Nossa Luz",
                 text: "O mês dos girassóis. Encontramos nosso ritmo, dividimos nossos cafés e construímos o nosso porto seguro. Você iluminou meus dias.",
-                color: 0xFF6A00, 
-                imageUrl: "foto02.jpeg", // <--- NOME DO ARQUIVO DA FOTO 2
-                pos: { x: 130, y: 110, z: -20 }
+                color: 0xFF6A00, imageUrl: "foto02.jpegg",
+                // A estrela central mais alta
+                pos: { x: 0, y: 150, z: -100 }
             },
             {
                 id: 3, month: "Maio de 2026", title: "O Nosso Universo",
                 text: "Três meses. Hoje o nosso amor não cabe mais em um diário ou numa tela, ele encontrou espaço no céu aberto da Realidade Aumentada. Te amo!",
-                color: 0x00e5ff, 
-                imageUrl: "foto03.jpeg", // <--- NOME DO ARQUIVO DA FOTO 3
-                pos: { x: -20, y: 190, z: 70 }
+                color: 0x00e5ff, imageUrl: "foto03.jpeg",
+                pos: { x: 40, y: 130, z: -70 }
             }
         ];
 
@@ -166,13 +170,10 @@
         function initScene() {
             const canvas = document.getElementById('webgl-canvas');
             scene = new THREE.Scene();
-            
-            // FUNDO 100% TRANSPARENTE
-            scene.background = null; 
+            scene.background = null; // Fundo transparente
 
             camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
             
-            // alpha: true permite que a câmera apareça por trás
             renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
             renderer.setClearColor(0x000000, 0); 
             renderer.setSize(window.innerWidth, window.innerHeight);
@@ -181,8 +182,8 @@
             raycaster = new THREE.Raycaster();
             mouse = new THREE.Vector2();
 
-            // REMOVIOS OS OUTROS UNIVERSOS. FICAMOS APENAS COM AS ESTRELAS CLICÁVEIS.
             createMemoryStars();
+            drawConstellationLines();
             
             document.getElementById('click-layer').addEventListener('click', onInteract, false);
             document.getElementById('click-layer').addEventListener('touchstart', onInteract, {passive: false});
@@ -191,47 +192,64 @@
             animate();
         }
 
-        // Estrelas maiores e mais chamativas pra destacar no feed real
         function createMemoryStars() {
             memorias.forEach(mem => {
-                // Núcleo brilhante
-                const coreGeo = new THREE.SphereGeometry(6, 32, 32); // Aumentei o tamanho
+                const coreGeo = new THREE.SphereGeometry(4, 32, 32);
                 const coreMat = new THREE.MeshBasicMaterial({ color: mem.color });
                 const star = new THREE.Mesh(coreGeo, coreMat);
                 
-                // Halo Interno (Pulsante)
-                const haloGeo = new THREE.SphereGeometry(10, 32, 32);
+                const haloGeo = new THREE.SphereGeometry(8, 32, 32);
                 const haloMat = new THREE.MeshBasicMaterial({ color: mem.color, transparent: true, opacity: 0.6, blending: THREE.AdditiveBlending });
                 const halo = new THREE.Mesh(haloGeo, haloMat);
                 star.add(halo);
 
-                // Halo Externo (Suave)
-                const haloBigGeo = new THREE.SphereGeometry(22, 32, 32);
+                const haloBigGeo = new THREE.SphereGeometry(18, 32, 32);
                 const haloBigMat = new THREE.MeshBasicMaterial({ color: mem.color, transparent: true, opacity: 0.25, blending: THREE.AdditiveBlending });
                 const haloBig = new THREE.Mesh(haloBigGeo, haloBigMat);
                 star.add(haloBig);
 
+                // CAIXA DE COLISÃO INVISÍVEL GIGANTE PARA FACILITAR O CLIQUE
+                const hitBoxGeo = new THREE.SphereGeometry(30, 16, 16);
+                const hitBoxMat = new THREE.MeshBasicMaterial({ visible: false }); // Fica invisível
+                const hitBox = new THREE.Mesh(hitBoxGeo, hitBoxMat);
+                star.add(hitBox);
+
                 star.position.set(mem.pos.x, mem.pos.y, mem.pos.z);
+                
+                // O Raycaster vai atingir o HitBox, então passamos os dados pra ele
+                hitBox.userData = { isMemory: true, data: mem };
+                
+                // Pra garantir, colocamos na estrela também
                 star.userData = { isMemory: true, data: mem, halo: halo, haloBig: haloBig };
+                
                 memoryStarsGroup.add(star);
             });
             scene.add(memoryStarsGroup);
         }
 
+        // ==========================================
+        // LINHAS DA CONSTELAÇÃO
+        // ==========================================
+        function drawConstellationLines() {
+            const material = new THREE.LineBasicMaterial({ color: 0xFF9900, transparent: true, opacity: 0.4 });
+            const points = [];
+            points.push(new THREE.Vector3(memorias[0].pos.x, memorias[0].pos.y, memorias[0].pos.z));
+            points.push(new THREE.Vector3(memorias[1].pos.x, memorias[1].pos.y, memorias[1].pos.z));
+            points.push(new THREE.Vector3(memorias[2].pos.x, memorias[2].pos.y, memorias[2].pos.z));
+            
+            const geometry = new THREE.BufferGeometry().setFromPoints(points);
+            const line = new THREE.Line(geometry, material);
+            scene.add(line);
+        }
+
         async function startExperience() {
             document.getElementById('bg-music').play().catch(e => console.log(e));
 
-            // SOLICITA CÂMERA (AR)
             try {
-                const stream = await navigator.mediaDevices.getUserMedia({ 
-                    video: { facingMode: 'environment' }
-                });
+                const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
                 document.getElementById('ar-camera-feed').srcObject = stream;
-            } catch (err) {
-                console.error("Câmera falhou:", err);
-            }
+            } catch (err) { console.error("Câmera falhou:", err); }
 
-            // SOLICITA GIROSCÓPIO
             if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
                 DeviceOrientationEvent.requestPermission()
                     .then(permissionState => {
@@ -239,19 +257,17 @@
                             window.addEventListener('deviceorientation', handleOrientation);
                             isGyroEnabled = true;
                         }
-                    })
-                    .catch(console.error);
+                    }).catch(console.error);
             } else {
                 window.addEventListener('deviceorientation', handleOrientation);
                 isGyroEnabled = true;
             }
 
-            // Ativa UI
             document.getElementById('start-screen').style.opacity = '0';
             setTimeout(() => {
                 document.getElementById('start-screen').style.visibility = 'hidden';
                 document.getElementById('hud').classList.add('visible');
-                document.getElementById('crosshair').style.display = 'flex';
+                document.getElementById('guide').classList.add('visible'); // Mostra a seta
                 document.getElementById('click-layer').style.display = 'block';
                 initScene();
             }, 1000);
@@ -266,33 +282,47 @@
             camera.quaternion.setFromEuler(euler);
         }
 
+        // ==========================================
+        // LÓGICA DO CLIQUE / TOQUE DIRETO (SEM MIRA)
+        // ==========================================
         function onInteract(event) {
-            // Mira pro centro
-            mouse.x = 0; mouse.y = 0; 
+            event.preventDefault();
+            
+            // Pega a coordenada exata do toque do dedo ou mouse
+            if (event.type === 'touchstart') {
+                mouse.x = (event.touches[0].clientX / window.innerWidth) * 2 - 1;
+                mouse.y = -(event.touches[0].clientY / window.innerHeight) * 2 + 1;
+            } else {
+                mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+                mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+            }
 
             raycaster.setFromCamera(mouse, camera);
-            const intersects = raycaster.intersectObjects(memoryStarsGroup.children);
+            
+            // Verifica interseção com os filhos do grupo (incluindo as HitBoxes invisíveis!)
+            const intersects = raycaster.intersectObjects(memoryStarsGroup.children, true);
 
             if (intersects.length > 0) {
-                const star = intersects[0].object;
-                if (star.userData.isMemory) {
-                    openMemory(star.userData.data);
+                // Pega o primeiro objeto atingido
+                let obj = intersects[0].object;
+                
+                // Verifica se ele ou o "pai" dele tem os dados da memória
+                if (obj.userData.isMemory) {
+                    openMemory(obj.userData.data);
+                } else if (obj.parent && obj.parent.userData.isMemory) {
+                    openMemory(obj.parent.userData.data);
                 }
             }
         }
 
-        // ==========================================
-        // REVELAÇÃO DO CARD COM FOTO!
-        // ==========================================
         function openMemory(data) {
             document.getElementById('mem-month').innerText = data.month;
             document.getElementById('mem-title').innerText = data.title;
             document.getElementById('mem-text').innerText = data.text;
             
-            // CARREGA A FOTO NO CARD
             const memPhoto = document.getElementById('mem-photo');
-            memPhoto.src = data.imageUrl; // <--- INJETA O LINK DA FOTO AQUI
-            memPhoto.style.display = 'block'; // Garante que a foto apareça
+            memPhoto.src = data.imageUrl; 
+            memPhoto.style.display = 'block'; 
 
             document.getElementById('memory-overlay').classList.add('active');
             document.getElementById('click-layer').style.display = 'none';
@@ -301,11 +331,7 @@
         function closeMemory() {
             document.getElementById('memory-overlay').classList.remove('active');
             document.getElementById('click-layer').style.display = 'block';
-            
-            // Reseta a foto quando fecha pra não carregar a errada na próxima
-            setTimeout(() => {
-                document.getElementById('mem-photo').src = "";
-            }, 600);
+            setTimeout(() => { document.getElementById('mem-photo').src = ""; }, 600);
         }
 
         function onWindowResize() {
@@ -317,8 +343,6 @@
 
         function animate() {
             requestAnimationFrame(animate);
-
-            // Animação de pulsação mais intensa
             const time = Date.now() * 0.0035;
             memoryStarsGroup.children.forEach(star => {
                 if (star.userData.halo) {
@@ -328,7 +352,6 @@
                     star.userData.haloBig.scale.set(scale2, scale2, scale2);
                 }
             });
-
             renderer.render(scene, camera);
         }
     </script>
