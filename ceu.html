@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Nosso Céu - 3 Meses 🧡</title>
+    
+    <meta name="theme-color" content="#020204">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;800;900&family=Dancing+Script:wght@700&family=Inter:wght@300;400;600&display=swap');
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body, html { overflow: hidden; height: 100vh; width: 100vw; background-color: #020204; color: #fff; font-family: 'Inter', sans-serif; }
+        
+        #webgl-canvas { position: absolute; inset: 0; z-index: 1; }
+
+        /* ==========================================
+           TELA DE BOAS VINDAS (PERMISSÃO AR)
+           ========================================== */
+        #start-screen {
+            position: fixed; inset: 0; z-index: 50000;
+            background: linear-gradient(to bottom, #050505, #1a0a00);
+            display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;
+            padding: 30px; transition: opacity 1.5s ease, visibility 1.5s;
+        }
+
+        .start-title { font-family: 'Dancing Script', cursive; font-size: 46px; color: #FF6A00; margin-bottom: 10px; text-shadow: 0 0 20px rgba(255,106,0,0.4); }
+        .start-text { font-size: 15px; color: #ccc; line-height: 1.6; max-width: 300px; margin-bottom: 40px; font-weight: 300; }
+        
+        .start-btn {
+            background: linear-gradient(135deg, #FF6A00, #FF9900);
+            color: #fff; border: none; padding: 18px 40px; border-radius: 50px;
+            font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 14px; text-transform: uppercase; letter-spacing: 2px;
+            cursor: pointer; box-shadow: 0 10px 30px rgba(255,106,0,0.5);
+            animation: pulseBtn 2s infinite;
+        }
+        @keyframes pulseBtn { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+
+        /* ==========================================
+           INTERFACE DO CÉU (HUD)
+           ========================================== */
+        .ui-hud {
+            position: fixed; top: 40px; width: 100%; text-align: center; z-index: 10;
+            pointer-events: none; opacity: 0; transition: opacity 2s ease 1s;
+        }
+        .ui-hud.visible { opacity: 1; }
+        .hud-title { font-family: 'Dancing Script', cursive; font-size: 32px; color: #FF6A00; text-shadow: 0 2px 10px rgba(0,0,0,0.8); }
+        .hud-sub { font-family: 'Montserrat', sans-serif; font-size: 10px; text-transform: uppercase; letter-spacing: 3px; color: #fff; opacity: 0.8; }
+
+        .crosshair {
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 40px; height: 40px; border: 1px dashed rgba(255,255,255,0.3); border-radius: 50%;
+            z-index: 10; pointer-events: none; display: flex; justify-content: center; align-items: center;
+        }
+        .crosshair::after { content: ''; width: 4px; height: 4px; background: rgba(255,106,0,0.8); border-radius: 50%; }
+
+        /* ==========================================
+           PAINEL DA MEMÓRIA (CRISTAL)
+           ========================================== */
+        #memory-overlay {
+            position: fixed; inset: 0; z-index: 10000;
+            background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            display: flex; justify-content: center; align-items: center;
+            opacity: 0; visibility: hidden; transition: all 0.6s ease;
+        }
+        #memory-overlay.active { opacity: 1; visibility: visible; }
+
+        .memory-card {
+            background: linear-gradient(to bottom, rgba(255,255,255,0.08), rgba(0,0,0,0.8));
+            border: 1px solid rgba(255, 106, 0, 0.3); border-radius: 24px;
+            width: 85%; max-width: 350px; padding: 40px 30px; text-align: center;
+            transform: translateY(30px) scale(0.95); transition: all 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.9);
+        }
+        #memory-overlay.active .memory-card { transform: translateY(0) scale(1); }
+
+        .mem-month { font-family: 'Montserrat', sans-serif; font-size: 12px; color: #FF9900; text-transform: uppercase; letter-spacing: 3px; margin-bottom: 10px; font-weight: 800; }
+        .mem-title { font-family: 'Dancing Script', cursive; font-size: 38px; color: #fff; margin-bottom: 20px; text-shadow: 0 2px 5px rgba(0,0,0,0.5); }
+        .mem-text { font-size: 15px; line-height: 1.7; color: #e0e0e0; font-weight: 300; font-style: italic; margin-bottom: 30px; }
+
+        .close-btn {
+            background: rgba(255,106,0,0.1); border: 1px solid #FF6A00; color: #fff;
+            padding: 12px 30px; border-radius: 50px; font-family: 'Inter', sans-serif; font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;
+            cursor: pointer; transition: all 0.3s;
+        }
+        .close-btn:hover { background: #FF6A00; }
+    </style>
+</head>
+<body>
+
+    <audio id="bg-music" loop preload="auto">
+        <source src="musica-3meses.mp3" type="audio/mpeg">
+    </audio>
+
+    <div id="start-screen">
+        <h1 class="start-title">Nosso Universo</h1>
+        <p class="start-text">Para viver essa experiência juntos, fique de pé e prepare-se para olhar as estrelas.</p>
+        <button class="start-btn" onclick="startExperience()">Apontar para o Céu</button>
+    </div>
+
+    <div class="ui-hud" id="hud">
+        <h2 class="hud-title">3 Meses de Nós</h2>
+        <div class="hud-sub">Procure as constelações</div>
+    </div>
+    <div class="crosshair" id="crosshair" style="display: none;"></div>
+
+    <canvas id="webgl-canvas"></canvas>
+
+    <div id="memory-overlay">
+        <div class="memory-card">
+            <div class="mem-month" id="mem-month">Mês 1</div>
+            <h2 class="mem-title" id="mem-title">Título</h2>
+            <p class="mem-text" id="mem-text">Texto...</p>
+            <button class="close-btn" onclick="closeMemory()">Voltar ao Espaço</button>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <script>
+        // ==========================================
+        // DADOS DAS MEMÓRIAS DOS 3 MESES
+        // ==========================================
+        const memorias = [
+            {
+                id: 1, month: "15 de Março", title: "O Começo de Tudo",
+                text: "Onde as cartinhas começaram e a distância percebeu que tinha arranjado um problema sério com a gente. Nosso primeiro mês provou que a conexão vai muito além da geografia.",
+                color: 0xFFD700, pos: { x: -80, y: 40, z: -100 }
+            },
+            {
+                id: 2, month: "15 de Abril", title: "A Nossa Luz",
+                text: "O mês dos girassóis. Encontramos nosso ritmo, dividimos nossos cafés e construímos o nosso porto seguro. Você iluminou todos os meus dias.",
+                color: 0xFF6A00, pos: { x: 100, y: -20, z: -70 }
+            },
+            {
+                id: 3, month: "15 de Maio", title: "O Nosso Universo",
+                text: "Três meses. Hoje o nosso amor não cabe mais em um quarto de hotel ou numa tela de celular, ele precisa de um universo inteiro. Te amo, minha Thayna!",
+                color: 0xFFFFFF, pos: { x: 0, y: 80, z: 120 }
+            }
+        ];
+
+        // ==========================================
+        // VARIÁVEIS GLOBAIS THREE.JS
+        // ==========================================
+        let scene, camera, renderer, raycaster, mouse;
+        let memoryStarsGroup = new THREE.Group();
+        let isGyroEnabled = false;
+
+        // Variaveis de fallback (arrastar com o dedo)
+        let lon = 0, lat = 0;
+        let isDragging = false;
+        let previousMousePosition = { x: 0, y: 0 };
+
+        // ==========================================
+        // INICIALIZAÇÃO DA CENA
+        // ==========================================
+        function initScene() {
+            const canvas = document.getElementById('webgl-canvas');
+            scene = new THREE.Scene();
+            scene.fog = new THREE.FogExp2(0x020204, 0.0015); // Neblina espacial para dar profundidade
+
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            
+            renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+
+            raycaster = new THREE.Raycaster();
+            mouse = new THREE.Vector2();
+
+            createUniverse();
+            createMemoryStars();
+
+            // Eventos de interação (Toque para abrir a memória)
+            window.addEventListener('click', onInteract, false);
+            window.addEventListener('touchstart', onInteract, {passive: false});
+            
+            // Eventos de fallback (Arrastar)
+            canvas.addEventListener('mousedown', () => isDragging = true);
+            canvas.addEventListener('mouseup', () => isDragging = false);
+            canvas.addEventListener('mousemove', onDragMove);
+            canvas.addEventListener('touchmove', onTouchDragMove, {passive: false});
+
+            window.addEventListener('resize', onWindowResize, false);
+
+            animate();
+        }
+
+        // ==========================================
+        // CRIANDO AS ESTRELAS E NEBULOSAS
+        // ==========================================
+        function createUniverse() {
+            // Estrelas de fundo
+            const starGeo = new THREE.BufferGeometry();
+            const starMat = new THREE.PointsMaterial({ color: 0xffffff, size: 0.8, transparent: true, opacity: 0.8 });
+            const starVerts = [];
+            for(let i = 0; i < 8000; i++) {
+                starVerts.push((Math.random() - 0.5) * 800, (Math.random() - 0.5) * 800, (Math.random() - 0.5) * 800);
+            }
+            starGeo.setAttribute('position', new THREE.Float32BufferAttribute(starVerts, 3));
+            scene.add(new THREE.Points(starGeo, starMat));
+
+            // Poeira Laranja (Nebulosa)
+            const nebGeo = new THREE.BufferGeometry();
+            const nebMat = new THREE.PointsMaterial({ color: 0xFF6A00, size: 4, transparent: true, opacity: 0.3, blending: THREE.AdditiveBlending });
+            const nebVerts = [];
+            for(let i = 0; i < 1500; i++) {
+                nebVerts.push((Math.random() - 0.5) * 400, (Math.random() - 0.5) * 400, (Math.random() - 0.5) * 400);
+            }
+            nebGeo.setAttribute('position', new THREE.Float32BufferAttribute(nebVerts, 3));
+            scene.add(new THREE.Points(nebGeo, nebMat));
+        }
+
+        function createMemoryStars() {
+            memorias.forEach(mem => {
+                // O núcleo brilhante da estrela
+                const coreGeo = new THREE.SphereGeometry(3, 32, 32);
+                const coreMat = new THREE.MeshBasicMaterial({ color: mem.color });
+                const star = new THREE.Mesh(coreGeo, coreMat);
+                
+                // O halo expansivo ao redor
+                const haloGeo = new THREE.SphereGeometry(4.5, 32, 32);
+                const haloMat = new THREE.MeshBasicMaterial({ color: mem.color, transparent: true, opacity: 0.3, blending: THREE.AdditiveBlending });
+                const halo = new THREE.Mesh(haloGeo, haloMat);
+                star.add(halo);
+
+                star.position.set(mem.pos.x, mem.pos.y, mem.pos.z);
+                
+                // Salva os dados no objeto 3D para lermos no clique
+                star.userData = { isMemory: true, data: mem, halo: halo };
+                memoryStarsGroup.add(star);
+            });
+            scene.add(memoryStarsGroup);
+        }
+
+        // ==========================================
+        // SISTEMA DE GIROSCÓPIO (A MÁGICA AR) E FALLBACK
+        // ==========================================
+        function startExperience() {
+            const bgMusic = document.getElementById('bg-music');
+            bgMusic.play().catch(e => console.log(e));
+
+            // Tenta solicitar permissão para o Giroscópio (Obrigatório iOS 13+)
+            if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
+                DeviceOrientationEvent.requestPermission()
+                    .then(permissionState => {
+                        if (permissionState === 'granted') {
+                            window.addEventListener('deviceorientation', handleOrientation);
+                            isGyroEnabled = true;
+                            document.getElementById('crosshair').style.display = 'flex';
+                        }
+                    })
+                    .catch(console.error);
+            } else {
+                // Dispositivos Android antigos ou PCs
+                window.addEventListener('deviceorientation', handleOrientation);
+                isGyroEnabled = true;
+                document.getElementById('crosshair').style.display = 'flex';
+            }
+
+            // Transição de telas
+            document.getElementById('start-screen').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('start-screen').style.visibility = 'hidden';
+                document.getElementById('hud').classList.add('visible');
+                initScene();
+            }, 1500);
+        }
+
+        // Converte os dados do celular para o movimento da câmera
+        function handleOrientation(event) {
+            if (!event.alpha || !event.beta || !event.gamma) return;
+            isGyroEnabled = true;
+
+            const alpha = THREE.MathUtils.degToRad(event.alpha); // Z
+            const beta = THREE.MathUtils.degToRad(event.beta);   // X
+            const gamma = THREE.MathUtils.degToRad(event.gamma); // Y
+
+            const euler = new THREE.Euler(beta, alpha, -gamma, 'YXZ');
+            camera.quaternion.setFromEuler(euler);
+        }
+
+        // Fallback: Se não tiver giroscópio (ex: no PC), usa o arrastar
+        function onDragMove(event) {
+            if (!isDragging || isGyroEnabled) return;
+            const deltaMove = { x: event.offsetX - previousMousePosition.x, y: event.offsetY - previousMousePosition.y };
+            lon -= deltaMove.x * 0.2; lat += deltaMove.y * 0.2;
+            updateCameraFromDrag();
+            previousMousePosition = { x: event.offsetX, y: event.offsetY };
+        }
+        function onTouchDragMove(event) {
+            if(isGyroEnabled) return;
+            event.preventDefault();
+            const touch = event.touches[0];
+            const deltaMove = { x: touch.clientX - previousMousePosition.x, y: touch.clientY - previousMousePosition.y };
+            lon -= deltaMove.x * 0.2; lat += deltaMove.y * 0.2;
+            updateCameraFromDrag();
+            previousMousePosition = { x: touch.clientX, y: touch.clientY };
+        }
+        function updateCameraFromDrag() {
+            lat = Math.max(-85, Math.min(85, lat));
+            const phi = THREE.MathUtils.degToRad(90 - lat);
+            const theta = THREE.MathUtils.degToRad(lon);
+            const target = new THREE.Vector3();
+            target.x = 500 * Math.sin(phi) * Math.cos(theta);
+            target.y = 500 * Math.cos(phi);
+            target.z = 500 * Math.sin(phi) * Math.sin(theta);
+            camera.lookAt(target);
+        }
+        window.addEventListener('mousedown', e => { previousMousePosition = { x: e.offsetX, y: e.offsetY }; });
+        window.addEventListener('touchstart', e => { previousMousePosition = { x: e.touches[0].clientX, y: e.touches[0].clientY }; });
+
+        // ==========================================
+        // INTERAÇÃO (CLICAR NAS ESTRELAS)
+        // ==========================================
+        function onInteract(event) {
+            // Calcula o centro da tela (onde a mira crosshair está)
+            mouse.x = 0; mouse.y = 0; 
+            
+            // Se clicou com o dedo/mouse, usa as coordenadas reais
+            if(event.type === 'touchstart') {
+                mouse.x = (event.touches[0].clientX / window.innerWidth) * 2 - 1;
+                mouse.y = -(event.touches[0].clientY / window.innerHeight) * 2 + 1;
+            } else if (event.type === 'click') {
+                mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+                mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+            }
+
+            raycaster.setFromCamera(mouse, camera);
+            const intersects = raycaster.intersectObjects(memoryStarsGroup.children);
+
+            if (intersects.length > 0) {
+                const star = intersects[0].object;
+                if (star.userData.isMemory) {
+                    openMemory(star.userData.data);
+                }
+            }
+        }
+
+        function openMemory(data) {
+            document.getElementById('mem-month').innerText = data.month;
+            document.getElementById('mem-title').innerText = data.title;
+            document.getElementById('mem-text').innerText = data.text;
+            document.getElementById('memory-overlay').classList.add('active');
+            document.getElementById('crosshair').style.display = 'none';
+            document.getElementById('hud').style.opacity = '0';
+        }
+
+        function closeMemory() {
+            document.getElementById('memory-overlay').classList.remove('active');
+            if(isGyroEnabled) document.getElementById('crosshair').style.display = 'flex';
+            document.getElementById('hud').style.opacity = '1';
+        }
+
+        function onWindowResize() {
+            if(!camera) return;
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        // ==========================================
+        // LOOP DE ANIMAÇÃO
+        // ==========================================
+        function animate() {
+            requestAnimationFrame(animate);
+
+            // Pulsação dos Halos das estrelas
+            const time = Date.now() * 0.003;
+            memoryStarsGroup.children.forEach(star => {
+                if (star.userData.halo) {
+                    const scale = 1 + Math.sin(time + star.position.x) * 0.2;
+                    star.userData.halo.scale.set(scale, scale, scale);
+                }
+            });
+
+            // Gira a poeira estelar bem devagar
+            scene.rotation.y += 0.0005;
+
+            renderer.render(scene, camera);
+        }
+    </script>
+</body>
+</html>
