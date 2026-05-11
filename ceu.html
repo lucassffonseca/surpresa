@@ -14,6 +14,34 @@
         /* Câmera de fundo */
         #ar-camera-feed { position: absolute; inset: 0; width: 100vw; height: 100vh; object-fit: cover; z-index: 0; opacity: 0; transition: opacity 1s; }
 
+        /* --- TELA DE BLOQUEIO (TIME LOCK) --- */
+        #lock-screen {
+            position: fixed; inset: 0; z-index: 60000;
+            background: radial-gradient(circle at top, #1b0735 0%, #000 80%);
+            display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;
+            padding: 30px; transition: opacity 1.5s ease, visibility 1.5s;
+        }
+        .lock-icon {
+            font-size: 50px; margin-bottom: 20px; color: #00e5ff;
+            text-shadow: 0 0 20px rgba(0,229,255,0.6);
+            animation: floatLock 3s infinite ease-in-out;
+        }
+        @keyframes floatLock {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .lock-title { font-family: 'Dancing Script', cursive; font-size: 45px; color: #00e5ff; margin-bottom: 10px; text-shadow: 0 0 20px rgba(0,229,255,0.5); }
+        .lock-text { font-family: 'Montserrat', sans-serif; font-size: 13px; color: #ccc; margin-bottom: 35px; text-transform: uppercase; letter-spacing: 2px; }
+        
+        .countdown-container { display: flex; gap: 12px; }
+        .cd-box { 
+            background: rgba(0, 229, 255, 0.05); border: 1px solid rgba(0, 229, 255, 0.3); 
+            border-radius: 12px; padding: 15px 10px; min-width: 75px; 
+            box-shadow: 0 0 15px rgba(0,229,255,0.1); 
+        }
+        .cd-num { font-size: 28px; font-weight: 700; color: #fff; text-shadow: 0 0 10px #00e5ff; display: block; margin-bottom: 5px; }
+        .cd-label { font-size: 9px; color: #00e5ff; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 600;}
+
         /* --- TELA DE INÍCIO --- */
         #start-screen {
             position: fixed; inset: 0; z-index: 50000;
@@ -134,7 +162,6 @@
         .final-text::after { content: '|'; animation: blink 0.8s infinite; color: #FFD700; font-weight: 300;}
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
-        /* NOVO: Botão para o Futuro */
         #continue-btn {
             background: transparent; border: 1px solid #00e5ff; color: #00e5ff;
             padding: 15px 35px; border-radius: 50px; font-family: 'Montserrat', sans-serif; font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 2px;
@@ -147,7 +174,7 @@
         /* --- GRAN FINALE DO FUTURO --- */
         #finale-overlay {
             position: fixed; inset: 0; z-index: 30000;
-            background: radial-gradient(circle at center, #1b0735 0%, #000 80%); /* Nebulosa espacial */
+            background: radial-gradient(circle at center, #1b0735 0%, #000 80%);
             display: flex; flex-direction: column; justify-content: center; align-items: center;
             opacity: 0; visibility: hidden; transition: opacity 1.5s ease-in;
         }
@@ -167,7 +194,6 @@
             100% { transform: scale(0); opacity: 0; visibility: hidden;}
         }
 
-        /* Foto do Futuro */
         #final-universe-portal {
             position: relative; width: 220px; height: 220px;
             opacity: 0; transform: scale(0.5); transition: opacity 1.5s ease 2s, transform 2s ease 2.2s;
@@ -206,7 +232,20 @@
 
     <video id="ar-camera-feed" autoplay playsinline muted></video>
 
-    <div id="start-screen">
+    <div id="lock-screen">
+        <div class="lock-icon">🔒</div>
+        <h1 class="lock-title">Um Segredo do Universo...</h1>
+        <p class="lock-text">As estrelas só estarão alinhadas em:</p>
+        
+        <div class="countdown-container">
+            <div class="cd-box"><span class="cd-num" id="cd-days">00</span><span class="cd-label">Dias</span></div>
+            <div class="cd-box"><span class="cd-num" id="cd-hours">00</span><span class="cd-label">Horas</span></div>
+            <div class="cd-box"><span class="cd-num" id="cd-minutes">00</span><span class="cd-label">Min</span></div>
+            <div class="cd-box"><span class="cd-num" id="cd-seconds">00</span><span class="cd-label">Seg</span></div>
+        </div>
+    </div>
+
+    <div id="start-screen" style="display: none;">
         <h1 class="start-title">Nosso Céu</h1>
         <p class="start-text">Para esta surpresa funcionar, precisamos acessar a câmera e os sensores do seu celular.</p>
         <button class="start-btn" onclick="startExperience()">Permitir</button>
@@ -250,14 +289,60 @@
     </div>
 
     <script>
+        // ==========================================
+        // LÓGICA DO TIME LOCK (BLOQUEIO POR TEMPO)
+        // ==========================================
+        const targetDate = new Date('2026-05-15T00:00:00').getTime(); // Dia 15/05 à meia-noite
+        const lockScreen = document.getElementById('lock-screen');
+        const startScreen = document.getElementById('start-screen');
+        let countdownInterval;
+
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const distance = targetDate - now;
+
+            if (distance <= 0) {
+                // Chegou a data! Oculta o bloqueio e revela a tela de início
+                clearInterval(countdownInterval);
+                lockScreen.style.opacity = '0';
+                setTimeout(() => {
+                    lockScreen.style.display = 'none';
+                    startScreen.style.display = 'flex';
+                }, 1500); // Tempo para o fade-out
+                return;
+            }
+
+            // Cálculos de tempo
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            // Atualiza o HTML
+            document.getElementById('cd-days').innerText = days.toString().padStart(2, '0');
+            document.getElementById('cd-hours').innerText = hours.toString().padStart(2, '0');
+            document.getElementById('cd-minutes').innerText = minutes.toString().padStart(2, '0');
+            document.getElementById('cd-seconds').innerText = seconds.toString().padStart(2, '0');
+        }
+
+        // Inicia o contador imediatamente e define a atualização a cada 1 segundo
+        updateCountdown();
+        countdownInterval = setInterval(updateCountdown, 1000);
+
+        // ==========================================
+        // DADOS E TEXTOS
+        // ==========================================
         const memorias = {
             1: { month: "Mês 1", title: "O Início", text: "Onde tudo começou. O primeiro mês nos provou que o que sentimos vai além de qualquer distância.", imageUrl: "foto20.jpeg" },
-            2: { month: "Mês 2", title: "A Nossa Luz", text: "Encontramos nosso ritmo e construímos o nosso porto seguro. Você iluminou meus diase me tornou uma pessoa melhor", imageUrl: "foto38.jpeg" },
+            2: { month: "Mês 2", title: "A Nossa Luz", text: "Encontramos nosso ritmo e construímos o nosso porto seguro. Você iluminou meus dias e me tornou uma pessoa melhor.", imageUrl: "foto38.jpeg" },
             3: { month: "Mês 3", title: "Nosso Futuro", text: "Hoje o nosso amor não cabe mais na tela, ele encontrou espaço no universo. Obrigado por nossos 3 meses.", imageUrl: "foto44.jpeg" }
         };
 
         const finalLetterText = "Amor,<br><br>Se eu pudesse escolher um lugar seguro, certeza que seria ao seu lado.<br><br>Esses 3 meses formaram a nossa primeira constelação.<br><br>Obrigado por iluminar minha vida.<br>Feliz Nosso Dia!<br>— Lucas";
 
+        // ==========================================
+        // LÓGICA DA EXPERIÊNCIA E SENSORES
+        // ==========================================
         const instruction = document.getElementById('hud-instruction');
         const constellation = document.getElementById('constellation-container');
         const videoFeed = document.getElementById('ar-camera-feed');
@@ -393,7 +478,6 @@
             document.getElementById('hud').classList.remove('visible');
             constellation.classList.remove('active');
             document.getElementById('message-overlay').classList.add('active');
-            // Começa a digitar e, ao final, chama a função para mostrar o botão
             setTimeout(() => { typeWriter(finalLetterText, 0, showContinueButton); }, 1500);
         }
 
@@ -417,12 +501,10 @@
             }
         }
 
-        // Exibe o botão "Explorar o Futuro" após a carta
         function showContinueButton() {
             document.getElementById('continue-btn').classList.add('visible');
         }
 
-        // Chamado quando ela clica no botão "Explorar o Futuro"
         function startFinaleSequence() {
             document.getElementById('message-overlay').style.opacity = '0';
             setTimeout(() => {
