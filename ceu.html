@@ -6,7 +6,7 @@
     <title>Nosso Universo - 3 Meses 🌌</title>
     
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700;800&family=Dancing+Script:wght@700&family=Inter:wght@300;400;600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;800&family=Dancing+Script:wght@700&family=Inter:wght@300;400;600&display=swap');
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body, html { overflow: hidden; height: 100vh; width: 100vw; background-color: #000; color: #fff; font-family: 'Inter', sans-serif; }
@@ -45,11 +45,10 @@
             background: rgba(0,0,0,0.6); border: 1px solid #FFD700; color: #FFD700;
             padding: 12px 25px; border-radius: 50px; font-family: 'Montserrat', sans-serif; font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 2px;
             cursor: pointer; z-index: 20; display: none; backdrop-filter: blur(5px);
-            box-shadow: 0 0 15px rgba(255,215,0,0.3); animation: fadeInBtn 1s forwards;
+            box-shadow: 0 0 15px rgba(255,215,0,0.3);
         }
-        @keyframes fadeInBtn { from { opacity: 0; transform: translate(-50%, 20px); } to { opacity: 1; transform: translate(-50%, 0); } }
 
-        /* --- CONSTELAÇÃO --- */
+        /* --- CONSTELAÇÃO CENTRALIZADA --- */
         #constellation-container {
             position: absolute; inset: 0; z-index: 5;
             opacity: 0; visibility: hidden; transition: opacity 1s, visibility 1s;
@@ -68,12 +67,16 @@
         }
         .star::after {
             content: ''; position: absolute; width: 12px; height: 12px; background: #fff; border-radius: 50%;
-            box-shadow: 0 0 15px 5px currentColor, 0 0 30px 10px currentColor;
+            box-shadow: 0 0 15px 5px currentColor, 0 0 30px 10px currentColor; transition: transform 0.3s;
         }
+        
+        /* Estrela clicada fica levemente apagada para ela saber onde já foi */
+        .star.opened::after { opacity: 0.3; transform: scale(0.8); }
 
-        #star1 { top: 35%; left: 25%; color: #FFD700; animation-delay: 0s; }
-        #star2 { top: 45%; left: 75%; color: #FF6A00; animation-delay: -1s; }
-        #star3 { top: 70%; left: 45%; color: #00e5ff; animation-delay: -2s; }
+        /* Posições Centralizadas (Formando um V no meio da tela) */
+        #star1 { top: 40%; left: 30%; color: #FFD700; animation-delay: 0s; }
+        #star2 { top: 60%; left: 50%; color: #FF6A00; animation-delay: -1s; }
+        #star3 { top: 40%; left: 70%; color: #00e5ff; animation-delay: -2s; }
 
         @keyframes starFloat {
             0% { transform: translate(-50%, -50%) scale(0.9); }
@@ -109,7 +112,23 @@
             padding: 12px 30px; border-radius: 50px; font-family: 'Montserrat', sans-serif; font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 1px;
             cursor: pointer; transition: all 0.3s;
         }
-        .close-btn:hover { background: #FF6A00; box-shadow: 0 0 15px rgba(255,106,0,0.5); }
+
+        /* --- GRAN FINALE (CARTA SECRETA) --- */
+        #finale-overlay {
+            position: fixed; inset: 0; z-index: 20000;
+            background: rgba(0, 0, 0, 0.90); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            opacity: 0; visibility: hidden; transition: opacity 2s ease; padding: 30px; text-align: center;
+        }
+        #finale-overlay.active { opacity: 1; visibility: visible; }
+        
+        .finale-text {
+            font-family: 'Montserrat', sans-serif; font-size: 18px; line-height: 1.8; color: #FFD700; 
+            font-weight: 400; text-shadow: 0 0 15px rgba(255,215,0,0.3); min-height: 200px; max-width: 400px;
+        }
+        .finale-text::after { content: '|'; animation: blink 0.8s infinite; color: #FFD700; font-weight: 300;}
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
     </style>
 </head>
 <body>
@@ -135,8 +154,8 @@
 
     <div id="constellation-container">
         <svg class="constellation-lines" width="100%" height="100%">
-            <line class="line" x1="25%" y1="35%" x2="75%" y2="45%" />
-            <line class="line" x1="75%" y1="45%" x2="45%" y2="70%" />
+            <line class="line" x1="30%" y1="40%" x2="50%" y2="60%" />
+            <line class="line" x1="50%" y1="60%" x2="70%" y2="40%" />
         </svg>
 
         <div class="star" id="star1" onclick="openMemory(1)"></div>
@@ -154,12 +173,18 @@
         </div>
     </div>
 
+    <div id="finale-overlay">
+        <p class="finale-text" id="typed-finale"></p>
+    </div>
+
     <script>
         const memorias = {
             1: { month: "Mês 1", title: "O Início", text: "Onde tudo começou. O primeiro mês nos provou que o que sentimos vai além de qualquer distância.", imageUrl: "foto1_3meses.jpg" },
             2: { month: "Mês 2", title: "A Nossa Luz", text: "Encontramos nosso ritmo e construímos o nosso porto seguro. Você iluminou meus dias.", imageUrl: "foto2_3meses.jpg" },
-            3: { month: "Mês 3", title: "Nosso Futuro", text: "Hoje o nosso amor não cabe mais na tela, ele encontrou espaço no universo. Obrigado por esses 3 meses. Te amo, Thayna!", imageUrl: "foto3_3meses.jpg" }
+            3: { month: "Mês 3", title: "Nosso Futuro", text: "Obrigado por esses 3 meses incríveis. Mas a surpresa não acaba aqui...", imageUrl: "foto3_3meses.jpg" }
         };
+
+        const finalMessageText = "Thayna,<br><br>Se eu pudesse escolher um lugar seguro, seria ao seu lado.<br><br>Nosso amor encontrou espaço no universo, e a cada dia que passa, eu te amo mais.<br><br>Feliz 3 Meses!<br>— Lucas";
 
         const instruction = document.getElementById('hud-instruction');
         const constellation = document.getElementById('constellation-container');
@@ -169,37 +194,31 @@
         let isSkyActive = false;
         let isManualMode = false;
         let sensorDetected = false; 
+        
+        // RASTREADOR DE ESTRELAS CLICADAS
+        let openedStars = new Set();
+        let isFinaleTriggered = false;
 
         async function startExperience() {
             document.getElementById('bg-music').play().catch(e => console.log("Música aguardando interação:", e));
 
-            // 1. PEDE O GIROSCÓPIO PRIMEIRO (Crucial para o iPhone/iOS)
             if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
                 try {
                     const permissionState = await DeviceOrientationEvent.requestPermission();
                     if (permissionState === 'granted') {
                         window.addEventListener('deviceorientation', handleGyroscope);
-                    } else {
-                        console.log("Permissão do giroscópio negada no iOS.");
                     }
-                } catch (error) {
-                    console.error("Erro ao solicitar giroscópio:", error);
-                }
+                } catch (error) { console.error("Erro sensor:", error); }
             } else {
-                // Outros navegadores / Android
                 window.addEventListener('deviceorientation', handleGyroscope);
             }
 
-            // 2. DEPOIS PEDE A CÂMERA
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
                 videoFeed.srcObject = stream;
                 videoFeed.onloadedmetadata = () => { videoFeed.style.opacity = '1'; };
-            } catch (err) { 
-                console.error("Câmera negada:", err); 
-            }
+            } catch (err) { console.error("Câmera negada:", err); }
 
-            // 3. TRANSIÇÃO DA TELA INICIAL PARA O HUD
             document.getElementById('start-screen').style.opacity = '0';
             setTimeout(() => {
                 document.getElementById('start-screen').style.visibility = 'hidden';
@@ -207,22 +226,16 @@
                 instruction.innerText = "Aponte o celular para o céu";
             }, 1000);
 
-            // 4. BOTÃO DE EMERGÊNCIA (Failsafe)
             setTimeout(() => {
-                if (!sensorDetected) {
-                    forceBtn.style.display = 'block';
-                }
+                if (!sensorDetected) forceBtn.style.display = 'block';
             }, 4000);
         }
 
         function handleGyroscope(event) {
-            if (isManualMode || event.beta === null) return;
+            if (isManualMode || event.beta === null || isFinaleTriggered) return;
             sensorDetected = true; 
             forceBtn.style.display = 'none';
 
-            // CORREÇÃO MATEMÁTICA: 
-            // Em pé (normal) = 90º. Deitado com a câmera pro céu = 180º.
-            // Quando a Thayna levantar e inclinar o celular para cima, o beta passa de 105º.
             if (event.beta > 105 && event.beta <= 180) {
                 if (!isSkyActive) activateSky(true, "Toque nas estrelas do nosso céu");
             } else {
@@ -240,34 +253,72 @@
             isSkyActive = active;
             instruction.innerText = textMsg;
             if (active) {
-                instruction.style.color = "#FFD700"; // Dourado
+                instruction.style.color = "#FFD700"; 
                 constellation.classList.add('active');
             } else {
-                instruction.style.color = "#FF9900"; // Laranja
+                instruction.style.color = "#FF9900"; 
                 constellation.classList.remove('active');
             }
         }
 
         function openMemory(id) {
             const data = memorias[id];
+            
+            // Marca visualmente a estrela como aberta
+            document.getElementById(`star${id}`).classList.add('opened');
+            openedStars.add(id);
+
             document.getElementById('mem-month').innerText = data.month;
             document.getElementById('mem-title').innerText = data.title;
             document.getElementById('mem-text').innerText = data.text;
             document.getElementById('mem-photo').src = data.imageUrl; 
             
             document.getElementById('memory-overlay').classList.add('active');
-            
-            // Pausa os sensores enquanto ela lê
             window.removeEventListener('deviceorientation', handleGyroscope);
         }
 
         function closeMemory() {
             document.getElementById('memory-overlay').classList.remove('active');
-            
             setTimeout(() => { document.getElementById('mem-photo').src = ""; }, 400);
             
-            if (!isManualMode) {
+            // CHECAGEM DO GRAN FINALE
+            if (openedStars.size === 3 && !isFinaleTriggered) {
+                isFinaleTriggered = true; // Trava para não repetir
+                setTimeout(triggerFinale, 1000); // Espera 1 segundo após fechar a última foto
+            } else if (!isManualMode && !isFinaleTriggered) {
                 window.addEventListener('deviceorientation', handleGyroscope);
+            }
+        }
+
+        // FUNÇÕES DO GRAN FINALE
+        function triggerFinale() {
+            // Some com a HUD e Constelação
+            document.getElementById('hud').classList.remove('visible');
+            constellation.classList.remove('active');
+            
+            // Chama a tela escura
+            document.getElementById('finale-overlay').classList.add('active');
+            
+            // Começa a digitar
+            setTimeout(() => { typeWriter(finalMessageText, 0); }, 1500);
+        }
+
+        function typeWriter(text, i) {
+            if (i < text.length) {
+                let char = text.substring(i, i+1);
+                let isTag = false;
+                
+                // Trata as quebras de linha <br>
+                if(text.substring(i, i+4) === '<br>') {
+                    document.getElementById("typed-finale").innerHTML += '<br>';
+                    i += 3;
+                    isTag = true;
+                } else {
+                    document.getElementById("typed-finale").innerHTML += char;
+                }
+                
+                let speed = isTag ? 0 : Math.random() * 40 + 30; // Velocidade de digitação
+                setTimeout(function() { typeWriter(text, i + 1); }, speed);
             }
         }
     </script>
