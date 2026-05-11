@@ -5,8 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Nosso Universo - 3 Meses 🌌</title>
     
-    <meta name="theme-color" content="#000000">
-    
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700;800&family=Dancing+Script:wght@700&family=Inter:wght@300;400;600&display=swap');
 
@@ -14,10 +12,7 @@
         body, html { overflow: hidden; height: 100vh; width: 100vw; background-color: #000; color: #fff; font-family: 'Inter', sans-serif; }
         
         /* Câmera de fundo */
-        #ar-camera-feed { position: absolute; inset: 0; width: 100vw; height: 100vh; object-fit: cover; z-index: 0; }
-        
-        /* Canvas 3D das estrelas */
-        #webgl-canvas { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
+        #ar-camera-feed { position: absolute; inset: 0; width: 100vw; height: 100vh; object-fit: cover; z-index: 0; opacity: 0; transition: opacity 2s; }
 
         /* --- TELA DE INÍCIO --- */
         #start-screen {
@@ -37,49 +32,55 @@
 
         /* --- HUD (Textos na tela AR) --- */
         .ui-hud {
-            position: fixed; top: 40px; width: 100%; text-align: center; z-index: 10;
+            position: fixed; top: 50px; width: 100%; text-align: center; z-index: 10;
             pointer-events: none; opacity: 0; transition: opacity 2s ease 1s;
         }
         .ui-hud.visible { opacity: 1; }
-        .hud-title { font-family: 'Dancing Script', cursive; font-size: 38px; color: #fff; text-shadow: 0 2px 10px rgba(0,0,0,0.8); }
-        .hud-sub { font-family: 'Montserrat', sans-serif; font-size: 11px; text-transform: uppercase; letter-spacing: 3px; color: #FF9900; opacity: 0.9; text-shadow: 0 1px 5px rgba(0,0,0,0.8); margin-top: 5px;}
+        .hud-title { font-family: 'Dancing Script', cursive; font-size: 42px; color: #fff; text-shadow: 0 2px 15px rgba(0,0,0,0.9); }
+        .hud-sub { font-family: 'Montserrat', sans-serif; font-size: 11px; text-transform: uppercase; letter-spacing: 3px; color: #FF9900; opacity: 0.9; text-shadow: 0 1px 5px rgba(0,0,0,0.9); margin-top: 5px;}
 
-        /* Bússola indicadora */
-        #ar-navigator {
-            position: fixed; bottom: 40px; right: 30px; width: 50px; height: 50px;
-            background: rgba(0,0,0,0.5); border: 1px solid rgba(255,106,0,0.3);
-            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-            border-radius: 50%; z-index: 10; pointer-events: none;
-            display: none; justify-content: center; align-items: center;
-            box-shadow: 0 0 15px rgba(255,106,0,0.2);
+        /* --- A CONSTELAÇÃO MÁGICA (CSS PURO) --- */
+        #constellation-container {
+            position: absolute; inset: 0; z-index: 5;
+            opacity: 0; transition: opacity 3s;
         }
-        #nav-arrow {
-            width: 0; height: 0; border-left: 8px solid transparent; border-right: 8px solid transparent;
-            border-bottom: 16px solid rgba(255,255,255,0.9);
-            transform: rotate(0deg); transition: transform 0.1s linear;
+        #constellation-container.visible { opacity: 1; }
+
+        /* Linhas ligando as estrelas */
+        .constellation-lines {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;
+        }
+        .line { stroke: rgba(255, 153, 0, 0.4); stroke-width: 2; stroke-dasharray: 5 5; }
+
+        /* As Estrelas */
+        .star {
+            position: absolute; width: 24px; height: 24px; background: #fff;
+            border-radius: 50%; transform: translate(-50%, -50%); cursor: pointer;
+            box-shadow: 0 0 20px 10px rgba(255, 255, 255, 0.2);
+            animation: starFloat 4s infinite ease-in-out alternate;
+        }
+        .star::after {
+            content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 8px; height: 8px; background: #fff; border-radius: 50%;
+            box-shadow: 0 0 15px 5px currentColor;
         }
 
-        #click-layer { position: absolute; inset: 0; z-index: 5; cursor: pointer; }
+        /* Cores e Posições Fixas na Tela */
+        #star1 { top: 35%; left: 25%; color: #FFD700; box-shadow: 0 0 30px 15px rgba(255, 215, 0, 0.3); animation-delay: 0s; }
+        #star2 { top: 45%; left: 75%; color: #FF6A00; box-shadow: 0 0 30px 15px rgba(255, 106, 0, 0.3); animation-delay: -1s; }
+        #star3 { top: 70%; left: 45%; color: #00e5ff; box-shadow: 0 0 30px 15px rgba(0, 229, 255, 0.3); animation-delay: -2s; }
 
-        /* Guia visual para ela apontar pro alto */
-        .look-up-guide {
-            position: fixed; bottom: 15%; left: 50%; transform: translateX(-50%);
-            display: flex; flex-direction: column; align-items: center; z-index: 10;
-            opacity: 0; transition: opacity 1s; pointer-events: none;
+        @keyframes starFloat {
+            0% { transform: translate(-50%, -50%) scale(0.9); }
+            100% { transform: translate(-50%, -60%) scale(1.1); }
         }
-        .look-up-guide.visible { opacity: 1; animation: fadeOut 6s forwards; }
-        .arrow-up { font-size: 30px; animation: bounceUp 1.5s infinite; color: rgba(255,106,0,0.9); text-shadow: 0 2px 5px rgba(0,0,0,0.5);}
-        .guide-text { font-family: 'Montserrat', sans-serif; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; margin-top: 5px; color: rgba(255,255,255,0.9); font-weight: 600; text-shadow: 0 2px 5px rgba(0,0,0,0.5);}
-        
-        @keyframes bounceUp { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
-        @keyframes fadeOut { 0%, 80% { opacity: 1; } 100% { opacity: 0; visibility: hidden; } }
 
         /* --- PAINEL DA MEMÓRIA --- */
         #memory-overlay {
             position: fixed; inset: 0; z-index: 10000;
-            background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            background: rgba(0, 0, 0, 0.75); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
             display: flex; justify-content: center; align-items: center;
-            opacity: 0; visibility: hidden; transition: all 0.5s ease;
+            opacity: 0; visibility: hidden; transition: all 0.4s ease;
         }
         #memory-overlay.active { opacity: 1; visibility: visible; }
 
@@ -115,9 +116,9 @@
     <video id="ar-camera-feed" autoplay playsinline muted></video>
 
     <div id="start-screen">
-        <h1 class="start-title">Nosso Universo</h1>
-        <p class="start-text">Para esta surpresa funcionar, permita o acesso à câmera e aos sensores.<br><br>Aponte o seu celular para o céu e procure a nossa constelação.</p>
-        <button class="start-btn" onclick="startExperience()">Descobrir</button>
+        <h1 class="start-title">Nosso Céu</h1>
+        <p class="start-text">Aponte a câmera do seu celular para o céu e descubra o que o universo guardou para nós.</p>
+        <button class="start-btn" onclick="startExperience()">Abrir Câmera</button>
     </div>
 
     <div class="ui-hud" id="hud">
@@ -125,17 +126,16 @@
         <div class="hud-sub">Toque nas estrelas do nosso céu</div>
     </div>
     
-    <div class="look-up-guide" id="guide">
-        <div class="arrow-up">⇧</div>
-        <div class="guide-text">Olhe para cima</div>
-    </div>
+    <div id="constellation-container">
+        <svg class="constellation-lines" width="100%" height="100%">
+            <line class="line" x1="25%" y1="35%" x2="75%" y2="45%" />
+            <line class="line" x1="75%" y1="45%" x2="45%" y2="70%" />
+        </svg>
 
-    <div id="ar-navigator">
-        <div id="nav-arrow"></div>
+        <div class="star" id="star1" onclick="openMemory(1)"></div>
+        <div class="star" id="star2" onclick="openMemory(2)"></div>
+        <div class="star" id="star3" onclick="openMemory(3)"></div>
     </div>
-
-    <div id="click-layer" style="display: none;"></div>
-    <canvas id="webgl-canvas"></canvas>
 
     <div id="memory-overlay">
         <div class="memory-card">
@@ -147,228 +147,74 @@
         </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-
     <script>
-        // =========================================================================
-        // CONFIGURAÇÃO DAS MEMÓRIAS (CONSTELAÇÃO NO ZÊNITE)
-        // =========================================================================
-        const memorias = [
-            {
-                id: 1, month: "Mês 1", title: "O Início", 
-                text: "Onde tudo começou. O primeiro mês nos provou que o que sentimos vai além de qualquer distância e superou todas as expectativas.",
-                color: 0xFFD700, imageUrl: "foto1_3meses.jpg",
-                pos: { x: -40, y: 180, z: 20 } 
+        // Banco de Dados das Memórias
+        const memorias = {
+            1: {
+                month: "Mês 1", title: "O Início", 
+                text: "Onde tudo começou. O primeiro mês nos provou que o que sentimos vai além de qualquer distância.",
+                imageUrl: "foto1_3meses.jpg"
             },
-            {
-                id: 2, month: "Mês 2", title: "A Nossa Luz",
+            2: {
+                month: "Mês 2", title: "A Nossa Luz",
                 text: "Encontramos nosso ritmo e construímos o nosso porto seguro. Você iluminou meus dias.",
-                color: 0xFF6A00, imageUrl: "foto2_3meses.jpg",
-                pos: { x: 0, y: 230, z: -15 } 
+                imageUrl: "foto2_3meses.jpg"
             },
-            {
-                id: 3, month: "Mês 3", title: "Nosso Futuro",
+            3: {
+                month: "Mês 3", title: "Nosso Futuro",
                 text: "Hoje o nosso amor não cabe mais na tela, ele encontrou espaço no universo. Obrigado por esses 3 meses. Te amo, Thayna!",
-                color: 0x00e5ff, imageUrl: "foto3_3meses.jpg",
-                pos: { x: 45, y: 190, z: 15 } 
+                imageUrl: "foto3_3meses.jpg"
             }
-        ];
+        };
 
-        let scene, camera, renderer, raycaster, mouse;
-        let memoryStarsGroup = new THREE.Group();
-        let isGyroEnabled = false;
-
-        function initScene() {
-            const canvas = document.getElementById('webgl-canvas');
-            scene = new THREE.Scene();
-            scene.background = null; // Fundo transparente para a câmera aparecer
-
-            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-            
-            renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
-            renderer.setClearColor(0x000000, 0); 
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            renderer.setPixelRatio(window.devicePixelRatio);
-
-            raycaster = new THREE.Raycaster();
-            mouse = new THREE.Vector2();
-
-            createMemoryStars();
-            drawConstellationLines(); 
-            
-            document.getElementById('click-layer').addEventListener('click', onInteract, false);
-            document.getElementById('click-layer').addEventListener('touchstart', onInteract, {passive: false});
-            window.addEventListener('resize', onWindowResize, false);
-
-            animate();
-        }
-
-        // Desenha as estrelas no céu
-        function createMemoryStars() {
-            memorias.forEach(mem => {
-                const star = new THREE.Group();
-                star.position.set(mem.pos.x, mem.pos.y, mem.pos.z);
-
-                // Núcleo brilhante
-                const coreGeo = new THREE.SphereGeometry(6, 32, 32);
-                const coreMat = new THREE.MeshBasicMaterial({ color: mem.color });
-                const core = new THREE.Mesh(coreGeo, coreMat);
-                star.add(core);
-                
-                // Halo de luz
-                const haloGeo = new THREE.SphereGeometry(14, 32, 32);
-                const haloMat = new THREE.MeshBasicMaterial({ color: mem.color, transparent: true, opacity: 0.6, blending: THREE.AdditiveBlending });
-                const halo = new THREE.Mesh(haloGeo, haloMat);
-                star.add(halo);
-
-                // Área de clique invisível (maior para facilitar o toque no celular)
-                const hitBoxGeo = new THREE.SphereGeometry(40, 16, 16);
-                const hitBoxMat = new THREE.MeshBasicMaterial({ visible: false }); 
-                const hitBox = new THREE.Mesh(hitBoxGeo, hitBoxMat);
-                star.add(hitBox);
-
-                hitBox.userData = { isMemory: true, data: mem };
-                star.userData = { isMemory: true, data: mem, halo: halo, core: core };
-                
-                memoryStarsGroup.add(star);
-            });
-            scene.add(memoryStarsGroup);
-        }
-
-        // Desenha as linhas ligando as estrelas (A Constelação)
-        function drawConstellationLines() {
-            const material = new THREE.LineBasicMaterial({ color: 0xFF9900, transparent: true, opacity: 0.4, linewidth: 2 });
-            const points = [];
-            memorias.forEach(mem => {
-                points.push(new THREE.Vector3(mem.pos.x, mem.pos.y, mem.pos.z));
-            });
-            const geometry = new THREE.BufferGeometry().setFromPoints(points);
-            const line = new THREE.Line(geometry, material);
-            scene.add(line);
-        }
-
+        // Inicia a Câmera e a Experiência
         async function startExperience() {
             // Toca a música
             document.getElementById('bg-music').play().catch(e => console.log(e));
 
-            // Pede acesso à câmera
+            // Pede acesso à câmera traseira
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
-                document.getElementById('ar-camera-feed').srcObject = stream;
+                const videoFeed = document.getElementById('ar-camera-feed');
+                videoFeed.srcObject = stream;
+                
+                // Exibe o vídeo assim que estiver pronto
+                videoFeed.onloadedmetadata = () => {
+                    videoFeed.style.opacity = '1';
+                };
             } catch (err) { 
-                console.error("Câmera falhou ou foi negada:", err); 
-                alert("Sem a câmera, a experiência fica no escuro, mas as estrelas ainda estarão lá!");
+                console.error("Câmera negada ou não disponível:", err); 
+                // Se der erro, o fundo fica preto e a constelação funciona normalmente.
             }
 
-            // Pede permissão de Giroscópio (Obrigatório para iOS)
-            if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
-                DeviceOrientationEvent.requestPermission()
-                    .then(permissionState => {
-                        if (permissionState === 'granted') {
-                            window.addEventListener('deviceorientation', handleOrientation);
-                            isGyroEnabled = true;
-                        }
-                    }).catch(console.error);
-            } else {
-                window.addEventListener('deviceorientation', handleOrientation);
-                isGyroEnabled = true;
-            }
-
-            // Esconde a tela inicial e revela a interface
+            // Animação de transição das telas
             document.getElementById('start-screen').style.opacity = '0';
+            
             setTimeout(() => {
                 document.getElementById('start-screen').style.visibility = 'hidden';
                 document.getElementById('hud').classList.add('visible');
-                document.getElementById('guide').classList.add('visible');
-                document.getElementById('ar-navigator').style.display = 'flex';
-                document.getElementById('click-layer').style.display = 'block';
-                initScene();
+                document.getElementById('constellation-container').classList.add('visible');
             }, 1000);
         }
 
-        // Atualiza a rotação da câmera com o movimento do celular
-        function handleOrientation(event) {
-            if (!event.alpha || !event.beta || !event.gamma) return;
-            const alpha = THREE.MathUtils.degToRad(event.alpha);
-            const beta = THREE.MathUtils.degToRad(event.beta);
-            const gamma = THREE.MathUtils.degToRad(event.gamma);
-            const euler = new THREE.Euler(beta, alpha, -gamma, 'YXZ');
-            camera.quaternion.setFromEuler(euler);
-        }
-
-        // Clica/Toca na Estrela
-        function onInteract(event) {
-            event.preventDefault();
-            if (event.type === 'touchstart') {
-                mouse.x = (event.touches[0].clientX / window.innerWidth) * 2 - 1;
-                mouse.y = -(event.touches[0].clientY / window.innerHeight) * 2 + 1;
-            } else {
-                mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-                mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-            }
-
-            raycaster.setFromCamera(mouse, camera);
-            const intersects = raycaster.intersectObjects(memoryStarsGroup.children, true);
-
-            if (intersects.length > 0) {
-                let obj = intersects[0].object;
-                while(obj && !obj.userData.isMemory) obj = obj.parent;
-                if(obj) openMemory(obj.userData.data);
-            }
-        }
-
         // Abre o Modal com a Foto e Texto
-        function openMemory(data) {
+        function openMemory(id) {
+            const data = memorias[id];
+            
             document.getElementById('mem-month').innerText = data.month;
             document.getElementById('mem-title').innerText = data.title;
             document.getElementById('mem-text').innerText = data.text;
             document.getElementById('mem-photo').src = data.imageUrl; 
             
             document.getElementById('memory-overlay').classList.add('active');
-            document.getElementById('click-layer').style.display = 'none'; // Trava cliques no 3D
         }
 
+        // Fecha o Modal
         function closeMemory() {
             document.getElementById('memory-overlay').classList.remove('active');
-            document.getElementById('click-layer').style.display = 'block'; // Destrava
             
-            // Limpa a foto depois que o modal fechar para não dar glitch visual na próxima
-            setTimeout(() => { document.getElementById('mem-photo').src = ""; }, 500);
-        }
-
-        function onWindowResize() {
-            if(!camera) return;
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        }
-
-        // Bússola: Aponta para a constelação no céu
-        const navigatorArrow = document.getElementById('nav-arrow');
-        function updateNavigator() {
-            if(!camera) return;
-            const targetPos = new THREE.Vector3(0, 200, 0); // Posição central da constelação (Zênite)
-            const cameraInv = new THREE.Matrix4().copy(camera.matrixWorld).invert();
-            targetPos.applyMatrix4(cameraInv); 
-            let angle = Math.atan2(targetPos.x, targetPos.y) * 180 / Math.PI;
-            navigatorArrow.style.transform = `rotate(${angle}deg)`;
-        }
-
-        // Loop de Renderização
-        function animate() {
-            requestAnimationFrame(animate);
-            updateNavigator(); 
-
-            // Faz as estrelas pulsarem suavemente
-            const time = Date.now() * 0.003;
-            memoryStarsGroup.children.forEach(starGroup => {
-                const star = starGroup.userData;
-                if (star.halo) {
-                    const scale = 1 + Math.sin(time + starGroup.position.x) * 0.2;
-                    star.halo.scale.set(scale, scale, scale);
-                }
-            });
-            renderer.render(scene, camera);
+            // Limpa a foto depois que o modal fechar
+            setTimeout(() => { document.getElementById('mem-photo').src = ""; }, 400);
         }
     </script>
 </body>
