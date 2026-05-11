@@ -171,7 +171,6 @@
         let sensorDetected = false; 
 
         async function startExperience() {
-            // Dá play na música
             document.getElementById('bg-music').play().catch(e => console.log("Música aguardando interação:", e));
 
             // 1. PEDE O GIROSCÓPIO PRIMEIRO (Crucial para o iPhone/iOS)
@@ -208,7 +207,7 @@
                 instruction.innerText = "Aponte o celular para o céu";
             }, 1000);
 
-            // 4. BOTÃO DE EMERGÊNCIA (Failsafe caso o sensor falhe silenciosamente)
+            // 4. BOTÃO DE EMERGÊNCIA (Failsafe)
             setTimeout(() => {
                 if (!sensorDetected) {
                     forceBtn.style.display = 'block';
@@ -218,19 +217,19 @@
 
         function handleGyroscope(event) {
             if (isManualMode || event.beta === null) return;
-            sensorDetected = true; // Confirma que o sensor está funcionando
-            forceBtn.style.display = 'none'; // Esconde o botão de emergência
+            sensorDetected = true; 
+            forceBtn.style.display = 'none';
 
-            // event.beta: 90 é o celular em pé. Conforme deita para olhar para o céu, o número diminui ou vai para o negativo.
-            // Se o ângulo for menor que 75 (inclinado pra trás/cima), ativa a constelação.
-            if (event.beta < 75 && event.beta > -60) {
+            // CORREÇÃO MATEMÁTICA: 
+            // Em pé (normal) = 90º. Deitado com a câmera pro céu = 180º.
+            // Quando a Thayna levantar e inclinar o celular para cima, o beta passa de 105º.
+            if (event.beta > 105 && event.beta <= 180) {
                 if (!isSkyActive) activateSky(true, "Toque nas estrelas do nosso céu");
             } else {
                 if (isSkyActive) activateSky(false, "Aponte o celular para o céu");
             }
         }
 
-        // Função ativada apenas pelo botão de emergência
         function forceSkyActivation() {
             isManualMode = true; 
             forceBtn.style.display = 'none'; 
@@ -241,10 +240,10 @@
             isSkyActive = active;
             instruction.innerText = textMsg;
             if (active) {
-                instruction.style.color = "#FFD700"; // Dourado indicando sucesso
+                instruction.style.color = "#FFD700"; // Dourado
                 constellation.classList.add('active');
             } else {
-                instruction.style.color = "#FF9900"; // Laranja indicando espera
+                instruction.style.color = "#FF9900"; // Laranja
                 constellation.classList.remove('active');
             }
         }
@@ -265,10 +264,8 @@
         function closeMemory() {
             document.getElementById('memory-overlay').classList.remove('active');
             
-            // Limpa a foto para não dar "flicker" na próxima vez
             setTimeout(() => { document.getElementById('mem-photo').src = ""; }, 400);
             
-            // Reativa sensores (se não estiver no modo manual)
             if (!isManualMode) {
                 window.addEventListener('deviceorientation', handleGyroscope);
             }
