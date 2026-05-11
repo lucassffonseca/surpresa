@@ -167,31 +167,36 @@
         const forceBtn = document.getElementById('force-sky-btn');
         
         let isSkyActive = false;
-        let isManualMode = false; // Impede o sensor de sobrescrever o clique do botão
+        let isManualMode = false;
+        let sensorDetected = false; 
 
         async function startExperience() {
             document.getElementById('bg-music').play().catch(e => console.log(e));
 
-            // Câmera
+            // 1. PEDE O GIROSCÓPIO PRIMEIRO (A regra de ouro do iPhone)
+            if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
+                try {
+                    const permissionState = await DeviceOrientationEvent.requestPermission();
+                    if (permissionState === 'granted') {
+                        window.addEventListener('deviceorientation', handleGyroscope);
+                    } else {
+                        console.log("Permissão do iPhone negada.");
+                    }
+                } catch (error) {
+                    console.error("Erro no sensor do iPhone:", error);
+                }
+            } else {
+                window.addEventListener('deviceorientation', handleGyroscope);
+            }
+
+            // 2. DEPOIS LIGA A CÂMERA
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
                 videoFeed.srcObject = stream;
                 videoFeed.onloadedmetadata = () => { videoFeed.style.opacity = '1'; };
             } catch (err) { console.error("Câmera negada:", err); }
 
-            // Sensores (Giroscópio)
-            if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
-                DeviceOrientationEvent.requestPermission()
-                    .then(permissionState => {
-                        if (permissionState === 'granted') {
-                            window.addEventListener('deviceorientation', handleGyroscope);
-                        }
-                    }).catch(console.error);
-            } else {
-                window.addEventListener('deviceorientation', handleGyroscope);
-            }
-
-            // Transição
+            // 3. TRANSIÇÃO DA TELA
             document.getElementById('start-screen').style.opacity = '0';
             setTimeout(() => {
                 document.getElementById('start-screen').style.visibility = 'hidden';
@@ -199,33 +204,30 @@
                 instruction.innerText = "Aponte o celular para o céu";
             }, 1000);
 
-            // GATILHO DE EMERGÊNCIA: Se as estrelas não aparecerem após 4 segundos, mostra o botão manual
+            // 4. BOTÃO DE EMERGÊNCIA (Failsafe)
             setTimeout(() => {
-                if (!isSkyActive) {
+                if (!sensorDetected) {
                     forceBtn.style.display = 'block';
                 }
             }, 4000);
         }
 
         function handleGyroscope(event) {
-            // Se ativou pelo botão manual, ignora os sensores pra não bugar
             if (isManualMode || event.beta === null) return;
-
-            // Se o sensor funcionar, esconde o botão de emergência
+            sensorDetected = true; 
             forceBtn.style.display = 'none';
 
-            // Ângulo ajustado: < 75 graus ativa o céu
-            if (event.beta < 75 && event.beta > -40) {
+            // Beta: Inclinação do celular. < 65 é apontando pro céu.
+            if (event.beta < 65 && event.beta > -40) {
                 if (!isSkyActive) activateSky(true, "Toque nas estrelas do nosso céu");
             } else {
                 if (isSkyActive) activateSky(false, "Aponte o celular para o céu");
             }
         }
 
-        // Função ativada pelo botão "Revelar Estrelas"
         function forceSkyActivation() {
-            isManualMode = true; // Trava o modo manual
-            forceBtn.style.display = 'none'; // Esconde o botão
+            isManualMode = true; 
+            forceBtn.style.display = 'none'; 
             activateSky(true, "Toque nas estrelas do nosso céu");
         }
 
@@ -243,18 +245,19 @@
 
         function openMemory(id) {
             const data = memorias[id];
-            
             document.getElementById('mem-month').innerText = data.month;
             document.getElementById('mem-title').innerText = data.title;
             document.getElementById('mem-text').innerText = data.text;
             document.getElementById('mem-photo').src = data.imageUrl; 
             
             document.getElementById('memory-overlay').classList.add('active');
+            window.removeEventListener('deviceorientation', handleGyroscope);
         }
 
         function closeMemory() {
             document.getElementById('memory-overlay').classList.remove('active');
             setTimeout(() => { document.getElementById('mem-photo').src = ""; }, 400);
+            window.addEventListener('deviceorientation', handleGyroscope);
         }
     </script>
 </body>
