@@ -1,118 +1,3 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Nosso Universo - 3 Meses 🌌</title>
-    
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700;800&family=Dancing+Script:wght@700&family=Inter:wght@300;400;600&display=swap');
-
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body, html { overflow: hidden; height: 100vh; width: 100vw; background-color: #000; color: #fff; font-family: 'Inter', sans-serif; }
-        
-        /* Câmera de fundo */
-        #ar-camera-feed { position: absolute; inset: 0; width: 100vw; height: 100vh; object-fit: cover; z-index: 0; opacity: 0; transition: opacity 1s; }
-
-        /* --- TELA DE INÍCIO --- */
-        #start-screen {
-            position: fixed; inset: 0; z-index: 50000;
-            background: linear-gradient(to bottom, #050505, #1a0a00);
-            display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;
-            padding: 30px; transition: opacity 1.5s ease, visibility 1.5s;
-        }
-        .start-title { font-family: 'Dancing Script', cursive; font-size: 50px; color: #FF6A00; margin-bottom: 15px; text-shadow: 0 0 20px rgba(255,106,0,0.4); }
-        .start-text { font-size: 15px; color: #ccc; line-height: 1.6; max-width: 320px; margin-bottom: 40px; font-weight: 300; }
-        .start-btn {
-            background: linear-gradient(135deg, #FF6A00, #FF9900); color: #fff; border: none; padding: 18px 40px; border-radius: 50px;
-            font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 14px; text-transform: uppercase; letter-spacing: 2px;
-            cursor: pointer; box-shadow: 0 10px 30px rgba(255,106,0,0.5); animation: pulseBtn 2s infinite;
-        }
-        @keyframes pulseBtn { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
-
-        /* --- HUD (Textos na tela) --- */
-        .ui-hud {
-            position: fixed; top: 50px; width: 100%; text-align: center; z-index: 10;
-            pointer-events: none; opacity: 0; transition: opacity 1s;
-        }
-        .ui-hud.visible { opacity: 1; }
-        .hud-title { font-family: 'Dancing Script', cursive; font-size: 38px; color: #fff; text-shadow: 0 2px 10px rgba(0,0,0,0.8); }
-        
-        /* Instrução dinâmica que muda conforme a inclinação */
-        #hud-instruction { font-family: 'Montserrat', sans-serif; font-size: 11px; text-transform: uppercase; letter-spacing: 3px; color: #FF9900; text-shadow: 0 1px 5px rgba(0,0,0,0.8); margin-top: 5px;}
-
-        /* --- A CONSTELAÇÃO MÁGICA (CSS) --- */
-        #constellation-container {
-            position: absolute; inset: 0; z-index: 5;
-            opacity: 0; visibility: hidden; transition: opacity 1s, visibility 1s;
-            pointer-events: none; /* Padrão: bloqueado */
-        }
-        /* Quando ativo pelos sensores */
-        #constellation-container.active { 
-            opacity: 1; visibility: visible; pointer-events: auto; 
-        }
-
-        /* Linhas ligando as estrelas */
-        .constellation-lines {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;
-        }
-        .line { stroke: rgba(255, 153, 0, 0.4); stroke-width: 2; stroke-dasharray: 5 5; }
-
-        /* As Estrelas */
-        .star {
-            position: absolute; width: 30px; height: 30px; background: transparent;
-            border-radius: 50%; transform: translate(-50%, -50%); cursor: pointer;
-            animation: starFloat 4s infinite ease-in-out alternate;
-            display: flex; justify-content: center; align-items: center;
-        }
-        /* Núcleo brilhante da estrela */
-        .star::after {
-            content: ''; position: absolute; width: 8px; height: 8px; background: #fff; border-radius: 50%;
-            box-shadow: 0 0 15px 5px currentColor, 0 0 30px 10px currentColor;
-        }
-
-        /* Posições Fixas na Tela (Lente Mágica) */
-        #star1 { top: 35%; left: 25%; color: #FFD700; animation-delay: 0s; }
-        #star2 { top: 45%; left: 75%; color: #FF6A00; animation-delay: -1s; }
-        #star3 { top: 70%; left: 45%; color: #00e5ff; animation-delay: -2s; }
-
-        @keyframes starFloat {
-            0% { transform: translate(-50%, -50%) scale(0.9); }
-            100% { transform: translate(-50%, -60%) scale(1.1); }
-        }
-
-        /* --- PAINEL DA MEMÓRIA --- */
-        #memory-overlay {
-            position: fixed; inset: 0; z-index: 10000;
-            background: rgba(0, 0, 0, 0.75); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-            display: flex; justify-content: center; align-items: center;
-            opacity: 0; visibility: hidden; transition: all 0.4s ease;
-        }
-        #memory-overlay.active { opacity: 1; visibility: visible; }
-
-        .memory-card {
-            background: linear-gradient(to bottom, rgba(255,255,255,0.05), rgba(0,0,0,0.95));
-            border: 1px solid rgba(255, 106, 0, 0.4); border-radius: 20px;
-            width: 85%; max-width: 380px; padding: 30px 25px; text-align: center;
-            transform: translateY(30px) scale(0.95); transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
-            box-shadow: 0 30px 60px rgba(0,0,0,0.9);
-            display: flex; flex-direction: column; align-items: center;
-        }
-        #memory-overlay.active .memory-card { transform: translateY(0) scale(1); }
-
-        .mem-month { font-family: 'Montserrat', sans-serif; font-size: 11px; color: #FF9900; text-transform: uppercase; letter-spacing: 3px; font-weight: 800; margin-bottom: 8px;}
-        .mem-title { font-family: 'Dancing Script', cursive; font-size: 34px; color: #fff; text-shadow: 0 2px 5px rgba(0,0,0,0.5); margin-bottom: 20px;}
-        .mem-photo { width: 100%; max-height: 220px; object-fit: cover; border-radius: 12px; border: 1px solid rgba(255,106,0,0.3); margin-bottom: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.6); }
-        .mem-text { font-size: 15px; line-height: 1.6; color: #e0e0e0; font-weight: 300; font-style: italic; margin-bottom: 30px;}
-
-        .close-btn {
-            background: rgba(255,106,0,0.1); border: 1px solid #FF6A00; color: #fff;
-            padding: 12px 30px; border-radius: 50px; font-family: 'Montserrat', sans-serif; font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 1px;
-            cursor: pointer; transition: all 0.3s;
-        }
-        .close-btn:hover { background: #FF6A00; box-shadow: 0 0 15px rgba(255,106,0,0.5); }
-    </style>
-</head>
 <body>
 
     <audio id="bg-music" loop preload="auto">
@@ -129,7 +14,7 @@
 
     <div class="ui-hud" id="hud">
         <h2 class="hud-title">Nossa História</h2>
-        <div id="hud-instruction">Iniciando...</div>
+        <div id="hud-instruction" style="font-family: 'Montserrat', sans-serif; font-size: 11px; text-transform: uppercase; letter-spacing: 3px; color: #FF9900; text-shadow: 0 1px 5px rgba(0,0,0,0.8); margin-top: 5px;">Iniciando Universo...</div>
     </div>
     
     <div id="constellation-container">
@@ -154,7 +39,6 @@
     </div>
 
     <script>
-        // Banco de Dados das Memórias
         const memorias = {
             1: { month: "Mês 1", title: "O Início", text: "Onde tudo começou. O primeiro mês nos provou que o que sentimos vai além de qualquer distância.", imageUrl: "foto1_3meses.jpg" },
             2: { month: "Mês 2", title: "A Nossa Luz", text: "Encontramos nosso ritmo e construímos o nosso porto seguro. Você iluminou meus dias.", imageUrl: "foto2_3meses.jpg" },
@@ -164,11 +48,11 @@
         const instruction = document.getElementById('hud-instruction');
         const constellation = document.getElementById('constellation-container');
         const videoFeed = document.getElementById('ar-camera-feed');
+        
         let isSkyActive = false;
+        let sensorDetected = false; // Variável da trava de segurança
 
-        // Inicia a Experiência
         async function startExperience() {
-            // Toca a música
             document.getElementById('bg-music').play().catch(e => console.log(e));
 
             // 1. Inicia Câmera Traseira
@@ -178,16 +62,12 @@
                 videoFeed.onloadedmetadata = () => { videoFeed.style.opacity = '1'; };
             } catch (err) { console.error("Câmera negada:", err); }
 
-            // 2. Inicia Sensores de Movimento (Giroscópio)
-            // Necessário Https e autorização no iOS 13+
+            // 2. Inicia Sensores de Movimento
             if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
                 DeviceOrientationEvent.requestPermission()
                     .then(permissionState => {
                         if (permissionState === 'granted') {
                             window.addEventListener('deviceorientation', handleGyroscope);
-                        } else {
-                            alert("Sem os sensores, as estrelas ficarão fixas na tela.");
-                            activateSky(true); // Fallback: Ativa direto
                         }
                     }).catch(console.error);
             } else {
@@ -199,37 +79,43 @@
             setTimeout(() => {
                 document.getElementById('start-screen').style.visibility = 'hidden';
                 document.getElementById('hud').classList.add('visible');
+                instruction.innerText = "Aponte o celular para o céu";
             }, 1000);
+
+            // 3. TRAVA DE SEGURANÇA (Garante que vai funcionar no teste local)
+            setTimeout(() => {
+                if (!sensorDetected) {
+                    console.log("Sensores bloqueados. Forçando exibição da constelação.");
+                    activateSky(true, "Toque nas estrelas do nosso céu");
+                }
+            }, 3000); // Espera 3 segundos. Se não ler o giroscópio, ativa sozinho.
         }
 
-        // Lógica do Giroscópio para Gatilho de "Aponte pro Céu"
         function handleGyroscope(event) {
-            if (!event.beta) return; // Beta é a inclinação frente/trás (0 a 180)
+            if (!event.beta) return;
+            sensorDetected = true; // Confirma que o sensor está funcionando
 
-            // Se o celular estiver inclinado para cima (apontando pro céu real)
-            // Ajuste o ângulo (60 a 90 graus é o ideal)
-            if (event.beta > 60 && event.beta < 110) {
-                if (!isSkyActive) activateSky(true);
+            // Ângulo corrigido: celular em pé é 90º. Apontando pro teto/céu é próximo de 0º.
+            // Ativa se ele inclinar o celular num ângulo menor que 65º (olhando pra cima)
+            if (event.beta < 65 && event.beta > -30) {
+                if (!isSkyActive) activateSky(true, "Toque nas estrelas do nosso céu");
             } else {
-                if (isSkyActive) activateSky(false);
+                if (isSkyActive) activateSky(false, "Aponte o celular para o céu");
             }
         }
 
-        // Ativa/Desativa a constelação na tela
-        function activateSky(active) {
+        function activateSky(active, textMsg) {
             isSkyActive = active;
+            instruction.innerText = textMsg;
             if (active) {
-                instruction.innerText = "Toque nas estrelas do nosso céu";
                 instruction.style.color = "#FFD700"; // Dourado
                 constellation.classList.add('active');
             } else {
-                instruction.innerText = "Aponte o celular para o céu";
-                instruction.style.color = "#FF9900"; // Laranja normal
+                instruction.style.color = "#FF9900"; // Laranja
                 constellation.classList.remove('active');
             }
         }
 
-        // Abre o Modal da Memória
         function openMemory(id) {
             const data = memorias[id];
             
@@ -239,21 +125,13 @@
             document.getElementById('mem-photo').src = data.imageUrl; 
             
             document.getElementById('memory-overlay').classList.add('active');
-            
-            // Pausa os sensores temporariamente para não fechar a estrela se ela abaixar o celular lendo
             window.removeEventListener('deviceorientation', handleGyroscope);
         }
 
-        // Fecha o Modal
         function closeMemory() {
             document.getElementById('memory-overlay').classList.remove('active');
-            
-            // Limpa a foto
             setTimeout(() => { document.getElementById('mem-photo').src = ""; }, 400);
-            
-            // Reativa os sensores
             window.addEventListener('deviceorientation', handleGyroscope);
         }
     </script>
 </body>
-</html>
