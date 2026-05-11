@@ -48,7 +48,7 @@
             box-shadow: 0 0 15px rgba(255,215,0,0.3);
         }
 
-        /* --- CONSTELAÇÃO TRÊS MARIAS (Centralizada em Linha Diagonal) --- */
+        /* --- CÉU DE ESTRELAS ALEATÓRIAS --- */
         #constellation-container {
             position: absolute; inset: 0; z-index: 5;
             opacity: 0; visibility: hidden; transition: opacity 1s, visibility 1s;
@@ -56,28 +56,25 @@
         }
         #constellation-container.active { opacity: 1; visibility: visible; pointer-events: auto; }
 
-        .constellation-lines { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
-        .line { stroke: rgba(255, 153, 0, 0.6); stroke-width: 2.5; stroke-dasharray: 5 5; }
-
         .star {
             position: absolute; width: 60px; height: 60px; background: transparent;
             border-radius: 50%; transform: translate(-50%, -50%); cursor: pointer;
             animation: starFloat 4s infinite ease-in-out alternate;
             display: flex; justify-content: center; align-items: center;
+            /* O top e o left serão definidos via JavaScript na função randomizeStars() */
         }
         .star::after {
             content: ''; position: absolute; width: 12px; height: 12px; background: #fff; border-radius: 50%;
             box-shadow: 0 0 15px 5px currentColor, 0 0 30px 10px currentColor; transition: all 0.5s ease;
         }
         
-        /* Feedback visual das estrelas já abertas (Mais opacas, sem piscar) */
         .star.opened::after { opacity: 0.2; transform: scale(0.7); box-shadow: none; }
         .star.opened { animation: none; pointer-events: none; }
 
-        /* Posições Alinhadas tipo Três Marias (Linha diagonal centralizada) */
-        #star1 { top: 35%; left: 25%; color: #FFD700; animation-delay: 0s; }
-        #star2 { top: 50%; left: 50%; color: #FF6A00; animation-delay: -1s; }
-        #star3 { top: 65%; left: 75%; color: #00e5ff; animation-delay: -2s; }
+        /* Cores base das estrelas e animação */
+        #star1 { color: #FFD700; animation-delay: 0s; }
+        #star2 { color: #FF6A00; animation-delay: -1s; }
+        #star3 { color: #00e5ff; animation-delay: -2s; }
 
         @keyframes starFloat {
             0% { transform: translate(-50%, -50%) scale(0.9); }
@@ -130,7 +127,7 @@
         .final-text::after { content: '|'; animation: blink 0.8s infinite; color: #FFD700; font-weight: 300;}
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
-        /* --- GRAN FINALE (SUPERNOVA DO CORAÇÃO DE GIRASSÓIS FOTORREALISTAS) --- */
+        /* --- GRAN FINALE (SUPERNOVA E CORAÇÃO) --- */
         #finale-overlay {
             position: fixed; inset: 0; z-index: 30000;
             background: #000; display: flex; flex-direction: column; justify-content: center; align-items: center;
@@ -138,7 +135,6 @@
         }
         #finale-overlay.active { opacity: 1; visibility: visible; }
 
-        /* O Clarão da Supernova */
         .supernova-flash {
             position: absolute; width: 10px; height: 10px; background: #fff; border-radius: 50%;
             box-shadow: 0 0 100px 50px #fff, 0 0 200px 100px #FFD700;
@@ -153,7 +149,6 @@
             100% { transform: scale(0); opacity: 0; visibility: hidden;}
         }
 
-        /* O Coração Final de Girassóis Reais (Fotorrealista) */
         #final-sunflower-heart {
             position: relative; width: 250px; height: 250px;
             opacity: 0; transform: scale(0.5); transition: opacity 1.5s ease 2s, transform 2s ease 2.2s;
@@ -165,7 +160,7 @@
             width: 100%; height: 100%;
             object-fit: contain;
             filter: drop-shadow(0 10px 30px rgba(255,215,0,0.5));
-            animation: heartPulse 3s infinite ease-in-out 4s; /* Começa a pulsar depois de aparecer */
+            animation: heartPulse 3s infinite ease-in-out 4s;
         }
         
         @keyframes heartPulse {
@@ -173,7 +168,6 @@
             50% { transform: scale(1.05); filter: drop-shadow(0 15px 40px rgba(255,215,0,0.8)); }
         }
 
-        /* Foto central dentro do coração (OPCIONAL: Substituir pela foto final de vocês) */
         .central-photo {
             position: absolute; width: 80px; height: 80px; border-radius: 50%;
             object-fit: cover; border: 4px solid #fff; box-shadow: 0 5px 15px rgba(0,0,0,0.5);
@@ -211,11 +205,6 @@
     <button id="force-sky-btn" onclick="forceSkyActivation()">Revelar Estrelas</button>
 
     <div id="constellation-container">
-        <svg class="constellation-lines" width="100%" height="100%">
-            <line class="line" x1="25%" y1="35%" x2="50%" y2="50%" />
-            <line class="line" x1="50%" y1="50%" x2="75%" y2="65%" />
-        </svg>
-
         <div class="star" id="star1" onclick="openMemory(1)"></div>
         <div class="star" id="star2" onclick="openMemory(2)"></div>
         <div class="star" id="star3" onclick="openMemory(3)"></div>
@@ -237,13 +226,10 @@
 
     <div id="finale-overlay">
         <div class="supernova-flash"></div>
-        
         <div id="final-sunflower-heart">
             <img src="coracao-girassol-real.png" class="sunflower-heart-img" alt="Coração de Girassóis Reais">
-            
             <img src="foto3_3meses.jpg" class="central-photo" alt="Nossa Foto Final">
         </div>
-
         <h3 class="end-title">Te Amo, Thayna</h3>
     </div>
 
@@ -254,7 +240,6 @@
             3: { month: "Mês 3", title: "Nosso Futuro", text: "Hoje o nosso amor não cabe mais na tela, ele encontrou espaço no universo. Obrigado por esses 3 meses. Te amo!", imageUrl: "foto3_3meses.jpg" }
         };
 
-        // Mensagem da "Carta Secreta" que aparece após a 3ª estrela
         const finalLetterText = "Thayna,<br><br>Se eu pudesse escolher um lugar seguro, seria ao seu lado.<br><br>Esses 3 meses foram apenas o começo da nossa maior constelação.<br><br>Obrigado por iluminar minha vida.<br>Feliz Nosso Dia!<br>— Lucas";
 
         const instruction = document.getElementById('hud-instruction');
@@ -266,12 +251,27 @@
         let isManualMode = false;
         let sensorDetected = false; 
         
-        // RASTREADOR DE ESTRELAS CLICADAS
         let openedStars = new Set();
         let isSurpriseTriggered = false;
 
+        // FUNÇÃO PARA ESPALHAR AS ESTRELAS DE FORMA ALEATÓRIA E SEGURA
+        function randomizeStars() {
+            for (let i = 1; i <= 3; i++) {
+                let star = document.getElementById('star' + i);
+                // Top: Limita entre 25% e 75% da altura da tela (Não some em cima nem embaixo)
+                let randomTop = Math.floor(Math.random() * 50) + 25; 
+                // Left: Limita entre 15% e 85% da largura da tela (Não some pros lados)
+                let randomLeft = Math.floor(Math.random() * 70) + 15; 
+                
+                star.style.top = randomTop + '%';
+                star.style.left = randomLeft + '%';
+            }
+        }
+
         async function startExperience() {
-            // PLAY NA MÚSICA (Garantido pelo clique no botão Permitir)
+            // Sorteia a posição das estrelas assim que abre
+            randomizeStars();
+
             document.getElementById('bg-music').play().catch(e => console.log("Música aguardando interação:", e));
 
             if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
@@ -304,14 +304,13 @@
         }
 
         function handleGyroscope(event) {
-            // Se ativou pelo botão manual, ignora os sensores pra não bugar
-            // Se a surpresa final começou, também ignora
             if (isManualMode || event.beta === null || isSurpriseTriggered) return;
             sensorDetected = true; 
             forceBtn.style.display = 'none';
 
-            // Beta: Inclinação do celular. < 65 é apontando pro céu.
-            if (event.beta < 65 && event.beta > -40) {
+            // CORREÇÃO MATEMÁTICA DEFINITIVA (iPhone/iOS)
+            // Se o ângulo for maior que 75º, o celular está levantado.
+            if (event.beta > 75 && event.beta <= 180) {
                 if (!isSkyActive) activateSky(true, "Toque nas estrelas do nosso céu");
             } else {
                 if (isSkyActive) activateSky(false, "Aponte o celular para o céu");
@@ -328,10 +327,10 @@
             isSkyActive = active;
             instruction.innerText = textMsg;
             if (active) {
-                instruction.style.color = "#FFD700"; // Dourado
+                instruction.style.color = "#FFD700"; 
                 constellation.classList.add('active');
             } else {
-                instruction.style.color = "#FF9900"; // Laranja normal
+                instruction.style.color = "#FF9900"; 
                 constellation.classList.remove('active');
             }
         }
@@ -339,7 +338,6 @@
         function openMemory(id) {
             const data = memorias[id];
             
-            // Marca visualmente a estrela como aberta (fica mais opaca)
             document.getElementById(`star${id}`).classList.add('opened');
             openedStars.add(id);
 
@@ -349,8 +347,6 @@
             document.getElementById('mem-photo').src = data.imageUrl; 
             
             document.getElementById('memory-overlay').classList.add('active');
-            
-            // Pausa os sensores enquanto ela lê
             window.removeEventListener('deviceorientation', handleGyroscope);
         }
 
@@ -358,39 +354,26 @@
             document.getElementById('memory-overlay').classList.remove('active');
             setTimeout(() => { document.getElementById('mem-photo').src = ""; }, 400);
             
-            // CHECAGEM DO GRAN FINALE (Ocorre após fechar a modal da foto)
             if (openedStars.size === 3 && !isSurpriseTriggered) {
-                isSurpriseTriggered = true; // Trava para não repetir
-                setTimeout(triggerFinalSurprise, 800); // Espera 0.8s após fechar a última foto
+                isSurpriseTriggered = true; 
+                setTimeout(triggerFinalSurprise, 800); 
             } else if (!isManualMode && !isSurpriseTriggered) {
-                // Reativa sensores se não abriu todas
                 window.addEventListener('deviceorientation', handleGyroscope);
             }
         }
-
-        // ==========================================
-        // FUNÇÕES DO GRAN FINALE (MENSAGEM + SUPERNOVA)
-        // ==========================================
         
         function triggerFinalSurprise() {
-            // 1. Esconde a HUD e a Constelação de vez
             document.getElementById('hud').classList.remove('visible');
             constellation.classList.remove('active');
-            
-            // 2. Chama a tela da "Carta Secreta" (Mensagem Datilografada)
             document.getElementById('message-overlay').classList.add('active');
-            
-            // 3. Começa a digitar com delay para dar tempo dela ler
             setTimeout(() => { typeWriter(finalLetterText, 0, startFinaleSequence); }, 1500);
         }
 
-        // Máquina de escrever (com callback para chamar o clarão no final)
         function typeWriter(text, i, callback) {
             if (i < text.length) {
                 let char = text.substring(i, i+1);
                 let isTag = false;
                 
-                // Trata as quebras de linha <br>
                 if(text.substring(i, i+4) === '<br>') {
                     document.getElementById("typed-final-msg").innerHTML += '<br>';
                     i += 3;
@@ -399,25 +382,18 @@
                     document.getElementById("typed-final-msg").innerHTML += char;
                 }
                 
-                let speed = isTag ? 0 : Math.random() * 40 + 30; // Velocidade de digitação
+                let speed = isTag ? 0 : Math.random() * 40 + 30; 
                 setTimeout(function() { typeWriter(text, i + 1, callback); }, speed);
             } else {
-                // Digitação terminou. Espera 2.5s para ela ler a carta inteira e chama o clarão.
                 if(callback) setTimeout(callback, 2500);
             }
         }
 
         function startFinaleSequence() {
-            // 1. Some suavemente com a mensagem datilografada
             document.getElementById('message-overlay').style.opacity = '0';
-            
-            // 2. Espera a mensagem sumir e ativa o Gran Finale (Clarão da Supernova)
             setTimeout(() => {
                 document.getElementById('message-overlay').style.visibility = 'hidden';
                 document.getElementById('finale-overlay').classList.add('active');
-                
-                // O clarão da supernova e o aparecimento do coração fotorrealista 
-                // são controlados pelas animações e transições no CSS (com delays).
             }, 2000); 
         }
     </script>
