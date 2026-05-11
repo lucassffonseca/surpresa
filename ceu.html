@@ -165,7 +165,7 @@
         const videoFeed = document.getElementById('ar-camera-feed');
         
         let isSkyActive = false;
-        let sensorDetected = false; 
+        // REMOVIDA a trava de segurança forçada (failsafe timer)
 
         async function startExperience() {
             document.getElementById('bg-music').play().catch(e => console.log(e));
@@ -183,6 +183,10 @@
                     .then(permissionState => {
                         if (permissionState === 'granted') {
                             window.addEventListener('deviceorientation', handleGyroscope);
+                        } else {
+                            // Se negar os sensores no celular, fica na mensagem "Aponte..." pra sempre.
+                            instruction.innerText = "Sensores necessários para ver as estrelas.";
+                            instruction.style.color = "#FF4D4D"; // Vermelho
                         }
                     }).catch(console.error);
             } else {
@@ -196,21 +200,13 @@
                 document.getElementById('hud').classList.add('visible');
                 instruction.innerText = "Aponte o celular para o céu";
             }, 1000);
-
-            // 3. TRAVA DE SEGURANÇA PARA TESTES (Força ativação se o sensor falhar)
-            setTimeout(() => {
-                if (!sensorDetected) {
-                    console.log("Sensores bloqueados. Forçando exibição da constelação.");
-                    activateSky(true, "Toque nas estrelas do nosso céu");
-                }
-            }, 3000); 
         }
 
         function handleGyroscope(event) {
             if (!event.beta) return;
-            sensorDetected = true; 
 
-            // Ângulo: Celular em pé é 90º. Olhando pro teto/céu aproxima de 0º.
+            // Ângulo rigoroso: Celular em pé é 90º. Olhando pro teto/céu aproxima de 0º.
+            // SÓ ativa se inclinar o celular num ângulo menor que 65º (olhando pra cima real)
             if (event.beta < 65 && event.beta > -30) {
                 if (!isSkyActive) activateSky(true, "Toque nas estrelas do nosso céu");
             } else {
@@ -239,12 +235,14 @@
             document.getElementById('mem-photo').src = data.imageUrl; 
             
             document.getElementById('memory-overlay').classList.add('active');
+            // Trava os sensores enquanto lê para não fechar a estrela
             window.removeEventListener('deviceorientation', handleGyroscope);
         }
 
         function closeMemory() {
             document.getElementById('memory-overlay').classList.remove('active');
             setTimeout(() => { document.getElementById('mem-photo').src = ""; }, 400);
+            // Reativa sensores
             window.addEventListener('deviceorientation', handleGyroscope);
         }
     </script>
