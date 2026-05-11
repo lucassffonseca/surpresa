@@ -39,7 +39,7 @@
         .hud-title { font-family: 'Dancing Script', cursive; font-size: 38px; color: #fff; text-shadow: 0 2px 10px rgba(0,0,0,0.8); margin-bottom: 5px; }
         #hud-instruction { font-family: 'Montserrat', sans-serif; font-size: 11px; text-transform: uppercase; letter-spacing: 3px; color: #FF9900; text-shadow: 0 1px 5px rgba(0,0,0,0.8); transition: color 0.5s; }
 
-        /* --- BOTÃO DE EMERGÊNCIA (Failsafe) --- */
+        /* --- BOTÃO DE EMERGÊNCIA --- */
         #force-sky-btn {
             position: fixed; bottom: 50px; left: 50%; transform: translateX(-50%);
             background: rgba(0,0,0,0.6); border: 1px solid #FFD700; color: #FFD700;
@@ -48,7 +48,7 @@
             box-shadow: 0 0 15px rgba(255,215,0,0.3);
         }
 
-        /* --- CONSTELAÇÃO CENTRALIZADA --- */
+        /* --- CONSTELAÇÃO TRÊS MARIAS (Centralizada em Linha Diagonal) --- */
         #constellation-container {
             position: absolute; inset: 0; z-index: 5;
             opacity: 0; visibility: hidden; transition: opacity 1s, visibility 1s;
@@ -67,23 +67,24 @@
         }
         .star::after {
             content: ''; position: absolute; width: 12px; height: 12px; background: #fff; border-radius: 50%;
-            box-shadow: 0 0 15px 5px currentColor, 0 0 30px 10px currentColor; transition: transform 0.3s;
+            box-shadow: 0 0 15px 5px currentColor, 0 0 30px 10px currentColor; transition: all 0.5s ease;
         }
         
-        /* Estrela clicada fica levemente apagada para ela saber onde já foi */
-        .star.opened::after { opacity: 0.3; transform: scale(0.8); }
+        /* Feedback visual das estrelas já abertas (Mais opacas, sem piscar) */
+        .star.opened::after { opacity: 0.2; transform: scale(0.7); box-shadow: none; }
+        .star.opened { animation: none; pointer-events: none; }
 
-        /* Posições Centralizadas (Formando um V no meio da tela) */
-        #star1 { top: 40%; left: 30%; color: #FFD700; animation-delay: 0s; }
-        #star2 { top: 60%; left: 50%; color: #FF6A00; animation-delay: -1s; }
-        #star3 { top: 40%; left: 70%; color: #00e5ff; animation-delay: -2s; }
+        /* Posições Alinhadas tipo Três Marias (Linha diagonal centralizada) */
+        #star1 { top: 35%; left: 25%; color: #FFD700; animation-delay: 0s; }
+        #star2 { top: 50%; left: 50%; color: #FF6A00; animation-delay: -1s; }
+        #star3 { top: 65%; left: 75%; color: #00e5ff; animation-delay: -2s; }
 
         @keyframes starFloat {
             0% { transform: translate(-50%, -50%) scale(0.9); }
             100% { transform: translate(-50%, -55%) scale(1.1); }
         }
 
-        /* --- PAINEL DA MEMÓRIA --- */
+        /* --- PAINEL DA MEMÓRIA COM FOTO --- */
         #memory-overlay {
             position: fixed; inset: 0; z-index: 10000;
             background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
@@ -113,21 +114,78 @@
             cursor: pointer; transition: all 0.3s;
         }
 
-        /* --- GRAN FINALE (CARTA SECRETA) --- */
-        #finale-overlay {
+        /* --- TELA DA MENSAGEM FINAL (CARTA SECRETA) --- */
+        #message-overlay {
             position: fixed; inset: 0; z-index: 20000;
             background: rgba(0, 0, 0, 0.90); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
             display: flex; flex-direction: column; justify-content: center; align-items: center;
             opacity: 0; visibility: hidden; transition: opacity 2s ease; padding: 30px; text-align: center;
         }
-        #finale-overlay.active { opacity: 1; visibility: visible; }
+        #message-overlay.active { opacity: 1; visibility: visible; }
         
-        .finale-text {
+        .final-text {
             font-family: 'Montserrat', sans-serif; font-size: 18px; line-height: 1.8; color: #FFD700; 
             font-weight: 400; text-shadow: 0 0 15px rgba(255,215,0,0.3); min-height: 200px; max-width: 400px;
         }
-        .finale-text::after { content: '|'; animation: blink 0.8s infinite; color: #FFD700; font-weight: 300;}
+        .final-text::after { content: '|'; animation: blink 0.8s infinite; color: #FFD700; font-weight: 300;}
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+        /* --- GRAN FINALE (SUPERNOVA DO CORAÇÃO DE GIRASSÓIS FOTORREALISTAS) --- */
+        #finale-overlay {
+            position: fixed; inset: 0; z-index: 30000;
+            background: #000; display: flex; flex-direction: column; justify-content: center; align-items: center;
+            opacity: 0; visibility: hidden; transition: opacity 1.5s ease-in;
+        }
+        #finale-overlay.active { opacity: 1; visibility: visible; }
+
+        /* O Clarão da Supernova */
+        .supernova-flash {
+            position: absolute; width: 10px; height: 10px; background: #fff; border-radius: 50%;
+            box-shadow: 0 0 100px 50px #fff, 0 0 200px 100px #FFD700;
+            opacity: 0; transform: scale(0);
+        }
+        #finale-overlay.active .supernova-flash { animation: supernovaEffect 2.5s forwards; }
+
+        @keyframes supernovaEffect {
+            0% { transform: scale(1); opacity: 1; }
+            30% { transform: scale(50); opacity: 1; box-shadow: 0 0 300px 150px #fff; }
+            70% { transform: scale(100); opacity: 0.5; }
+            100% { transform: scale(0); opacity: 0; visibility: hidden;}
+        }
+
+        /* O Coração Final de Girassóis Reais (Fotorrealista) */
+        #final-sunflower-heart {
+            position: relative; width: 250px; height: 250px;
+            opacity: 0; transform: scale(0.5); transition: opacity 1.5s ease 2s, transform 2s ease 2.2s;
+            display: flex; justify-content: center; align-items: center;
+        }
+        #finale-overlay.active #final-sunflower-heart { opacity: 1; transform: scale(1); }
+
+        .sunflower-heart-img {
+            width: 100%; height: 100%;
+            object-fit: contain;
+            filter: drop-shadow(0 10px 30px rgba(255,215,0,0.5));
+            animation: heartPulse 3s infinite ease-in-out 4s; /* Começa a pulsar depois de aparecer */
+        }
+        
+        @keyframes heartPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); filter: drop-shadow(0 15px 40px rgba(255,215,0,0.8)); }
+        }
+
+        /* Foto central dentro do coração (OPCIONAL: Substituir pela foto final de vocês) */
+        .central-photo {
+            position: absolute; width: 80px; height: 80px; border-radius: 50%;
+            object-fit: cover; border: 4px solid #fff; box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            opacity: 0; transform: scale(0); transition: opacity 1s ease 3.5s, transform 1s ease 3.5s;
+        }
+        #finale-overlay.active .central-photo { opacity: 1; transform: scale(1); }
+
+        .end-title {
+            font-family: 'Dancing Script', cursive; font-size: 40px; color: #fff; margin-top: 30px;
+            opacity: 0; transition: opacity 1.5s ease 4.5s; text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+        }
+        #finale-overlay.active .end-title { opacity: 1; }
 
     </style>
 </head>
@@ -154,8 +212,8 @@
 
     <div id="constellation-container">
         <svg class="constellation-lines" width="100%" height="100%">
-            <line class="line" x1="30%" y1="40%" x2="50%" y2="60%" />
-            <line class="line" x1="50%" y1="60%" x2="70%" y2="40%" />
+            <line class="line" x1="25%" y1="35%" x2="50%" y2="50%" />
+            <line class="line" x1="50%" y1="50%" x2="75%" y2="65%" />
         </svg>
 
         <div class="star" id="star1" onclick="openMemory(1)"></div>
@@ -173,18 +231,31 @@
         </div>
     </div>
 
+    <div id="message-overlay">
+        <p class="final-text" id="typed-final-msg"></p>
+    </div>
+
     <div id="finale-overlay">
-        <p class="finale-text" id="typed-finale"></p>
+        <div class="supernova-flash"></div>
+        
+        <div id="final-sunflower-heart">
+            <img src="coracao-girassol-real.png" class="sunflower-heart-img" alt="Coração de Girassóis Reais">
+            
+            <img src="foto3_3meses.jpg" class="central-photo" alt="Nossa Foto Final">
+        </div>
+
+        <h3 class="end-title">Te Amo, Thayna</h3>
     </div>
 
     <script>
         const memorias = {
             1: { month: "Mês 1", title: "O Início", text: "Onde tudo começou. O primeiro mês nos provou que o que sentimos vai além de qualquer distância.", imageUrl: "foto1_3meses.jpg" },
             2: { month: "Mês 2", title: "A Nossa Luz", text: "Encontramos nosso ritmo e construímos o nosso porto seguro. Você iluminou meus dias.", imageUrl: "foto2_3meses.jpg" },
-            3: { month: "Mês 3", title: "Nosso Futuro", text: "Obrigado por esses 3 meses incríveis. Mas a surpresa não acaba aqui...", imageUrl: "foto3_3meses.jpg" }
+            3: { month: "Mês 3", title: "Nosso Futuro", text: "Hoje o nosso amor não cabe mais na tela, ele encontrou espaço no universo. Obrigado por esses 3 meses. Te amo!", imageUrl: "foto3_3meses.jpg" }
         };
 
-        const finalMessageText = "Thayna,<br><br>Se eu pudesse escolher um lugar seguro, seria ao seu lado.<br><br>Nosso amor encontrou espaço no universo, e a cada dia que passa, eu te amo mais.<br><br>Feliz 3 Meses!<br>— Lucas";
+        // Mensagem da "Carta Secreta" que aparece após a 3ª estrela
+        const finalLetterText = "Thayna,<br><br>Se eu pudesse escolher um lugar seguro, seria ao seu lado.<br><br>Esses 3 meses foram apenas o começo da nossa maior constelação.<br><br>Obrigado por iluminar minha vida.<br>Feliz Nosso Dia!<br>— Lucas";
 
         const instruction = document.getElementById('hud-instruction');
         const constellation = document.getElementById('constellation-container');
@@ -197,9 +268,10 @@
         
         // RASTREADOR DE ESTRELAS CLICADAS
         let openedStars = new Set();
-        let isFinaleTriggered = false;
+        let isSurpriseTriggered = false;
 
         async function startExperience() {
+            // PLAY NA MÚSICA (Garantido pelo clique no botão Permitir)
             document.getElementById('bg-music').play().catch(e => console.log("Música aguardando interação:", e));
 
             if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
@@ -232,11 +304,14 @@
         }
 
         function handleGyroscope(event) {
-            if (isManualMode || event.beta === null || isFinaleTriggered) return;
+            // Se ativou pelo botão manual, ignora os sensores pra não bugar
+            // Se a surpresa final começou, também ignora
+            if (isManualMode || event.beta === null || isSurpriseTriggered) return;
             sensorDetected = true; 
             forceBtn.style.display = 'none';
 
-            if (event.beta > 105 && event.beta <= 180) {
+            // Beta: Inclinação do celular. < 65 é apontando pro céu.
+            if (event.beta < 65 && event.beta > -40) {
                 if (!isSkyActive) activateSky(true, "Toque nas estrelas do nosso céu");
             } else {
                 if (isSkyActive) activateSky(false, "Aponte o celular para o céu");
@@ -253,10 +328,10 @@
             isSkyActive = active;
             instruction.innerText = textMsg;
             if (active) {
-                instruction.style.color = "#FFD700"; 
+                instruction.style.color = "#FFD700"; // Dourado
                 constellation.classList.add('active');
             } else {
-                instruction.style.color = "#FF9900"; 
+                instruction.style.color = "#FF9900"; // Laranja normal
                 constellation.classList.remove('active');
             }
         }
@@ -264,7 +339,7 @@
         function openMemory(id) {
             const data = memorias[id];
             
-            // Marca visualmente a estrela como aberta
+            // Marca visualmente a estrela como aberta (fica mais opaca)
             document.getElementById(`star${id}`).classList.add('opened');
             openedStars.add(id);
 
@@ -274,6 +349,8 @@
             document.getElementById('mem-photo').src = data.imageUrl; 
             
             document.getElementById('memory-overlay').classList.add('active');
+            
+            // Pausa os sensores enquanto ela lê
             window.removeEventListener('deviceorientation', handleGyroscope);
         }
 
@@ -281,45 +358,67 @@
             document.getElementById('memory-overlay').classList.remove('active');
             setTimeout(() => { document.getElementById('mem-photo').src = ""; }, 400);
             
-            // CHECAGEM DO GRAN FINALE
-            if (openedStars.size === 3 && !isFinaleTriggered) {
-                isFinaleTriggered = true; // Trava para não repetir
-                setTimeout(triggerFinale, 1000); // Espera 1 segundo após fechar a última foto
-            } else if (!isManualMode && !isFinaleTriggered) {
+            // CHECAGEM DO GRAN FINALE (Ocorre após fechar a modal da foto)
+            if (openedStars.size === 3 && !isSurpriseTriggered) {
+                isSurpriseTriggered = true; // Trava para não repetir
+                setTimeout(triggerFinalSurprise, 800); // Espera 0.8s após fechar a última foto
+            } else if (!isManualMode && !isSurpriseTriggered) {
+                // Reativa sensores se não abriu todas
                 window.addEventListener('deviceorientation', handleGyroscope);
             }
         }
 
-        // FUNÇÕES DO GRAN FINALE
-        function triggerFinale() {
-            // Some com a HUD e Constelação
+        // ==========================================
+        // FUNÇÕES DO GRAN FINALE (MENSAGEM + SUPERNOVA)
+        // ==========================================
+        
+        function triggerFinalSurprise() {
+            // 1. Esconde a HUD e a Constelação de vez
             document.getElementById('hud').classList.remove('visible');
             constellation.classList.remove('active');
             
-            // Chama a tela escura
-            document.getElementById('finale-overlay').classList.add('active');
+            // 2. Chama a tela da "Carta Secreta" (Mensagem Datilografada)
+            document.getElementById('message-overlay').classList.add('active');
             
-            // Começa a digitar
-            setTimeout(() => { typeWriter(finalMessageText, 0); }, 1500);
+            // 3. Começa a digitar com delay para dar tempo dela ler
+            setTimeout(() => { typeWriter(finalLetterText, 0, startFinaleSequence); }, 1500);
         }
 
-        function typeWriter(text, i) {
+        // Máquina de escrever (com callback para chamar o clarão no final)
+        function typeWriter(text, i, callback) {
             if (i < text.length) {
                 let char = text.substring(i, i+1);
                 let isTag = false;
                 
                 // Trata as quebras de linha <br>
                 if(text.substring(i, i+4) === '<br>') {
-                    document.getElementById("typed-finale").innerHTML += '<br>';
+                    document.getElementById("typed-final-msg").innerHTML += '<br>';
                     i += 3;
                     isTag = true;
                 } else {
-                    document.getElementById("typed-finale").innerHTML += char;
+                    document.getElementById("typed-final-msg").innerHTML += char;
                 }
                 
                 let speed = isTag ? 0 : Math.random() * 40 + 30; // Velocidade de digitação
-                setTimeout(function() { typeWriter(text, i + 1); }, speed);
+                setTimeout(function() { typeWriter(text, i + 1, callback); }, speed);
+            } else {
+                // Digitação terminou. Espera 2.5s para ela ler a carta inteira e chama o clarão.
+                if(callback) setTimeout(callback, 2500);
             }
+        }
+
+        function startFinaleSequence() {
+            // 1. Some suavemente com a mensagem datilografada
+            document.getElementById('message-overlay').style.opacity = '0';
+            
+            // 2. Espera a mensagem sumir e ativa o Gran Finale (Clarão da Supernova)
+            setTimeout(() => {
+                document.getElementById('message-overlay').style.visibility = 'hidden';
+                document.getElementById('finale-overlay').classList.add('active');
+                
+                // O clarão da supernova e o aparecimento do coração fotorrealista 
+                // são controlados pelas animações e transições no CSS (com delays).
+            }, 2000); 
         }
     </script>
 </body>
