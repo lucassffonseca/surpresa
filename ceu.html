@@ -12,7 +12,7 @@
         body, html { overflow: hidden; height: 100vh; width: 100vw; background-color: #000; color: #fff; font-family: 'Inter', sans-serif; }
         
         /* Câmera de fundo */
-        #ar-camera-feed { position: absolute; inset: 0; width: 100vw; height: 100vh; object-fit: cover; z-index: 0; opacity: 0; transition: opacity 2s; }
+        #ar-camera-feed { position: absolute; inset: 0; width: 100vw; height: 100vh; object-fit: cover; z-index: 0; opacity: 0; transition: opacity 1s; }
 
         /* --- TELA DE INÍCIO --- */
         #start-screen {
@@ -30,21 +30,27 @@
         }
         @keyframes pulseBtn { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
 
-        /* --- HUD (Textos na tela AR) --- */
+        /* --- HUD (Textos na tela) --- */
         .ui-hud {
             position: fixed; top: 50px; width: 100%; text-align: center; z-index: 10;
-            pointer-events: none; opacity: 0; transition: opacity 2s ease 1s;
+            pointer-events: none; opacity: 0; transition: opacity 1s;
         }
         .ui-hud.visible { opacity: 1; }
-        .hud-title { font-family: 'Dancing Script', cursive; font-size: 42px; color: #fff; text-shadow: 0 2px 15px rgba(0,0,0,0.9); }
-        .hud-sub { font-family: 'Montserrat', sans-serif; font-size: 11px; text-transform: uppercase; letter-spacing: 3px; color: #FF9900; opacity: 0.9; text-shadow: 0 1px 5px rgba(0,0,0,0.9); margin-top: 5px;}
+        .hud-title { font-family: 'Dancing Script', cursive; font-size: 38px; color: #fff; text-shadow: 0 2px 10px rgba(0,0,0,0.8); }
+        
+        /* Instrução dinâmica que muda conforme a inclinação */
+        #hud-instruction { font-family: 'Montserrat', sans-serif; font-size: 11px; text-transform: uppercase; letter-spacing: 3px; color: #FF9900; text-shadow: 0 1px 5px rgba(0,0,0,0.8); margin-top: 5px;}
 
-        /* --- A CONSTELAÇÃO MÁGICA (CSS PURO) --- */
+        /* --- A CONSTELAÇÃO MÁGICA (CSS) --- */
         #constellation-container {
             position: absolute; inset: 0; z-index: 5;
-            opacity: 0; transition: opacity 3s;
+            opacity: 0; visibility: hidden; transition: opacity 1s, visibility 1s;
+            pointer-events: none; /* Padrão: bloqueado */
         }
-        #constellation-container.visible { opacity: 1; }
+        /* Quando ativo pelos sensores */
+        #constellation-container.active { 
+            opacity: 1; visibility: visible; pointer-events: auto; 
+        }
 
         /* Linhas ligando as estrelas */
         .constellation-lines {
@@ -54,21 +60,21 @@
 
         /* As Estrelas */
         .star {
-            position: absolute; width: 24px; height: 24px; background: #fff;
+            position: absolute; width: 30px; height: 30px; background: transparent;
             border-radius: 50%; transform: translate(-50%, -50%); cursor: pointer;
-            box-shadow: 0 0 20px 10px rgba(255, 255, 255, 0.2);
             animation: starFloat 4s infinite ease-in-out alternate;
+            display: flex; justify-content: center; align-items: center;
         }
+        /* Núcleo brilhante da estrela */
         .star::after {
-            content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 8px; height: 8px; background: #fff; border-radius: 50%;
-            box-shadow: 0 0 15px 5px currentColor;
+            content: ''; position: absolute; width: 8px; height: 8px; background: #fff; border-radius: 50%;
+            box-shadow: 0 0 15px 5px currentColor, 0 0 30px 10px currentColor;
         }
 
-        /* Cores e Posições Fixas na Tela */
-        #star1 { top: 35%; left: 25%; color: #FFD700; box-shadow: 0 0 30px 15px rgba(255, 215, 0, 0.3); animation-delay: 0s; }
-        #star2 { top: 45%; left: 75%; color: #FF6A00; box-shadow: 0 0 30px 15px rgba(255, 106, 0, 0.3); animation-delay: -1s; }
-        #star3 { top: 70%; left: 45%; color: #00e5ff; box-shadow: 0 0 30px 15px rgba(0, 229, 255, 0.3); animation-delay: -2s; }
+        /* Posições Fixas na Tela (Lente Mágica) */
+        #star1 { top: 35%; left: 25%; color: #FFD700; animation-delay: 0s; }
+        #star2 { top: 45%; left: 75%; color: #FF6A00; animation-delay: -1s; }
+        #star3 { top: 70%; left: 45%; color: #00e5ff; animation-delay: -2s; }
 
         @keyframes starFloat {
             0% { transform: translate(-50%, -50%) scale(0.9); }
@@ -117,13 +123,13 @@
 
     <div id="start-screen">
         <h1 class="start-title">Nosso Céu</h1>
-        <p class="start-text">Aponte a câmera do seu celular para o céu e descubra o que o universo guardou para nós.</p>
-        <button class="start-btn" onclick="startExperience()">Abrir Câmera</button>
+        <p class="start-text">Para esta surpresa funcionar, precisamos acessar a câmera e os sensores do seu celular.</p>
+        <button class="start-btn" onclick="startExperience()">Permitir</button>
     </div>
 
     <div class="ui-hud" id="hud">
-        <h2 class="hud-title">3 Meses de Nós</h2>
-        <div class="hud-sub">Toque nas estrelas do nosso céu</div>
+        <h2 class="hud-title">Nossa História</h2>
+        <div id="hud-instruction">Iniciando...</div>
     </div>
     
     <div id="constellation-container">
@@ -143,61 +149,87 @@
             <h2 class="mem-title" id="mem-title">Título</h2>
             <img src="" alt="Nossa Memória" id="mem-photo" class="mem-photo">
             <p class="mem-text" id="mem-text">Texto...</p>
-            <button class="close-btn" onclick="closeMemory()">Voltar ao Céu</button>
+            <button class="close-btn" onclick="closeMemory()">Voltar</button>
         </div>
     </div>
 
     <script>
         // Banco de Dados das Memórias
         const memorias = {
-            1: {
-                month: "Mês 1", title: "O Início", 
-                text: "Onde tudo começou. O primeiro mês nos provou que o que sentimos vai além de qualquer distância.",
-                imageUrl: "foto1_3meses.jpg"
-            },
-            2: {
-                month: "Mês 2", title: "A Nossa Luz",
-                text: "Encontramos nosso ritmo e construímos o nosso porto seguro. Você iluminou meus dias.",
-                imageUrl: "foto2_3meses.jpg"
-            },
-            3: {
-                month: "Mês 3", title: "Nosso Futuro",
-                text: "Hoje o nosso amor não cabe mais na tela, ele encontrou espaço no universo. Obrigado por esses 3 meses. Te amo, Thayna!",
-                imageUrl: "foto3_3meses.jpg"
-            }
+            1: { month: "Mês 1", title: "O Início", text: "Onde tudo começou. O primeiro mês nos provou que o que sentimos vai além de qualquer distância.", imageUrl: "foto1_3meses.jpg" },
+            2: { month: "Mês 2", title: "A Nossa Luz", text: "Encontramos nosso ritmo e construímos o nosso porto seguro. Você iluminou meus dias.", imageUrl: "foto2_3meses.jpg" },
+            3: { month: "Mês 3", title: "Nosso Futuro", text: "Hoje o nosso amor não cabe mais na tela, ele encontrou espaço no universo. Obrigado por esses 3 meses. Te amo, Thayna!", imageUrl: "foto3_3meses.jpg" }
         };
 
-        // Inicia a Câmera e a Experiência
+        const instruction = document.getElementById('hud-instruction');
+        const constellation = document.getElementById('constellation-container');
+        const videoFeed = document.getElementById('ar-camera-feed');
+        let isSkyActive = false;
+
+        // Inicia a Experiência
         async function startExperience() {
             // Toca a música
             document.getElementById('bg-music').play().catch(e => console.log(e));
 
-            // Pede acesso à câmera traseira
+            // 1. Inicia Câmera Traseira
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
-                const videoFeed = document.getElementById('ar-camera-feed');
                 videoFeed.srcObject = stream;
-                
-                // Exibe o vídeo assim que estiver pronto
-                videoFeed.onloadedmetadata = () => {
-                    videoFeed.style.opacity = '1';
-                };
-            } catch (err) { 
-                console.error("Câmera negada ou não disponível:", err); 
-                // Se der erro, o fundo fica preto e a constelação funciona normalmente.
+                videoFeed.onloadedmetadata = () => { videoFeed.style.opacity = '1'; };
+            } catch (err) { console.error("Câmera negada:", err); }
+
+            // 2. Inicia Sensores de Movimento (Giroscópio)
+            // Necessário Https e autorização no iOS 13+
+            if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
+                DeviceOrientationEvent.requestPermission()
+                    .then(permissionState => {
+                        if (permissionState === 'granted') {
+                            window.addEventListener('deviceorientation', handleGyroscope);
+                        } else {
+                            alert("Sem os sensores, as estrelas ficarão fixas na tela.");
+                            activateSky(true); // Fallback: Ativa direto
+                        }
+                    }).catch(console.error);
+            } else {
+                window.addEventListener('deviceorientation', handleGyroscope);
             }
 
-            // Animação de transição das telas
+            // Transição de tela
             document.getElementById('start-screen').style.opacity = '0';
-            
             setTimeout(() => {
                 document.getElementById('start-screen').style.visibility = 'hidden';
                 document.getElementById('hud').classList.add('visible');
-                document.getElementById('constellation-container').classList.add('visible');
             }, 1000);
         }
 
-        // Abre o Modal com a Foto e Texto
+        // Lógica do Giroscópio para Gatilho de "Aponte pro Céu"
+        function handleGyroscope(event) {
+            if (!event.beta) return; // Beta é a inclinação frente/trás (0 a 180)
+
+            // Se o celular estiver inclinado para cima (apontando pro céu real)
+            // Ajuste o ângulo (60 a 90 graus é o ideal)
+            if (event.beta > 60 && event.beta < 110) {
+                if (!isSkyActive) activateSky(true);
+            } else {
+                if (isSkyActive) activateSky(false);
+            }
+        }
+
+        // Ativa/Desativa a constelação na tela
+        function activateSky(active) {
+            isSkyActive = active;
+            if (active) {
+                instruction.innerText = "Toque nas estrelas do nosso céu";
+                instruction.style.color = "#FFD700"; // Dourado
+                constellation.classList.add('active');
+            } else {
+                instruction.innerText = "Aponte o celular para o céu";
+                instruction.style.color = "#FF9900"; // Laranja normal
+                constellation.classList.remove('active');
+            }
+        }
+
+        // Abre o Modal da Memória
         function openMemory(id) {
             const data = memorias[id];
             
@@ -207,14 +239,20 @@
             document.getElementById('mem-photo').src = data.imageUrl; 
             
             document.getElementById('memory-overlay').classList.add('active');
+            
+            // Pausa os sensores temporariamente para não fechar a estrela se ela abaixar o celular lendo
+            window.removeEventListener('deviceorientation', handleGyroscope);
         }
 
         // Fecha o Modal
         function closeMemory() {
             document.getElementById('memory-overlay').classList.remove('active');
             
-            // Limpa a foto depois que o modal fechar
+            // Limpa a foto
             setTimeout(() => { document.getElementById('mem-photo').src = ""; }, 400);
+            
+            // Reativa os sensores
+            window.addEventListener('deviceorientation', handleGyroscope);
         }
     </script>
 </body>
