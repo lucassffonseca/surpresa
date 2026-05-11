@@ -60,7 +60,6 @@
             position: absolute; width: 60px; height: 60px; background: transparent;
             border-radius: 50%; transform: translate(-50%, -50%); cursor: pointer;
             display: flex; justify-content: center; align-items: center;
-            /* Inicia escondida e travada */
             opacity: 0; pointer-events: none; transition: opacity 1s ease;
         }
         .star::after {
@@ -68,20 +67,17 @@
             box-shadow: 0 0 15px 5px currentColor, 0 0 30px 10px currentColor; transition: all 0.5s ease;
         }
 
-        /* Quando é a vez da estrela brilhar */
         .star.active-step {
             opacity: 1; pointer-events: auto;
             animation: starFloat 4s infinite ease-in-out alternate;
         }
         
-        /* Quando a estrela já foi lida (Fica de fundo) */
         .star.opened {
             opacity: 0.2; pointer-events: none; animation: none;
             transform: translate(-50%, -50%) scale(0.8);
         }
         .star.opened::after { box-shadow: none; }
 
-        /* Cores base */
         #star1 { color: #FFD700; }
         #star2 { color: #FF6A00; }
         #star3 { color: #00e5ff; }
@@ -247,7 +243,7 @@
         const memorias = {
             1: { month: "Mês 1", title: "O Início", text: "Onde tudo começou. O primeiro mês nos provou que o que sentimos vai além de qualquer distância.", imageUrl: "foto20.jpeg" },
             2: { month: "Mês 2", title: "A Nossa Luz", text: "Encontramos nosso ritmo e construímos o nosso porto seguro. Você iluminou meus dias.", imageUrl: "foto38.jpeg" },
-            3: { month: "Mês 3", title: "Nosso Futuro", text: "Hoje o nosso amor não cabe mais na tela, ele encontrou espaço no universo. Obrigado por esses 3 meses. Te amo!", imageUrl: "foto3_3meses.jpg" }
+            3: { month: "Mês 3", title: "Nosso Futuro", text: "Hoje o nosso amor não cabe mais na tela, ele encontrou espaço no universo. Obrigado por esses 3 meses. Te amo!", imageUrl: "foto44.jpeg" }
         };
 
         const finalLetterText = "Thayna,<br><br>Se eu pudesse escolher um lugar seguro, seria ao seu lado.<br><br>Esses 3 meses foram apenas o começo da nossa maior constelação.<br><br>Obrigado por iluminar minha vida.<br>Feliz Nosso Dia!<br>— Lucas";
@@ -261,26 +257,29 @@
         let isManualMode = false;
         let sensorDetected = false; 
         
-        // CONTROLE DE FLUXO (ESTRELA ATUAL)
         let currentStarIndex = 1;
         let isSurpriseTriggered = false;
+        let openedStars = new Set();
 
-        // ESPALHA AS ESTRELAS ALEATORIAMENTE NA TELA (Sem sobrepor nas bordas)
+        // ESPALHA AS ESTRELAS NA ZONA SEGURA (Abaixo da HUD)
         function randomizeStars() {
             for (let i = 1; i <= 3; i++) {
                 let star = document.getElementById('star' + i);
-                let randomTop = Math.floor(Math.random() * 50) + 25; 
+                // Top: Limita entre 40% e 75% da tela. Isso garante que a estrela vai nascer 
+                // sempre da metade pra baixo, NUNCA sobrepondo o título da HUD.
+                let randomTop = Math.floor(Math.random() * 35) + 40; 
+                // Left: Limita entre 15% e 85% para não colar nas bordas laterais.
                 let randomLeft = Math.floor(Math.random() * 70) + 15; 
+                
                 star.style.top = randomTop + '%';
                 star.style.left = randomLeft + '%';
             }
         }
 
-        // DESBLOQUEIA A ESTRELA DO MÊS CORRESPONDENTE
         function unlockStar(index) {
             let star = document.getElementById('star' + index);
             if (star) {
-                star.classList.add('active-step'); // Faz a estrela brilhar e ficar clicável
+                star.classList.add('active-step'); 
             }
         }
 
@@ -312,7 +311,6 @@
                 document.getElementById('hud').classList.add('visible');
                 instruction.innerText = "Aponte o celular para o céu";
                 
-                // Habilita apenas a Estrela 1 no início
                 unlockStar(1);
             }, 1000);
 
@@ -326,7 +324,6 @@
             sensorDetected = true; 
             forceBtn.style.display = 'none';
 
-            // ATIVA O CÉU SE INCLINAR PARA CIMA (Entre 75 e 180 graus)
             if (event.beta > 75 && event.beta <= 180) {
                 if (!isSkyActive) activateSky(true, "Procure a estrela que está brilhando");
             } else {
@@ -353,10 +350,11 @@
         }
 
         function openMemory(id) {
-            // Prevenção extra para não clicar fora de ordem
             if (id !== currentStarIndex) return;
 
             const data = memorias[id];
+            document.getElementById(`star${id}`).classList.add('opened');
+            openedStars.add(id);
 
             document.getElementById('mem-month').innerText = data.month;
             document.getElementById('mem-title').innerText = data.title;
@@ -371,20 +369,16 @@
             document.getElementById('memory-overlay').classList.remove('active');
             setTimeout(() => { document.getElementById('mem-photo').src = ""; }, 400);
             
-            // A ESTRELA ATUAL É MARCADA COMO LIDA
             let oldStar = document.getElementById('star' + currentStarIndex);
             oldStar.classList.remove('active-step');
-            oldStar.classList.add('opened'); // Fica opaca no fundo
+            oldStar.classList.add('opened'); 
 
-            // AVANÇA PARA O PRÓXIMO MÊS
             currentStarIndex++;
             
-            // VERIFICA SE FINALIZOU
             if (currentStarIndex > 3 && !isSurpriseTriggered) {
                 isSurpriseTriggered = true; 
                 setTimeout(triggerFinalSurprise, 800); 
             } else if (!isManualMode && !isSurpriseTriggered) {
-                // ACENDE A PRÓXIMA ESTRELA NO CÉU
                 unlockStar(currentStarIndex);
                 window.addEventListener('deviceorientation', handleGyroscope);
             } else if (isManualMode && !isSurpriseTriggered) {
