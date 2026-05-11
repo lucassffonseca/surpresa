@@ -55,10 +55,13 @@
             opacity: 0; visibility: hidden; transition: opacity 1s, visibility 1s;
             pointer-events: none;
         }
-        #constellation-container.active { opacity: 1; visibility: visible; pointer-events: auto; }
+        /* Quando ativo pelos sensores */
+        #constellation-container.active { 
+            opacity: 1; visibility: visible; pointer-events: auto; 
+        }
 
         .constellation-lines { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
-        .line { stroke: rgba(255, 153, 0, 0.4); stroke-width: 2; stroke-dasharray: 5 5; }
+        .line { stroke: rgba(255, 153, 0, 0.6); stroke-width: 2.5; stroke-dasharray: 5 5; } /* Linhas mais sólidas */
 
         .star {
             position: absolute; width: 50px; height: 50px; background: transparent;
@@ -146,119 +149,4 @@
 
     <div id="memory-overlay">
         <div class="memory-card">
-            <div class="mem-month" id="mem-month">Mês</div>
-            <h2 class="mem-title" id="mem-title">Título</h2>
-            <img src="" alt="Nossa Memória" id="mem-photo" class="mem-photo">
-            <p class="mem-text" id="mem-text">Texto...</p>
-            <button class="close-btn" onclick="closeMemory()">Voltar</button>
-        </div>
-    </div>
-
-    <script>
-        const memorias = {
-            1: { month: "Mês 1", title: "O Início", text: "Onde tudo começou. O primeiro mês nos provou que o que sentimos vai além de qualquer distância.", imageUrl: "foto1_3meses.jpg" },
-            2: { month: "Mês 2", title: "A Nossa Luz", text: "Encontramos nosso ritmo e construímos o nosso porto seguro. Você iluminou meus dias.", imageUrl: "foto2_3meses.jpg" },
-            3: { month: "Mês 3", title: "Nosso Futuro", text: "Hoje o nosso amor não cabe mais na tela, ele encontrou espaço no universo. Obrigado por esses 3 meses. Te amo, Thayna!", imageUrl: "foto3_3meses.jpg" }
-        };
-
-        const instruction = document.getElementById('hud-instruction');
-        const constellation = document.getElementById('constellation-container');
-        const videoFeed = document.getElementById('ar-camera-feed');
-        const forceBtn = document.getElementById('force-sky-btn');
-        
-        let isSkyActive = false;
-        let isManualMode = false;
-        let sensorDetected = false; 
-
-        async function startExperience() {
-            document.getElementById('bg-music').play().catch(e => console.log(e));
-
-            // 1. PEDE O GIROSCÓPIO PRIMEIRO (A regra de ouro do iPhone)
-            if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
-                try {
-                    const permissionState = await DeviceOrientationEvent.requestPermission();
-                    if (permissionState === 'granted') {
-                        window.addEventListener('deviceorientation', handleGyroscope);
-                    } else {
-                        console.log("Permissão do iPhone negada.");
-                    }
-                } catch (error) {
-                    console.error("Erro no sensor do iPhone:", error);
-                }
-            } else {
-                window.addEventListener('deviceorientation', handleGyroscope);
-            }
-
-            // 2. DEPOIS LIGA A CÂMERA
-            try {
-                const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
-                videoFeed.srcObject = stream;
-                videoFeed.onloadedmetadata = () => { videoFeed.style.opacity = '1'; };
-            } catch (err) { console.error("Câmera negada:", err); }
-
-            // 3. TRANSIÇÃO DA TELA
-            document.getElementById('start-screen').style.opacity = '0';
-            setTimeout(() => {
-                document.getElementById('start-screen').style.visibility = 'hidden';
-                document.getElementById('hud').classList.add('visible');
-                instruction.innerText = "Aponte o celular para o céu";
-            }, 1000);
-
-            // 4. BOTÃO DE EMERGÊNCIA (Failsafe)
-            setTimeout(() => {
-                if (!sensorDetected) {
-                    forceBtn.style.display = 'block';
-                }
-            }, 4000);
-        }
-
-        function handleGyroscope(event) {
-            if (isManualMode || event.beta === null) return;
-            sensorDetected = true; 
-            forceBtn.style.display = 'none';
-
-            // Beta: Inclinação do celular. < 65 é apontando pro céu.
-            if (event.beta < 65 && event.beta > -40) {
-                if (!isSkyActive) activateSky(true, "Toque nas estrelas do nosso céu");
-            } else {
-                if (isSkyActive) activateSky(false, "Aponte o celular para o céu");
-            }
-        }
-
-        function forceSkyActivation() {
-            isManualMode = true; 
-            forceBtn.style.display = 'none'; 
-            activateSky(true, "Toque nas estrelas do nosso céu");
-        }
-
-        function activateSky(active, textMsg) {
-            isSkyActive = active;
-            instruction.innerText = textMsg;
-            if (active) {
-                instruction.style.color = "#FFD700"; 
-                constellation.classList.add('active');
-            } else {
-                instruction.style.color = "#FF9900"; 
-                constellation.classList.remove('active');
-            }
-        }
-
-        function openMemory(id) {
-            const data = memorias[id];
-            document.getElementById('mem-month').innerText = data.month;
-            document.getElementById('mem-title').innerText = data.title;
-            document.getElementById('mem-text').innerText = data.text;
-            document.getElementById('mem-photo').src = data.imageUrl; 
-            
-            document.getElementById('memory-overlay').classList.add('active');
-            window.removeEventListener('deviceorientation', handleGyroscope);
-        }
-
-        function closeMemory() {
-            document.getElementById('memory-overlay').classList.remove('active');
-            setTimeout(() => { document.getElementById('mem-photo').src = ""; }, 400);
-            window.addEventListener('deviceorientation', handleGyroscope);
-        }
-    </script>
-</body>
-</html>
+            <div class="mem-month" id="mem-month">Mêshttp://googleusercontent.com/image_generation_content/2
