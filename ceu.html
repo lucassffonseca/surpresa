@@ -30,48 +30,47 @@
         }
         @keyframes pulseBtn { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
 
-        /* --- HUD (Textos na tela) --- */
+        /* --- HUD --- */
         .ui-hud {
             position: fixed; top: 50px; width: 100%; text-align: center; z-index: 10;
             pointer-events: none; opacity: 0; transition: opacity 1s;
         }
         .ui-hud.visible { opacity: 1; }
         .hud-title { font-family: 'Dancing Script', cursive; font-size: 38px; color: #fff; text-shadow: 0 2px 10px rgba(0,0,0,0.8); margin-bottom: 5px; }
-        
-        /* Instrução dinâmica */
         #hud-instruction { font-family: 'Montserrat', sans-serif; font-size: 11px; text-transform: uppercase; letter-spacing: 3px; color: #FF9900; text-shadow: 0 1px 5px rgba(0,0,0,0.8); transition: color 0.5s; }
 
-        /* --- A CONSTELAÇÃO MÁGICA (CSS) --- */
+        /* --- BOTÃO DE EMERGÊNCIA (Failsafe) --- */
+        #force-sky-btn {
+            position: fixed; bottom: 50px; left: 50%; transform: translateX(-50%);
+            background: rgba(0,0,0,0.6); border: 1px solid #FFD700; color: #FFD700;
+            padding: 12px 25px; border-radius: 50px; font-family: 'Montserrat', sans-serif; font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 2px;
+            cursor: pointer; z-index: 20; display: none; backdrop-filter: blur(5px);
+            box-shadow: 0 0 15px rgba(255,215,0,0.3); animation: fadeInBtn 1s forwards;
+        }
+        @keyframes fadeInBtn { from { opacity: 0; transform: translate(-50%, 20px); } to { opacity: 1; transform: translate(-50%, 0); } }
+
+        /* --- CONSTELAÇÃO --- */
         #constellation-container {
             position: absolute; inset: 0; z-index: 5;
             opacity: 0; visibility: hidden; transition: opacity 1s, visibility 1s;
-            pointer-events: none; /* Padrão: bloqueado */
+            pointer-events: none;
         }
-        /* Quando ativo pelos sensores */
-        #constellation-container.active { 
-            opacity: 1; visibility: visible; pointer-events: auto; 
-        }
+        #constellation-container.active { opacity: 1; visibility: visible; pointer-events: auto; }
 
-        /* Linhas ligando as estrelas */
-        .constellation-lines {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;
-        }
+        .constellation-lines { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
         .line { stroke: rgba(255, 153, 0, 0.4); stroke-width: 2; stroke-dasharray: 5 5; }
 
-        /* As Estrelas */
         .star {
-            position: absolute; width: 40px; height: 40px; background: transparent;
+            position: absolute; width: 50px; height: 50px; background: transparent;
             border-radius: 50%; transform: translate(-50%, -50%); cursor: pointer;
             animation: starFloat 4s infinite ease-in-out alternate;
             display: flex; justify-content: center; align-items: center;
         }
-        /* Núcleo brilhante da estrela */
         .star::after {
             content: ''; position: absolute; width: 10px; height: 10px; background: #fff; border-radius: 50%;
             box-shadow: 0 0 15px 5px currentColor, 0 0 30px 10px currentColor;
         }
 
-        /* Posições Fixas na Tela (Lente Mágica) */
         #star1 { top: 35%; left: 25%; color: #FFD700; animation-delay: 0s; }
         #star2 { top: 45%; left: 75%; color: #FF6A00; animation-delay: -1s; }
         #star3 { top: 70%; left: 45%; color: #00e5ff; animation-delay: -2s; }
@@ -84,7 +83,7 @@
         /* --- PAINEL DA MEMÓRIA --- */
         #memory-overlay {
             position: fixed; inset: 0; z-index: 10000;
-            background: rgba(0, 0, 0, 0.75); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
             display: flex; justify-content: center; align-items: center;
             opacity: 0; visibility: hidden; transition: all 0.4s ease;
         }
@@ -132,6 +131,8 @@
         <div id="hud-instruction">Iniciando Universo...</div>
     </div>
     
+    <button id="force-sky-btn" onclick="forceSkyActivation()">Revelar Estrelas</button>
+
     <div id="constellation-container">
         <svg class="constellation-lines" width="100%" height="100%">
             <line class="line" x1="25%" y1="35%" x2="75%" y2="45%" />
@@ -163,55 +164,69 @@
         const instruction = document.getElementById('hud-instruction');
         const constellation = document.getElementById('constellation-container');
         const videoFeed = document.getElementById('ar-camera-feed');
+        const forceBtn = document.getElementById('force-sky-btn');
         
         let isSkyActive = false;
-        // REMOVIDA a trava de segurança forçada (failsafe timer)
+        let isManualMode = false; // Impede o sensor de sobrescrever o clique do botão
 
         async function startExperience() {
             document.getElementById('bg-music').play().catch(e => console.log(e));
 
-            // 1. Inicia Câmera Traseira
+            // Câmera
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
                 videoFeed.srcObject = stream;
                 videoFeed.onloadedmetadata = () => { videoFeed.style.opacity = '1'; };
             } catch (err) { console.error("Câmera negada:", err); }
 
-            // 2. Inicia Sensores de Movimento
+            // Sensores (Giroscópio)
             if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
                 DeviceOrientationEvent.requestPermission()
                     .then(permissionState => {
                         if (permissionState === 'granted') {
                             window.addEventListener('deviceorientation', handleGyroscope);
-                        } else {
-                            // Se negar os sensores no celular, fica na mensagem "Aponte..." pra sempre.
-                            instruction.innerText = "Sensores necessários para ver as estrelas.";
-                            instruction.style.color = "#FF4D4D"; // Vermelho
                         }
                     }).catch(console.error);
             } else {
                 window.addEventListener('deviceorientation', handleGyroscope);
             }
 
-            // Transição de tela
+            // Transição
             document.getElementById('start-screen').style.opacity = '0';
             setTimeout(() => {
                 document.getElementById('start-screen').style.visibility = 'hidden';
                 document.getElementById('hud').classList.add('visible');
                 instruction.innerText = "Aponte o celular para o céu";
             }, 1000);
+
+            // GATILHO DE EMERGÊNCIA: Se as estrelas não aparecerem após 4 segundos, mostra o botão manual
+            setTimeout(() => {
+                if (!isSkyActive) {
+                    forceBtn.style.display = 'block';
+                }
+            }, 4000);
         }
 
         function handleGyroscope(event) {
-            if (!event.beta) return;
+            // Se ativou pelo botão manual, ignora os sensores pra não bugar
+            if (isManualMode || event.beta === null) return;
 
-            // Ângulo rigoroso: Celular em pé é 90º. Olhando pro teto/céu aproxima de 0º.
-            // SÓ ativa se inclinar o celular num ângulo menor que 65º (olhando pra cima real)
-            if (event.beta < 65 && event.beta > -30) {
+            // Se o sensor funcionar, esconde o botão de emergência
+            forceBtn.style.display = 'none';
+
+            // Ângulo ajustado: < 75 graus ativa o céu
+            if (event.beta < 75 && event.beta > -40) {
                 if (!isSkyActive) activateSky(true, "Toque nas estrelas do nosso céu");
             } else {
                 if (isSkyActive) activateSky(false, "Aponte o celular para o céu");
             }
+        }
+
+        // Função ativada pelo botão "Revelar Estrelas"
+        function forceSkyActivation() {
+            isManualMode = true; // Trava o modo manual
+            forceBtn.style.display = 'none'; // Esconde o botão
+            activateSky(true, "Toque nas estrelas do nosso céu");
         }
 
         function activateSky(active, textMsg) {
@@ -235,15 +250,11 @@
             document.getElementById('mem-photo').src = data.imageUrl; 
             
             document.getElementById('memory-overlay').classList.add('active');
-            // Trava os sensores enquanto lê para não fechar a estrela
-            window.removeEventListener('deviceorientation', handleGyroscope);
         }
 
         function closeMemory() {
             document.getElementById('memory-overlay').classList.remove('active');
             setTimeout(() => { document.getElementById('mem-photo').src = ""; }, 400);
-            // Reativa sensores
-            window.addEventListener('deviceorientation', handleGyroscope);
         }
     </script>
 </body>
