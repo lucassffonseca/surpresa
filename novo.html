@@ -38,7 +38,7 @@
   body[data-state=flight] #flight{display:flex;flex-direction:column;align-items:center;min-height:100dvh;padding:var(--topo) 20px var(--base)}
   body[data-state=arrival] #arrival{display:block}
 
-  .cta{width:100%;height:56px;border-radius:16px;background:var(--dende);color:var(--tinta);font-weight:600;font-size:17px;transition:transform .15s}
+  .cta{width:100%;height:58px;border-radius:999px;background:var(--dende);color:var(--tinta);font-weight:600;font-size:17px;box-shadow:0 10px 30px rgba(244,160,45,.35);transition:transform .15s}
   .cta:active{transform:scale(.97)}
   .cta:disabled{opacity:.45;cursor:not-allowed;transform:none}
   .link{background:none;color:#fff;text-decoration:underline;text-underline-offset:4px;font-size:15px;padding:12px 0;opacity:.85}
@@ -56,14 +56,14 @@
   .centro h1{font-size:42px}
   .centro p{opacity:.85;max-width:22em}
   .cadeado{font-size:44px;line-height:1}
-  #codigo{width:100%;height:58px;border-radius:16px;border:1.5px solid rgba(255,255,255,.3);background:rgba(255,255,255,.08);color:#fff;font-size:20px;text-align:center;padding:0 16px}
+  #codigo{width:100%;height:58px;border-radius:999px;border:1.5px solid rgba(255,255,255,.3);background:rgba(255,255,255,.08);color:#fff;font-size:20px;text-align:center;padding:0 16px}
   #codigo::placeholder{color:rgba(255,255,255,.45)}
   #erro{color:#ffb4a8;font-size:15px;min-height:1.5em}
 
   /* ---------- álbum ---------- */
   .sec{padding:56px 22px}
   .capa{min-height:100dvh;display:flex;flex-direction:column;justify-content:flex-end;padding-top:var(--topo);padding-bottom:calc(var(--base) + 8px)}
-  .capa h1{font-size:60px;margin-bottom:14px}
+  .capa h1{font-size:60px;margin-bottom:14px;background:linear-gradient(180deg,#fff 35%,#ffd7a0);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent}
   .capa .para{font-family:var(--display);font-weight:500;font-size:24px;opacity:.9;margin-bottom:22px}
   .capa .tempo{font-size:18px;max-width:20em;opacity:.85}
   .capa .desce{margin-top:30px;width:28px;height:28px;opacity:.7;animation:desce 2s ease-in-out infinite}
@@ -71,31 +71,6 @@
 
   .carta h2{font-size:34px;margin-bottom:18px}
   .carta p{font-size:19px;line-height:1.65;max-width:28em}
-
-  .marcos h2,.surp h2{font-size:34px;margin-bottom:18px}
-  .marco{display:grid;grid-template-columns:44px 1fr;gap:14px;padding:16px 0;border-bottom:1px solid rgba(255,255,255,.16)}
-  .marco .em{font-size:30px;line-height:1.2}
-  .marco b{display:block;font-family:var(--display);font-size:21px;font-weight:800}
-  .marco span{opacity:.75;font-size:15px}
-
-  .cap{padding:40px 22px 8px}
-  .cap-h{display:flex;align-items:baseline;gap:12px}
-  .cap-h .mes{font-family:var(--display);font-weight:800;font-size:72px;line-height:1;letter-spacing:-.03em}
-  .cap-h .ano{font-family:var(--display);font-weight:500;font-size:24px;opacity:.65}
-  .chip{display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:600;color:var(--dende);margin:6px 0 4px}
-  .chip svg{width:16px;height:16px;fill:var(--dende);transform:rotate(90deg)}
-  .resumo{opacity:.85;margin-top:8px}
-  .item{margin-top:30px}
-  .data{font-weight:600;font-size:14px;color:var(--dende);margin-bottom:8px}
-  .foto img{width:100%;height:auto;display:block;border-radius:22px;background:rgba(255,255,255,.08);cursor:zoom-in}
-  .ph{display:flex;align-items:center;justify-content:center;text-align:center;padding:24px;font-size:14px;opacity:.7;border:2px dashed rgba(255,255,255,.35);border-radius:22px;white-space:pre-line;aspect-ratio:4/5;width:100%}
-  .item h3{font-size:24px;margin:14px 0 4px}
-  .item p{margin-top:10px;opacity:.9}
-  .item h3 + p{margin-top:4px}
-
-  .surp a{display:block;text-decoration:none;color:#fff;background:rgba(255,255,255,.1);border-radius:18px;padding:16px 18px;margin-bottom:12px}
-  .surp a b{display:block;font-family:var(--display);font-weight:800;font-size:22px}
-  .surp a span{font-size:15px;opacity:.8}
 
   .continua{min-height:80dvh;display:flex;flex-direction:column;justify-content:center;gap:18px}
   .continua h2{font-size:52px}
@@ -106,7 +81,7 @@
   /* ---------- botões flutuantes ---------- */
   #som-btn,#fab{display:none;position:fixed;z-index:20;border-radius:50%;align-items:center;justify-content:center}
   body[data-state=main] #som-btn,body[data-state=main] #fab{display:flex}
-  #som-btn{top:calc(env(safe-area-inset-top) + 12px);right:14px;width:44px;height:44px;background:rgba(20,10,40,.55);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);color:#fff;font-size:18px}
+  #som-btn{left:16px;bottom:calc(env(safe-area-inset-bottom) + 18px);width:48px;height:48px;background:rgba(20,10,40,.55);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);color:#fff;font-size:18px}
   #fab{right:16px;bottom:calc(env(safe-area-inset-bottom) + 18px);width:58px;height:58px;background:var(--dende);font-size:26px;box-shadow:0 8px 22px rgba(0,0,0,.35)}
 
   /* ---------- sobreposições ---------- */
@@ -175,7 +150,50 @@
   .fim{padding:60px 0 20px;display:flex;flex-direction:column;gap:6px;align-items:flex-start}
   .fim h2{font-size:52px}
 
+
+  /* ---------- tema vidro ---------- */
+  .glass{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);-webkit-backdrop-filter:blur(18px) saturate(150%);backdrop-filter:blur(18px) saturate(150%)}
+
+  #mini{position:fixed;z-index:30;top:calc(env(safe-area-inset-top) + 8px);left:50%;width:min(calc(100% - 24px),400px);height:44px;
+    transform:translate(-50%,-160%);opacity:0;pointer-events:none;transition:transform .45s cubic-bezier(.2,.8,.2,1),opacity .3s;
+    display:flex;justify-content:space-around;align-items:center;border-radius:999px;font-weight:600;font-size:15px;font-variant-numeric:tabular-nums}
+  #mini.on{transform:translate(-50%,0);opacity:1}
+  body:not([data-state=main]) #mini{display:none}
+  #mini span{display:flex;gap:6px;align-items:center}
+  #mini span.d{color:var(--dende)}
+
+  .cap{padding:48px 20px 6px}
+  .cap-h{display:flex;align-items:baseline;gap:12px}
+  .cap-h .mes{font-family:var(--display);font-weight:800;font-size:76px;line-height:1;letter-spacing:-.04em}
+  .cap-h .ano{font-family:var(--display);font-weight:500;font-size:24px;opacity:.65}
+  .chip{display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:600;color:var(--dende);margin:8px 0 2px}
+  .chip svg{width:16px;height:16px;fill:var(--dende);transform:rotate(90deg)}
+  .resumo{opacity:.85;margin-top:8px}
+  .dia{margin-top:24px}
+  .data{position:sticky;top:calc(env(safe-area-inset-top) + 60px);z-index:5;width:max-content;margin-bottom:12px;padding:6px 14px;border-radius:999px;
+    font-weight:600;font-size:14px;background:rgba(22,10,48,.55);border:1px solid rgba(255,255,255,.18);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
+  .card{margin:0 0 16px;border-radius:28px;overflow:hidden;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);box-shadow:0 14px 34px rgba(5,2,20,.35)}
+  .foto img{width:100%;height:auto;display:block;cursor:zoom-in;background:rgba(255,255,255,.06)}
+  .ph{display:flex;align-items:center;justify-content:center;text-align:center;padding:24px;font-size:14px;opacity:.7;border:2px dashed rgba(255,255,255,.35);white-space:pre-line;aspect-ratio:4/5;width:100%}
+  .card figcaption{padding:14px 18px 18px}
+  .card h3{font-size:22px;margin-bottom:4px}
+  .card p{opacity:.92;font-size:16.5px}
+
+  .surp-card{display:flex;flex-direction:column;gap:6px;text-decoration:none;color:#fff;margin:0 0 16px;padding:18px;border-radius:28px;
+    background:linear-gradient(135deg,rgba(244,160,45,.3),rgba(244,160,45,.06));border:1px solid rgba(244,160,45,.6);
+    -webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);box-shadow:0 0 40px rgba(244,160,45,.18)}
+  .surp-card .selo{display:inline-flex;gap:6px;align-items:center;color:var(--dende);font-weight:600;font-size:14px}
+  .surp-card .selo svg{width:18px;height:18px;fill:var(--dende)}
+  .surp-card b{font-family:var(--display);font-weight:800;font-size:26px;line-height:1.1}
+  .surp-card .det{opacity:.85;font-size:15px}
+  .surp-card .abrir{margin-top:8px;align-self:flex-start;background:var(--dende);color:var(--tinta);font-weight:600;border-radius:999px;padding:10px 18px;font-size:15px}
+
+  .rv{opacity:0;transform:translateY(26px) scale(.985);transition:opacity .6s ease,transform .7s cubic-bezier(.2,.8,.2,1)}
+  .rv.in{opacity:1;transform:none}
+
   @media (prefers-reduced-motion:reduce){
+    .rv{opacity:1;transform:none;transition:none}
+    #mini{transition:none}
     .pass,.carimbo,.desce{animation:none}
     .cta{transition:none}
   }
@@ -183,6 +201,7 @@
 </head>
 <body data-state="gate">
 <div id="bg"></div>
+<div id="mini" class="glass" aria-label="Nosso tempo"></div>
 
 <!-- ============ Trava com contagem ============ -->
 <section id="lock" class="view">
@@ -223,9 +242,7 @@
     <svg class="desce" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
   </section>
   <section class="sec carta" id="carta"></section>
-  <section class="sec marcos" id="marcos"></section>
   <div id="capitulos"></div>
-  <section class="sec surp" id="surp"></section>
   <section class="sec continua" id="continua"></section>
 </main>
 
@@ -280,7 +297,7 @@ const CONFIG = {
   codigo: "tivoli",
   inicioNamoro: "2026-02-15",
 
-  testeLiberado: true,                  // TESTE: true destranca tudo. Volte para false antes de publicar para ela!
+  testeLiberado: true,                  // TESTE: true destranca tudo. Volte para false antes de mandar o link para ela!
   abreEm: "2026-11-15T00:00:00",        // o álbum destranca nos 9 meses
 
   musica: "musica.mp3",
@@ -297,7 +314,7 @@ const CONFIG = {
     { emoji: "🤝", titulo: "Nossa amizade",   data: "2025-11-02" },
     { emoji: "✨", titulo: "1º encontro",     data: "2026-01-10" },
     { emoji: "💌", titulo: "1º \"eu te amo\"", data: "2026-01-18" },
-    { emoji: "💍", titulo: "Nosso namoro",    data: "2026-02-15" }
+    { emoji: "💍", titulo: "Nosso namoro",    data: "2026-02-15", destaque: true }
   ],
 
   /* Meses em que VOCÊ foi a Belém (formato AAAA-MM). Alimentam o selo
@@ -357,9 +374,10 @@ const CONFIG = {
             { arquivo: "foto43.jpg", label: "15/04/2026", titulo: "", legenda: "Flores para a mais bela de todas!" },
         ],
 
+  /* Cada surpresa entra na linha do tempo pela data. Ao tocar, abre em outra página e a música do álbum pausa. */
   surpresas: [
-    { titulo: "2 meses: Dois meses de nós", detalhe: "A surpresa do dia 15 de abril.", href: "2meses.html" },
-    { titulo: "3 meses: Nosso Universo",    detalhe: "O céu de estrelas com as nossas memórias.", href: "ceu.html" }
+    { data: "2026-04-15", titulo: "Dois meses de nós", detalhe: "A surpresa dos 2 meses.", href: "2meses.html" },
+    { data: "2026-05-15", titulo: "Nosso Universo",    detalhe: "A surpresa dos 3 meses: o céu com as nossas memórias.", href: "ceu.html" }
   ],
 
   continua: [
@@ -418,7 +436,9 @@ function cor(p){
   const a = PAL[i], b = PAL[i+1];
   return 'rgb(' + a.map((v,k) => Math.round(v + (b[k]-v)*t)).join(',') + ')';
 }
-function fundo(p){ $('#bg').style.background = `linear-gradient(180deg,${cor(p)},${cor(p+.3)})`; }
+function fundo(p){
+  $('#bg').style.background = `radial-gradient(60% 38% at 88% 8%,rgba(244,160,45,.20),transparent 70%),radial-gradient(70% 45% at 6% 92%,rgba(40,170,210,.22),transparent 70%),linear-gradient(180deg,${cor(p)},${cor(p+.3)})`;
+}
 
 /* ---------- estados ---------- */
 function ir(estado){
@@ -431,6 +451,7 @@ function ir(estado){
 }
 function aoRolar(){
   if (document.body.dataset.state !== 'main') return;
+  $('#mini').classList.toggle('on', scrollY > innerHeight * .55);
   const max = document.documentElement.scrollHeight - innerHeight;
   fundo(max > 0 ? scrollY / max * .72 : 0);
 }
@@ -491,13 +512,22 @@ function barras(){
 
 /* ---------- capítulos a partir das memórias ---------- */
 function capitulos(){
+  const lista = C.memorias.map(m => ({tipo:'foto', ...m}));
+  C.surpresas.forEach(x => { const [a,mm,d] = x.data.split('-'); lista.push({tipo:'surpresa', ...x, label:`${d}/${mm}/${a}`}); });
   const grupos = {};
-  C.memorias.forEach(m => {
+  lista.forEach(m => {
     const [d, mm, a] = m.label.split('/');
     const k = `${a}-${mm}`;
     (grupos[k] = grupos[k] || []).push({...m, d: +d, mm: +mm});
   });
-  return Object.keys(grupos).sort().map(k => ({k, itens: grupos[k]}));
+  return Object.keys(grupos).sort().map(k => ({k, itens: grupos[k].sort((x,y) => x.d - y.d)}));
+}
+const PRESENTE = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6h-2.18c.11-.31.18-.65.18-1 0-1.66-1.34-3-3-3-1.05 0-1.96.54-2.5 1.35l-.5.67-.5-.68C10.96 2.54 10.05 2 9 2 7.34 2 6 3.34 6 5c0 .35.07.69.18 1H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-5-2c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zM9 4c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm11 15H4v-2h16v2zm0-5H4V8h5.08L7 10.83 8.62 12 11 8.76l1-1.36 1 1.36L15.38 12 17 10.83 14.92 8H20v6z"/></svg>';
+function cartao(m){
+  if (m.tipo === 'surpresa')
+    return `<a class="surp-card rv" href="${m.href}" target="_blank" rel="noopener" data-surp><span class="selo">${PRESENTE}Surpresa</span><b>${m.titulo}</b><span class="det">${m.detalhe}</span><span class="abrir">Abrir em nova página</span></a>`;
+  const legenda = (m.titulo || m.legenda) ? `<figcaption>${m.titulo ? `<h3>${m.titulo}</h3>` : ''}${m.legenda ? `<p>${m.legenda}</p>` : ''}</figcaption>` : '';
+  return `<figure class="card rv"><div class="foto">${img(m.arquivo, 'Memória de ' + m.label)}</div>${legenda}</figure>`;
 }
 
 /* ---------- montagem ---------- */
@@ -506,25 +536,22 @@ function montar(){
   $('#tempo').textContent = `Estamos juntos há ${tempoJuntos()}, e este álbum ainda está sendo escrito.`;
   $('#carta').innerHTML = `<h2>${C.nome}, meu amor!</h2>` + C.carta.map(p => `<p>${p}</p>`).join('<br>');
 
-  $('#marcos').innerHTML = '<h2>Baú de memórias</h2>' + C.marcos.map(m => `
-    <div class="marco"><span class="em">${m.emoji}</span><div><b>${m.titulo}</b><span>${m.data ? 'há ' + diasDesde(m.data) + ' dias' : ''}</span></div></div>`).join('');
+  $('#mini').innerHTML = C.marcos.filter(m => m.data).map(m =>
+    `<span class="${m.destaque ? 'd' : ''}" aria-label="${m.titulo}: ${diasDesde(m.data)} dias"><i aria-hidden="true" style="font-style:normal">${m.emoji}</i>${diasDesde(m.data)}d</span>`).join('');
 
   $('#capitulos').innerHTML = capitulos().map(cap => {
     const [ano, mes] = cap.k.split('-');
     const meta = C.meses[cap.k] || {};
     const chip = C.viagens.includes(cap.k) ? 'Fui te ver em Belém' : meta.chip;
-    let anterior = '';
-    const itens = cap.itens.map(m => {
-      const dia = m.label !== anterior ? `<div class="data">${m.d} de ${MES_LONGO[m.mm-1]}</div>` : '';
-      anterior = m.label;
-      return `<figure class="item">${dia}<div class="foto">${img(m.arquivo, 'Memória de ' + m.label)}</div>
-        <figcaption>${m.titulo ? `<h3>${m.titulo}</h3>` : ''}${m.legenda ? `<p>${m.legenda}</p>` : ''}</figcaption></figure>`;
-    }).join('');
-    return `<article class="cap"><header class="cap-h"><span class="mes">${MES_ABR[+mes-1]}</span><span class="ano">${ano}</span></header>
-      ${chip ? `<div class="chip">${AVIAO}${chip}</div>` : ''}${meta.resumo ? `<p class="resumo">${meta.resumo}</p>` : ''}${itens}</article>`;
+    const dias = [];
+    cap.itens.forEach(m => {
+      const u = dias[dias.length - 1];
+      if (u && u.label === m.label) u.itens.push(m); else dias.push({label: m.label, d: m.d, mm: m.mm, itens: [m]});
+    });
+    const corpo = dias.map(dia => `<section class="dia"><div class="data">${dia.d} de ${MES_LONGO[dia.mm-1]}</div>${dia.itens.map(cartao).join('')}</section>`).join('');
+    return `<article class="cap"><header class="cap-h rv"><span class="mes">${MES_ABR[+mes-1]}</span><span class="ano">${ano}</span></header>
+      ${chip ? `<div class="chip">${AVIAO}${chip}</div>` : ''}${meta.resumo ? `<p class="resumo">${meta.resumo}</p>` : ''}${corpo}</article>`;
   }).join('');
-
-  $('#surp').innerHTML = '<h2>Nossas surpresas</h2>' + C.surpresas.map(s => `<a href="${s.href}"><b>${s.titulo}</b><span>${s.detalhe}</span></a>`).join('');
 
   const f = faltam();
   const livre = aberto(C.voo.checkinAbre);
@@ -570,6 +597,7 @@ function montar(){
   $('#btn-rever').onclick = () => ir('ticket');
 
   $('#saudade-txt').textContent = C.saudade;
+  revelar();
 }
 
 /* ---------- código secreto ---------- */
@@ -604,6 +632,28 @@ $('#fecha-saudade').onclick = () => {
   $('#saudade').classList.remove('on');
   if (!mudo) fundoMusica.play().catch(()=>{});
 };
+
+/* ---------- surgir ao rolar ---------- */
+function revelar(){
+  const els = document.querySelectorAll('.rv');
+  if (!('IntersectionObserver' in window) || reduzir){ els.forEach(e => e.classList.add('in')); return; }
+  const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } }), {rootMargin:'0px 0px -8% 0px', threshold:.08});
+  els.forEach(e => io.observe(e));
+}
+
+/* ---------- surpresas em outra página: pausa a música e retoma ao voltar ---------- */
+let foiSurpresa = false;
+document.addEventListener('click', e => {
+  if (e.target.closest && e.target.closest('a[data-surp]')){ fundoMusica.pause(); foiSurpresa = true; }
+});
+function retomar(){
+  if (foiSurpresa && document.visibilityState === 'visible'){
+    foiSurpresa = false;
+    if (!mudo && document.body.dataset.state === 'main') fundoMusica.play().catch(()=>{});
+  }
+}
+document.addEventListener('visibilitychange', retomar);
+addEventListener('pageshow', retomar);
 
 /* ---------- foto ampliada ---------- */
 document.addEventListener('click', e => {
