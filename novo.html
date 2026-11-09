@@ -1,0 +1,646 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Nosso Álbum">
+<meta name="theme-color" content="#2a1748">
+<meta name="robots" content="noindex, nofollow">
+<title>Nossos momentos ❤️</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800&family=Figtree:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --acai:#2a1748; --mare:#0f4c75; --dende:#f4a02d;
+    --papel:#f7f4fc; --tinta:#241636; --muda:#6d6482;
+    --display:'Bricolage Grotesque','Avenir Next','Helvetica Neue',sans-serif;
+    --texto:'Figtree','Avenir Next','Helvetica Neue',sans-serif;
+    --topo:calc(env(safe-area-inset-top) + 20px);
+    --base:calc(env(safe-area-inset-bottom) + 24px);
+  }
+  *{box-sizing:border-box;margin:0}
+  html{-webkit-text-size-adjust:100%}
+  body{font-family:var(--texto);color:#fff;font-size:17px;line-height:1.55;background:var(--acai);min-height:100dvh}
+  #bg{position:fixed;inset:0;z-index:-1;background:linear-gradient(180deg,#2a1748,#1d2a5f)}
+  button,input{font:inherit}
+  button{cursor:pointer;border:0;-webkit-tap-highlight-color:transparent}
+  :focus-visible{outline:3px solid #fff;outline-offset:3px}
+  h1,h2,h3{font-family:var(--display);font-weight:800;letter-spacing:-.02em;line-height:1.04}
+
+  .view{display:none;max-width:430px;margin:0 auto}
+  body[data-state=lock] #lock, body[data-state=gate] #gate, body[data-state=som] #som{display:flex;flex-direction:column;min-height:100dvh;padding:var(--topo) 22px var(--base)}
+  body[data-state=main] #main{display:block}
+  body[data-state=ticket] #ticket{display:flex;flex-direction:column;min-height:100dvh;padding:var(--topo) 20px var(--base)}
+  body[data-state=flight] #flight{display:flex;flex-direction:column;align-items:center;min-height:100dvh;padding:var(--topo) 20px var(--base)}
+  body[data-state=arrival] #arrival{display:block}
+
+  .cta{width:100%;height:56px;border-radius:16px;background:var(--dende);color:var(--tinta);font-weight:600;font-size:17px;transition:transform .15s}
+  .cta:active{transform:scale(.97)}
+  .cta:disabled{opacity:.45;cursor:not-allowed;transform:none}
+  .link{background:none;color:#fff;text-decoration:underline;text-underline-offset:4px;font-size:15px;padding:12px 0;opacity:.85}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:600;font-size:15px}
+  .brand svg{width:22px;height:22px;fill:var(--dende)}
+
+  /* ---------- contagem ---------- */
+  .cd{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+  .cd div{background:rgba(255,255,255,.1);border-radius:16px;padding:12px 4px;text-align:center}
+  .cd b{display:block;font-family:var(--display);font-weight:800;font-size:30px;line-height:1.1}
+  .cd span{font-size:13px;opacity:.8}
+
+  /* ---------- trava, portão e som ---------- */
+  .centro{flex:1;display:flex;flex-direction:column;justify-content:center;gap:16px}
+  .centro h1{font-size:42px}
+  .centro p{opacity:.85;max-width:22em}
+  .cadeado{font-size:44px;line-height:1}
+  #codigo{width:100%;height:58px;border-radius:16px;border:1.5px solid rgba(255,255,255,.3);background:rgba(255,255,255,.08);color:#fff;font-size:20px;text-align:center;padding:0 16px}
+  #codigo::placeholder{color:rgba(255,255,255,.45)}
+  #erro{color:#ffb4a8;font-size:15px;min-height:1.5em}
+
+  /* ---------- álbum ---------- */
+  .sec{padding:56px 22px}
+  .capa{min-height:100dvh;display:flex;flex-direction:column;justify-content:flex-end;padding-top:var(--topo);padding-bottom:calc(var(--base) + 8px)}
+  .capa h1{font-size:60px;margin-bottom:14px}
+  .capa .para{font-family:var(--display);font-weight:500;font-size:24px;opacity:.9;margin-bottom:22px}
+  .capa .tempo{font-size:18px;max-width:20em;opacity:.85}
+  .capa .desce{margin-top:30px;width:28px;height:28px;opacity:.7;animation:desce 2s ease-in-out infinite}
+  @keyframes desce{50%{transform:translateY(8px)}}
+
+  .carta h2{font-size:34px;margin-bottom:18px}
+  .carta p{font-size:19px;line-height:1.65;max-width:28em}
+
+  .marcos h2,.surp h2{font-size:34px;margin-bottom:18px}
+  .marco{display:grid;grid-template-columns:44px 1fr;gap:14px;padding:16px 0;border-bottom:1px solid rgba(255,255,255,.16)}
+  .marco .em{font-size:30px;line-height:1.2}
+  .marco b{display:block;font-family:var(--display);font-size:21px;font-weight:800}
+  .marco span{opacity:.75;font-size:15px}
+
+  .cap{padding:40px 22px 8px}
+  .cap-h{display:flex;align-items:baseline;gap:12px}
+  .cap-h .mes{font-family:var(--display);font-weight:800;font-size:72px;line-height:1;letter-spacing:-.03em}
+  .cap-h .ano{font-family:var(--display);font-weight:500;font-size:24px;opacity:.65}
+  .chip{display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:600;color:var(--dende);margin:6px 0 4px}
+  .chip svg{width:16px;height:16px;fill:var(--dende);transform:rotate(90deg)}
+  .resumo{opacity:.85;margin-top:8px}
+  .item{margin-top:30px}
+  .data{font-weight:600;font-size:14px;color:var(--dende);margin-bottom:8px}
+  .foto img{width:100%;height:auto;display:block;border-radius:22px;background:rgba(255,255,255,.08);cursor:zoom-in}
+  .ph{display:flex;align-items:center;justify-content:center;text-align:center;padding:24px;font-size:14px;opacity:.7;border:2px dashed rgba(255,255,255,.35);border-radius:22px;white-space:pre-line;aspect-ratio:4/5;width:100%}
+  .item h3{font-size:24px;margin:14px 0 4px}
+  .item p{margin-top:10px;opacity:.9}
+  .item h3 + p{margin-top:4px}
+
+  .surp a{display:block;text-decoration:none;color:#fff;background:rgba(255,255,255,.1);border-radius:18px;padding:16px 18px;margin-bottom:12px}
+  .surp a b{display:block;font-family:var(--display);font-weight:800;font-size:22px}
+  .surp a span{font-size:15px;opacity:.8}
+
+  .continua{min-height:80dvh;display:flex;flex-direction:column;justify-content:center;gap:18px}
+  .continua h2{font-size:52px}
+  .continua p{font-size:19px;line-height:1.65}
+  .falta{font-family:var(--display);font-weight:800;font-size:26px;color:var(--dende);line-height:1.15}
+  .aviso{font-size:15px;opacity:.85}
+
+  /* ---------- botões flutuantes ---------- */
+  #som-btn,#fab{display:none;position:fixed;z-index:20;border-radius:50%;align-items:center;justify-content:center}
+  body[data-state=main] #som-btn,body[data-state=main] #fab{display:flex}
+  #som-btn{top:calc(env(safe-area-inset-top) + 12px);right:14px;width:44px;height:44px;background:rgba(20,10,40,.55);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);color:#fff;font-size:18px}
+  #fab{right:16px;bottom:calc(env(safe-area-inset-bottom) + 18px);width:58px;height:58px;background:var(--dende);font-size:26px;box-shadow:0 8px 22px rgba(0,0,0,.35)}
+
+  /* ---------- sobreposições ---------- */
+  .overlay{position:fixed;inset:0;z-index:50;background:rgba(15,8,30,.97);display:none;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:var(--topo) 24px var(--base);text-align:center;overflow:auto}
+  .overlay.on{display:flex}
+  .overlay h2{font-size:34px}
+  .overlay p{max-width:22em;opacity:.88}
+  .overlay video{width:100%;max-width:340px;max-height:46dvh;border-radius:20px;background:#000;object-fit:cover}
+  .fechar{position:absolute;top:calc(env(safe-area-inset-top) + 12px);right:14px;width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.14);color:#fff;font-size:18px}
+  #lb img{max-width:100%;max-height:86dvh;border-radius:14px}
+
+  /* ---------- cartão ---------- */
+  .pass{
+    --stub:132px;background:var(--papel);color:var(--tinta);border-radius:24px;overflow:hidden;box-shadow:0 18px 40px rgba(8,4,24,.45);
+    -webkit-mask:radial-gradient(circle 12px at 0 calc(100% - var(--stub)),transparent 97%,#000) left/51% 100% no-repeat,radial-gradient(circle 12px at 100% calc(100% - var(--stub)),transparent 97%,#000) right/51% 100% no-repeat;
+            mask:radial-gradient(circle 12px at 0 calc(100% - var(--stub)),transparent 97%,#000) left/51% 100% no-repeat,radial-gradient(circle 12px at 100% calc(100% - var(--stub)),transparent 97%,#000) right/51% 100% no-repeat;
+    animation:rise .8s cubic-bezier(.2,.8,.2,1) both;
+  }
+  @keyframes rise{from{transform:translateY(60px);opacity:0}to{transform:none;opacity:1}}
+  .pass-head{background:linear-gradient(90deg,var(--acai),var(--mare));color:#fff;display:flex;justify-content:space-between;align-items:center;padding:14px 20px;font-size:14px;font-weight:600}
+  .pass-head .brand{font-size:14px}
+  .pass-body{padding:20px 20px 22px}
+  .lbl{display:block;font-size:12px;color:var(--muda);margin-bottom:2px}
+  .nome{font-family:var(--display);font-weight:800;font-size:25px;line-height:1.1}
+  .rota{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:10px;margin:22px 0}
+  .cidade b{display:block;font-family:var(--display);font-weight:800;font-size:54px;line-height:.95;letter-spacing:-.02em}
+  .cidade span{font-size:14px;color:var(--muda)}
+  .cidade.dir{text-align:right}
+  .mid{position:relative;height:24px}
+  .mid::before{content:"";position:absolute;left:0;right:0;top:50%;border-top:2px dashed rgba(36,22,54,.3)}
+  .mid svg{position:absolute;left:50%;top:50%;width:26px;height:26px;transform:translate(-50%,-50%) rotate(90deg);fill:var(--acai);background:var(--papel);padding:0 2px;box-sizing:content-box}
+  .grade{display:grid;grid-template-columns:repeat(3,1fr);gap:16px 10px}
+  .grade dt{font-size:12px;color:var(--muda)}
+  .grade dd{font-weight:600;font-size:17px;line-height:1.2}
+  .stub{height:var(--stub);margin:0 14px;border-top:2px dashed rgba(36,22,54,.25);padding:14px 6px 0;display:flex;flex-direction:column;gap:10px}
+  .stub svg{width:100%;height:50px;color:var(--tinta)}
+  .stub p{font-size:13px;color:var(--muda);text-align:center;line-height:1.3}
+  .voos{margin:28px 0 8px}
+  .voos h2{font-size:26px;margin-bottom:12px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px}
+  .chips span{border:1.5px solid rgba(255,255,255,.35);border-radius:999px;padding:4px 14px;font-weight:600;font-size:15px}
+  .chips span.hoje{border-color:var(--dende);color:var(--dende)}
+  .stats{display:flex;gap:28px;margin:22px 0 28px}
+  .stats b{display:block;font-family:var(--display);font-weight:800;font-size:34px;line-height:1}
+  .stats span{font-size:14px;opacity:.8}
+
+  /* ---------- voo ---------- */
+  .map{flex:1;width:100%;max-height:640px}
+  .map text{font-family:var(--display);font-weight:800;font-size:30px;fill:#fff}
+  .map .sub{font-family:var(--texto);font-weight:400;font-size:14px;opacity:.8}
+  #status{font-family:var(--display);font-weight:800;font-size:26px;text-align:center;min-height:2.4em;padding-bottom:20px}
+
+  /* ---------- chegada ---------- */
+  .chegada{min-height:100dvh;display:flex;flex-direction:column;justify-content:center;gap:22px;padding-top:var(--topo)}
+  .chegada h1{font-size:46px}
+  .msg{display:flex;flex-direction:column;gap:14px;font-size:19px;line-height:1.6;max-width:26em}
+  .assina{font-family:var(--display);font-weight:800;font-size:22px}
+  .carimbo{align-self:flex-start;border:3px solid var(--dende);color:var(--dende);border-radius:14px;padding:8px 16px;font-family:var(--display);font-weight:800;line-height:1.15;font-size:20px;animation:carimbar .5s .3s cubic-bezier(.3,1.6,.5,1) both;transform:rotate(-6deg)}
+  .carimbo small{display:block;font-family:var(--texto);font-weight:600;font-size:13px}
+  @keyframes carimbar{from{transform:rotate(-6deg) scale(2.2);opacity:0}to{transform:rotate(-6deg) scale(1);opacity:1}}
+  .novo h2{font-size:38px;margin-bottom:10px}
+  .novo > p{opacity:.85;margin-bottom:22px}
+  .vazios{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .vazio{aspect-ratio:4/5;border:2px dashed rgba(255,255,255,.4);border-radius:18px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:12px;text-align:center;font-size:14px;line-height:1.3}
+  .vazio i{font-style:normal;font-size:30px;color:var(--dende);line-height:1}
+  .fim{padding:60px 0 20px;display:flex;flex-direction:column;gap:6px;align-items:flex-start}
+  .fim h2{font-size:52px}
+
+  @media (prefers-reduced-motion:reduce){
+    .pass,.carimbo,.desce{animation:none}
+    .cta{transition:none}
+  }
+</style>
+</head>
+<body data-state="gate">
+<div id="bg"></div>
+
+<!-- ============ Trava com contagem ============ -->
+<section id="lock" class="view">
+  <div class="centro">
+    <div class="cadeado" aria-hidden="true">🔒</div>
+    <h1>Ansiosa?</h1>
+    <p>O seu presente foi trancado a sete chaves. Ele será revelado automaticamente em:</p>
+    <div id="lock-cd"></div>
+  </div>
+</section>
+
+<!-- ============ Portão ============ -->
+<section id="gate" class="view">
+  <div class="centro">
+    <h1>Acesso restrito</h1>
+    <p>Qual é o nosso código secreto?</p>
+    <input id="codigo" type="password" autocapitalize="off" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="****" aria-label="Código secreto">
+    <div id="erro" role="alert"></div>
+  </div>
+  <button class="cta" id="btn-codigo">Desbloquear</button>
+</section>
+
+<!-- ============ Som ============ -->
+<section id="som" class="view">
+  <div class="centro">
+    <h1>Acesso liberado ✨</h1>
+    <p>Aumente o volume do celular para a experiência completa.</p>
+  </div>
+  <button class="cta" id="btn-play">Dar o play ▶</button>
+</section>
+
+<!-- ============ Álbum ============ -->
+<main id="main" class="view">
+  <section class="capa">
+    <h1>Nossos momentos</h1>
+    <div class="para" id="para"></div>
+    <p class="tempo" id="tempo"></p>
+    <svg class="desce" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+  </section>
+  <section class="sec carta" id="carta"></section>
+  <section class="sec marcos" id="marcos"></section>
+  <div id="capitulos"></div>
+  <section class="sec surp" id="surp"></section>
+  <section class="sec continua" id="continua"></section>
+</main>
+
+<button id="som-btn" aria-label="Ligar ou desligar a música">🔊</button>
+<button id="fab" aria-label="Deu saudade? Toque aqui">🧡</button>
+
+<!-- ============ Cartão ============ -->
+<section id="ticket" class="view">
+  <div id="pass"></div>
+  <div class="voos" id="voos"></div>
+  <button class="cta" id="btn-board">Embarcar</button>
+  <button class="link" id="btn-voltar-album">Voltar ao álbum</button>
+</section>
+
+<!-- ============ Voo ============ -->
+<section id="flight" class="view">
+  <div class="brand" id="brand-fl"></div>
+  <svg class="map" viewBox="0 0 390 600" aria-hidden="true">
+    <path id="route" d="M78 120 C 340 90, 70 400, 312 500" fill="none" stroke="#fff" stroke-opacity=".3" stroke-width="2.5" stroke-dasharray="3 9" stroke-linecap="round"/>
+    <path id="progress" d="M78 120 C 340 90, 70 400, 312 500" fill="none" stroke="#f4a02d" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="78" cy="120" r="7" fill="#f4a02d"/><circle cx="312" cy="500" r="7" fill="#fff"/>
+    <text x="78" y="82" text-anchor="middle">BEL</text><text x="78" y="152" text-anchor="middle" class="sub">Belém</text>
+    <text x="312" y="552" text-anchor="middle">SSA</text><text x="312" y="578" text-anchor="middle" class="sub">Salvador</text>
+    <g id="plane"><path fill="#fff" d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/></g>
+  </svg>
+  <p id="status" aria-live="polite"></p>
+</section>
+
+<!-- ============ Chegada ============ -->
+<section id="arrival" class="view">
+  <div class="sec chegada" id="chegada"></div>
+  <div class="sec novo" id="novo"></div>
+</section>
+
+<!-- ============ Sobreposições ============ -->
+<div class="overlay" id="saudade" role="dialog" aria-modal="true" aria-label="Sinta o meu abraço">
+  <button class="fechar" id="fecha-saudade" aria-label="Fechar">✕</button>
+  <h2>Sinta o meu abraço</h2>
+  <p id="saudade-txt"></p>
+  <video id="saudade-video" playsinline muted loop></video>
+</div>
+<div class="overlay" id="lb" aria-label="Foto ampliada"><button class="fechar" aria-label="Fechar">✕</button><img alt=""></div>
+
+<script>
+/* =====================================================================
+   EDITE AQUI. As fotos ficam na mesma pasta deste arquivo (foto01.jpeg...).
+   Para testar as trancas antes da data, abra o link com  ?liberar  no fim.
+   ===================================================================== */
+const CONFIG = {
+  nome: "Thayna",
+  sobrenome: "SOBRENOME",               // como está na passagem dela
+  codigo: "tivoli",
+  inicioNamoro: "2026-02-15",
+
+  testeLiberado: true,                  // TESTE: true destranca tudo. Volte para false antes de publicar para ela!
+  abreEm: "2026-11-15T00:00:00",        // o álbum destranca nos 9 meses
+
+  musica: "musica.mp3",
+  musicaSaudade: "musica-saudade.mp3",
+  videoSaudade: "video-saudade.mp4",
+
+  carta: [
+    "Existem pessoas que entram na nossa vida e, de alguma forma inexplicável, fazem tudo parecer mais leve, mais bonito e mais cheio de sentido. Você é assim para mim. Desde que nossos caminhos se cruzaram, meus dias ganharam mais cor, mais calma e um motivo a mais para sorrir.",
+    "Essa carta é apenas uma pequena forma de expressar o quanto você é especial para mim e o quanto sou grato por ter você ao meu lado. Que possamos continuar construindo momentos lindos, colecionando sorrisos e escrevendo juntos uma história cheia de carinho, cumplicidade e amor. Cada segundo com você é um presente."
+  ],
+  saudade: "Meu amor, minha namorada. Sempre que a saudade apertar, lembre-se que eu estou exatamente aqui. Feche os olhos, ouça a música e sinta que nada no mundo pode diminuir o que sentimos um pelo outro. Te amo!",
+
+  marcos: [
+    { emoji: "🤝", titulo: "Nossa amizade",   data: "2025-11-02" },
+    { emoji: "✨", titulo: "1º encontro",     data: "2026-01-10" },
+    { emoji: "💌", titulo: "1º \"eu te amo\"", data: "2026-01-18" },
+    { emoji: "💍", titulo: "Nosso namoro",    data: "2026-02-15" }
+  ],
+
+  /* Meses em que VOCÊ foi a Belém (formato AAAA-MM). Alimentam o selo
+     "Fui te ver em Belém", a lista de voos e a contagem de quilômetros. */
+  viagens: ["2026-01", "2026-03"],
+
+  /* Detalhes opcionais por mês: "chip" (selo) e "resumo" (texto de abertura). */
+  meses: {
+    "2026-02": { chip: "Você veio me ver em Salvador" }
+  },
+
+  /* Todas as fotos e legendas do álbum antigo. Para adicionar fotos novas,
+     acrescente linhas no fim com a data no formato DD/MM/AAAA. */
+  memorias: [
+            { arquivo: "foto01.jpeg", label: "02/11/2025", titulo: "Onde Tudo Começou", legenda: "Belém me trouxe muitos desafios. O hotel me trouxe muitos problemas. Minha vida virou do avesso em 2025. Hoje agradeço por ter passado por tudo isso pois foram esses desafios que me levaram até você." },
+            { arquivo: "foto02.jpeg", label: "23/12/2025", titulo: "" , legenda: "Ver sua carinha feliz não tem preço. Momentos como esses ficam marcados nas nossas lembranças." },
+            { arquivo: "foto03.jpeg", label: "28/12/2025", titulo: "", legenda: "Quando tudo ainda era novo, essa foi uma tentativa de personificar nós 2 juntos!" },
+            { arquivo: "foto04.jpeg", label: "03/01/2026", titulo: "", legenda: "A saudade aumentava a cada dia e a única saída era utilizar a IA para tentar criar momentos juntos..." },
+            { arquivo: "foto05.jpeg", label: "10/01/2026", titulo: "O grande dia chegou", legenda: "Depois de tanto esperar, só nos restava ansiedade e nervosismo pra o dia 10. Até tentativa de fugir teve nesse dia, mas superamos mais esse desafio e nos vemos a primeira vez de uma forma diferente...em um novo contexto..." },
+            { arquivo: "foto06.jpeg", label: "10/01/2026", titulo: "", legenda: "Tivemos um final de semana maravilhoso. Muito carinho e cuidado envolvido...Nossas energias vibraram na mesma sintonia e pudemos ter momentos íntimos e de prazer sem medo!" },
+            { arquivo: "foto07.jpeg", label: "12/01/2026", titulo: "", legenda: "O resultado do final de semana foi esse. Mais leves, mais felizes e com o sentimento de ter tomado a decisão certa..." },
+            { arquivo: "foto24.jpeg", label: "12/01/2026", titulo: "Primeira cartinha...", legenda: "Ganhei a primeira cartinha...fiquei bobo e surpreso pois não esperava por isso!" },
+            { arquivo: "foto08.jpeg", label: "18/01/2026", titulo: "", legenda: "Tivemos mais um final de semana maravilhoso juntos, com direito a caras e bocas." },
+            { arquivo: "foto09.jpeg", label: "18/01/2026", titulo: "", legenda: "Com direito a um cafezinho..." },
+            { arquivo: "foto10.jpeg", label: "18/01/2026", titulo: "", legenda: "E ainda fomos a um showzinho gostoso e dançamos coladinhos..." },
+            { arquivo: "foto25.jpeg", label: "18/01/2026", titulo: "Segunda cartinha", legenda: "E veio a segunda cartinha...Resumindo nosso final de semana, o primeiro 'eu te amo', e como sempre muito amor envolvido..." },
+            { arquivo: "foto26.jpeg", label: "23/01/2026", titulo: "Terceira cartinha...", legenda: "Essa cartinha veio com 2 presentes lindos. Amei a lembrança e o carinho que você empregou em tudo..." },
+            { arquivo: "foto12.jpeg", label: "24/01/2026", titulo: "", legenda: "Visitamos um museu e pintamos um pássaro juntos." },
+            { arquivo: "foto11.jpeg", label: "24/01/2026", titulo: "", legenda: "Você me apresentou a música clássica 🧡" },
+            { arquivo: "foto13.jpeg", label: "25/01/2026", titulo: "", legenda: "E também tivemos a primeira despedida no aeroporto. Mixto de felicidade com tristeza, vontade de chorar e sorrir...mas já contando os dias pra nos ver novamente." },
+            { arquivo: "foto14.jpeg", label: "02/02/2026", titulo: "", legenda: "Você foi me ver na Bahia" },
+            { arquivo: "foto15.jpeg", label: "03/02/2026", titulo: "", legenda: "Turistando em Salvador" },
+            { arquivo: "foto16.jpeg", label: "03/02/2026", titulo: "", legenda: "Momentos únicos ao seu lado." },
+            { arquivo: "foto17.jpeg", label: "03/02/2026", titulo: "", legenda: "Uma semana maravilhosa ao seu lado. Muito carinho e amor envolvido" },
+            { arquivo: "foto18.jpeg", label: "04/02/2026", titulo: "", legenda: "Se esbaldando na moqueca..." },
+            { arquivo: "foto19.jpeg", label: "05/02/2026", titulo: "", legenda: "E teve acarajé também!" },
+            { arquivo: "foto27.jpeg", label: "05/02/2026", titulo: "Quarta cartinha...", legenda: "Dessa vez mais picante...kkkkk...muito besta!" },
+            { arquivo: "foto20.jpeg", label: "15/02/2026", titulo: "Quer namorar comigo?", legenda: "Te pedi em namoro e você aceitou! Felicidade transbordando..." },
+            { arquivo: "foto21.jpeg", label: "17/02/2026", titulo: "", legenda: "Nosso programa favorito...melhor companhia para um café..." },
+            { arquivo: "foto22.jpeg", label: "17/02/2026", titulo: "", legenda: "Nosso carnaval foi maravilhoso." },
+            { arquivo: "foto23.jpeg", label: "18/02/2026", titulo: "", legenda: "Meu amor e nosso filho Pipoca...pais de pet =]" },
+            { arquivo: "foto28.jpeg", label: "08/03/2026", titulo: "", legenda: "Café da manhã do jeito que gostamos: simples e gostosinho!" },
+            { arquivo: "foto30.jpeg", label: "08/03/2026", titulo: "", legenda: "Todo momento ao seu lado é delicioso." },
+            { arquivo: "foto29.jpeg", label: "08/03/2026", titulo: "", legenda: "E teve almoço gostosinho também..." },
+            { arquivo: "foto31.jpeg", label: "11/03/2026", titulo: "Primeira vez...", legenda: "Primeira vez no Teatro na vida, e não poderia ter melhor companhia!" },
+            { arquivo: "foto32.jpeg", label: "11/03/2026", titulo: "", legenda: "Sempre bom estar com você, em todos os momentos." },
+            { arquivo: "foto33.jpeg", label: "13/03/2026", titulo: "", legenda: "Mais uma nova experirência ao seu lado." },
+            { arquivo: "foto34.jpeg", label: "13/03/2026", titulo: "", legenda: "Você sempre será minha melhor companhia" },
+            { arquivo: "foto35.jpeg", label: "13/03/2026", titulo: "", legenda: "A mais bela de todas." },
+            { arquivo: "foto36.jpeg", label: "14/03/2026", titulo: "", legenda: "Você é sinônimo de paz, amor e tranquilidade!" },
+            { arquivo: "foto37.jpeg", label: "14/03/2026", titulo: "", legenda: "Te amo de um jeito inexplicável! Nossos momentos são únicos." },
+            { arquivo: "foto38.jpeg", label: "15/03/2026", titulo: "", legenda: "No seu colo eu sinto paz e carinho." },
+            { arquivo: "foto39.jpeg", label: "15/03/2026", titulo: "", legenda: "E teve mais uma despedida. Dessa vez foi impossível conter as emoções..." },
+            { arquivo: "foto40.jpeg", label: "26/03/2026", titulo: "", legenda: "Não poderia deixar passar em branco! Feliz Páscoa meu amor!" },
+            { arquivo: "foto41.png", label: "10/04/2026", titulo: "", legenda: "" },
+            { arquivo: "foto42.jpg", label: "15/04/2026", titulo: "", legenda: "" },
+            { arquivo: "foto43.jpg", label: "15/04/2026", titulo: "", legenda: "Flores para a mais bela de todas!" },
+        ],
+
+  surpresas: [
+    { titulo: "2 meses: Dois meses de nós", detalhe: "A surpresa do dia 15 de abril.", href: "2meses.html" },
+    { titulo: "3 meses: Nosso Universo",    detalhe: "O céu de estrelas com as nossas memórias.", href: "ceu.html" }
+  ],
+
+  continua: [
+    "Sei que palavras nunca conseguem traduzir completamente aquilo que o coração sente, mas espero que este álbum mostre um pouco do quanto você é importante para mim. Obrigado por trazer tanta luz, carinho e significado para os meus dias.",
+    "E o próximo capítulo já tem data."
+  ],
+
+  voo: {
+    companhia: "Ponte Aérea Nós Dois",
+    numero: "PA 1112",
+    dataISO: "2026-12-11T08:15:00",
+    checkinAbre: "2026-12-10T08:15:00", // o check-in destranca 24 horas antes
+    dataCurta: "11 dez",
+    dataLonga: "11 de dezembro",
+    horario: "08:15",                   // o horário real do voo dela
+    portao: "9",
+    assento: "1A",
+    classe: "Ao meu lado",
+    bagagem: "Bagagem: 9 meses de saudade. Sem limite de peso.",
+    kmPorTrecho: 1700                   // Salvador a Belém, valor aproximado
+  },
+
+  chegada: {
+    titulo: "Bem-vinda a Salvador.",
+    mensagem: [
+      "Foram nove meses de aeroporto, de saudade e de contagem regressiva.",
+      "Dessa vez é diferente: você chega para ficar mais tempo, e quem espera do outro lado sou eu.",
+      "Aqui tem lugar pra você."
+    ],
+    assinatura: "Com amor, Lucas"
+  },
+
+  salvador: [
+    "O primeiro dia dela em casa",
+    "Nosso primeiro domingo de verdade na Bahia",
+    "O lugar que vai virar nosso",
+    "A primeira foto da vida nova"
+  ]
+};
+/* ===================================================================== */
+
+const $ = s => document.querySelector(s);
+const reduzir = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const LIBERAR = new URLSearchParams(location.search).has('liberar') || CONFIG.testeLiberado === true;
+const AVIAO = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/></svg>';
+const C = CONFIG;
+const MES_ABR = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+const MES_LONGO = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
+
+/* ---------- cor que viaja de Belém a Salvador ---------- */
+const hex = h => [1,3,5].map(i => parseInt(h.slice(i,i+2),16));
+const PAL = [hex('#2a1748'), hex('#1d2a5f'), hex('#0f4c75')];
+function cor(p){
+  p = Math.max(0, Math.min(1, p));
+  const s = p * 2, i = Math.min(1, Math.floor(s)), t = s - i;
+  const a = PAL[i], b = PAL[i+1];
+  return 'rgb(' + a.map((v,k) => Math.round(v + (b[k]-v)*t)).join(',') + ')';
+}
+function fundo(p){ $('#bg').style.background = `linear-gradient(180deg,${cor(p)},${cor(p+.3)})`; }
+
+/* ---------- estados ---------- */
+function ir(estado){
+  document.body.dataset.state = estado;
+  window.scrollTo(0,0);
+  if (estado === 'main') aoRolar();
+  if (estado === 'ticket') fundo(.78);
+  if (estado === 'arrival') fundo(1);
+  if (estado === 'gate' || estado === 'som' || estado === 'lock') fundo(0);
+}
+function aoRolar(){
+  if (document.body.dataset.state !== 'main') return;
+  const max = document.documentElement.scrollHeight - innerHeight;
+  fundo(max > 0 ? scrollY / max * .72 : 0);
+}
+addEventListener('scroll', aoRolar, {passive:true});
+
+/* ---------- contagens e trancas ---------- */
+const aberto = iso => LIBERAR || Date.now() >= new Date(iso).getTime();
+function grade(ms){
+  const s = Math.max(0, Math.floor(ms/1000));
+  const p = [['Dias', Math.floor(s/86400)], ['Hrs', Math.floor(s%86400/3600)], ['Min', Math.floor(s%3600/60)], ['Seg', s%60]];
+  return `<div class="cd">${p.map(([l,v]) => `<div><b>${String(v).padStart(2,'0')}</b><span>${l}</span></div>`).join('')}</div>`;
+}
+function tictac(){
+  if (document.body.dataset.state === 'lock'){
+    if (aberto(C.abreEm)) ir('gate'); else $('#lock-cd').innerHTML = grade(new Date(C.abreEm) - Date.now());
+  }
+  const cb = $('#btn-checkin');
+  if (cb){
+    if (aberto(C.voo.checkinAbre)){
+      if (cb.disabled){ cb.disabled = false; cb.textContent = 'Fazer check-in'; $('#checkin-cd').innerHTML = ''; }
+    } else $('#checkin-cd').innerHTML = grade(new Date(C.voo.checkinAbre) - Date.now());
+  }
+}
+
+/* ---------- datas ---------- */
+function tempoJuntos(){
+  const ini = new Date(C.inicioNamoro + 'T00:00:00'), h = new Date();
+  let m = (h.getFullYear()-ini.getFullYear())*12 + h.getMonth() - ini.getMonth();
+  let ref = new Date(ini); ref.setMonth(ini.getMonth() + m);
+  if (ref > h){ m--; ref = new Date(ini); ref.setMonth(ini.getMonth() + m); }
+  const d = Math.floor((h - ref) / 864e5);
+  return `${m} ${m===1?'mês':'meses'} e ${d} ${d===1?'dia':'dias'}`;
+}
+const diasDesde = iso => Math.max(0, Math.floor((Date.now() - new Date(iso + 'T00:00:00')) / 864e5));
+function faltam(){
+  const dias = Math.ceil((new Date(C.voo.dataISO) - Date.now()) / 864e5);
+  if (dias > 1) return `Faltam ${dias} dias para o seu voo.`;
+  if (dias === 1) return 'Falta 1 dia para o seu voo.';
+  if (dias === 0) return 'O seu voo é hoje.';
+  return '';
+}
+
+/* ---------- fotos com moldura de reserva ---------- */
+window.ph = src => { const d = document.createElement('div'); d.className = 'ph'; d.textContent = 'Foto não encontrada\n' + src; return d; };
+const img = (src, alt) => `<img src="${src}" alt="${alt}" loading="lazy" class="zoom" onerror="this.replaceWith(ph('${src}'))">`;
+
+/* ---------- barras do cartão ---------- */
+function barras(){
+  let x = 0, seed = 1112, s = '';
+  const r = () => (seed = (seed * 9301 + 49297) % 233280) / 233280;
+  while (x < 300){
+    const w = 1 + Math.floor(r()*4);
+    if (r() > .35) s += `<rect x="${x}" width="${w}" height="50"/>`;
+    x += w + 1 + Math.floor(r()*2);
+  }
+  return `<svg viewBox="0 0 300 50" preserveAspectRatio="none" aria-hidden="true" fill="currentColor">${s}</svg>`;
+}
+
+/* ---------- capítulos a partir das memórias ---------- */
+function capitulos(){
+  const grupos = {};
+  C.memorias.forEach(m => {
+    const [d, mm, a] = m.label.split('/');
+    const k = `${a}-${mm}`;
+    (grupos[k] = grupos[k] || []).push({...m, d: +d, mm: +mm});
+  });
+  return Object.keys(grupos).sort().map(k => ({k, itens: grupos[k]}));
+}
+
+/* ---------- montagem ---------- */
+function montar(){
+  $('#para').textContent = `Para a ${C.nome}.`;
+  $('#tempo').textContent = `Estamos juntos há ${tempoJuntos()}, e este álbum ainda está sendo escrito.`;
+  $('#carta').innerHTML = `<h2>${C.nome}, meu amor!</h2>` + C.carta.map(p => `<p>${p}</p>`).join('<br>');
+
+  $('#marcos').innerHTML = '<h2>Baú de memórias</h2>' + C.marcos.map(m => `
+    <div class="marco"><span class="em">${m.emoji}</span><div><b>${m.titulo}</b><span>${m.data ? 'há ' + diasDesde(m.data) + ' dias' : ''}</span></div></div>`).join('');
+
+  $('#capitulos').innerHTML = capitulos().map(cap => {
+    const [ano, mes] = cap.k.split('-');
+    const meta = C.meses[cap.k] || {};
+    const chip = C.viagens.includes(cap.k) ? 'Fui te ver em Belém' : meta.chip;
+    let anterior = '';
+    const itens = cap.itens.map(m => {
+      const dia = m.label !== anterior ? `<div class="data">${m.d} de ${MES_LONGO[m.mm-1]}</div>` : '';
+      anterior = m.label;
+      return `<figure class="item">${dia}<div class="foto">${img(m.arquivo, 'Memória de ' + m.label)}</div>
+        <figcaption>${m.titulo ? `<h3>${m.titulo}</h3>` : ''}${m.legenda ? `<p>${m.legenda}</p>` : ''}</figcaption></figure>`;
+    }).join('');
+    return `<article class="cap"><header class="cap-h"><span class="mes">${MES_ABR[+mes-1]}</span><span class="ano">${ano}</span></header>
+      ${chip ? `<div class="chip">${AVIAO}${chip}</div>` : ''}${meta.resumo ? `<p class="resumo">${meta.resumo}</p>` : ''}${itens}</article>`;
+  }).join('');
+
+  $('#surp').innerHTML = '<h2>Nossas surpresas</h2>' + C.surpresas.map(s => `<a href="${s.href}"><b>${s.titulo}</b><span>${s.detalhe}</span></a>`).join('');
+
+  const f = faltam();
+  const livre = aberto(C.voo.checkinAbre);
+  $('#continua').innerHTML = `<h2>Continua...</h2>` + C.continua.map(p => `<p>${p}</p>`).join('') +
+    (f ? `<div class="falta">${f}</div>` : '') +
+    `<button class="cta" id="btn-checkin" ${livre ? '' : 'disabled'}>${livre ? 'Fazer check-in' : 'Check-in ainda fechado'}</button>` +
+    `<div id="checkin-cd"></div>` + (livre ? '' : '<p class="aviso">O check-in abre 24 horas antes do voo.</p>');
+  $('#btn-checkin').onclick = () => ir('ticket');
+
+  const v = C.voo, voos = C.viagens;
+  $('#pass').innerHTML = `
+  <article class="pass" aria-label="Cartão de embarque">
+    <header class="pass-head"><span class="brand">${AVIAO}${v.companhia}</span><span>Cartão de embarque</span></header>
+    <div class="pass-body">
+      <span class="lbl">Passageira</span>
+      <div class="nome">${C.nome.toUpperCase()} ${C.sobrenome}</div>
+      <div class="rota">
+        <div class="cidade"><b>BEL</b><span>Belém</span></div><div class="mid">${AVIAO}</div><div class="cidade dir"><b>SSA</b><span>Salvador</span></div>
+      </div>
+      <dl class="grade">
+        <div><dt>Voo</dt><dd>${v.numero}</dd></div><div><dt>Data</dt><dd>${v.dataCurta}</dd></div><div><dt>Horário</dt><dd>${v.horario}</dd></div>
+        <div><dt>Portão</dt><dd>${v.portao}</dd></div><div><dt>Assento</dt><dd>${v.assento}</dd></div><div><dt>Classe</dt><dd>${v.classe}</dd></div>
+      </dl>
+    </div>
+    <footer class="stub">${barras()}<p>${v.bagagem}</p></footer>
+  </article>`;
+  const mesFinal = v.dataCurta.split(' ')[1];
+  $('#voos').innerHTML = `<h2>Antes deste voo, foram estes.</h2>
+    <div class="chips">${voos.map(k => `<span>${MES_ABR[+k.split('-')[1]-1]}</span>`).join('')}<span class="hoje">${mesFinal.charAt(0).toUpperCase() + mesFinal.slice(1)}</span></div>
+    <div class="stats"><div><b>${voos.length}</b><span>viagens de ida e volta</span></div><div><b>${(voos.length*2*v.kmPorTrecho).toLocaleString('pt-BR')}</b><span>km no ar</span></div></div>`;
+  $('#brand-fl').innerHTML = AVIAO + v.companhia;
+
+  $('#chegada').innerHTML = `
+    <div class="carimbo">Chegada<small>SSA, ${v.dataLonga}</small></div>
+    <h1>${C.chegada.titulo}</h1>
+    <div class="msg">${C.chegada.mensagem.map(p => `<p>${p}</p>`).join('')}<p class="assina">${C.chegada.assinatura}</p></div>`;
+  $('#novo').innerHTML = `
+    <h2>Agora o álbum é aqui.</h2>
+    <p>As próximas páginas ainda estão em branco. Vamos preencher juntos.</p>
+    <div class="vazios">${C.salvador.map(t => `<div class="vazio"><i>+</i>${t}</div>`).join('')}</div>
+    <div class="fim"><h2>Continua...</h2><button class="link" id="btn-album">Voltar ao álbum</button><button class="link" id="btn-rever">Rever meu cartão de embarque</button></div>`;
+  $('#btn-album').onclick = () => ir('main');
+  $('#btn-rever').onclick = () => ir('ticket');
+
+  $('#saudade-txt').textContent = C.saudade;
+}
+
+/* ---------- código secreto ---------- */
+const norm = s => s.toLowerCase().normalize('NFD').replace(/[^a-z0-9]/g, '');
+function tentar(){
+  if (norm($('#codigo').value) === norm(C.codigo)) ir('som');
+  else { $('#erro').textContent = 'Código incorreto. Tente de novo!'; $('#codigo').select(); }
+}
+$('#btn-codigo').onclick = tentar;
+$('#codigo').addEventListener('keydown', e => { if (e.key === 'Enter') tentar(); });
+
+/* ---------- música ---------- */
+const fundoMusica = new Audio(C.musica); fundoMusica.loop = true;
+const musicaSaudade = new Audio(); musicaSaudade.loop = true;
+let mudo = false;
+function atualizaSom(){ $('#som-btn').textContent = mudo ? '🔇' : '🔊'; }
+$('#btn-play').onclick = () => { fundoMusica.play().catch(()=>{}); ir('main'); };
+$('#som-btn').onclick = () => { mudo = !mudo; mudo ? fundoMusica.pause() : fundoMusica.play().catch(()=>{}); atualizaSom(); };
+
+/* ---------- saudade ---------- */
+const sv = $('#saudade-video');
+$('#fab').onclick = () => {
+  fundoMusica.pause();
+  sv.muted = true; sv.src = C.videoSaudade; sv.onerror = () => { sv.style.display = 'none'; };
+  sv.play().catch(()=>{});
+  musicaSaudade.src = C.musicaSaudade; musicaSaudade.play().catch(()=>{});
+  $('#saudade').classList.add('on');
+};
+$('#fecha-saudade').onclick = () => {
+  sv.pause(); sv.removeAttribute('src'); sv.load(); sv.style.display = '';
+  musicaSaudade.pause();
+  $('#saudade').classList.remove('on');
+  if (!mudo) fundoMusica.play().catch(()=>{});
+};
+
+/* ---------- foto ampliada ---------- */
+document.addEventListener('click', e => {
+  const t = e.target;
+  if (t.matches && t.matches('img.zoom')){ $('#lb img').src = t.src; $('#lb').classList.add('on'); }
+});
+$('#lb').onclick = () => $('#lb').classList.remove('on');
+
+/* ---------- cartão e voo ---------- */
+$('#btn-voltar-album').onclick = () => ir('main');
+$('#btn-board').onclick = voar;
+function voar(){
+  ir('flight');
+  const rota = $('#route'), prog = $('#progress'), aviao = $('#plane'), status = $('#status');
+  const len = rota.getTotalLength();
+  prog.style.strokeDasharray = len;
+  const dur = reduzir ? 1500 : 6500, t0 = performance.now();
+  const fases = [[0,'Decolando de Belém'],[.18,'Em rota para Salvador'],[.78,'Iniciando a descida'],[.97,'Pouso em Salvador']];
+  const lim = v => Math.max(0, Math.min(len, v));
+  function passo(agora){
+    const p = Math.min((agora - t0) / dur, 1);
+    const e = p < .5 ? 2*p*p : 1 - Math.pow(-2*p + 2, 2) / 2;
+    const d = e * len;
+    const a = rota.getPointAtLength(lim(d-1)), b = rota.getPointAtLength(lim(d+1)), pt = rota.getPointAtLength(d);
+    const ang = Math.atan2(b.y - a.y, b.x - a.x) * 180 / Math.PI;
+    aviao.setAttribute('transform', `translate(${pt.x} ${pt.y}) rotate(${ang+90}) translate(-12 -12)`);
+    prog.style.strokeDashoffset = len * (1 - e);
+    fundo(.78 + .22 * e);
+    status.textContent = fases.filter(f => p >= f[0]).pop()[1];
+    if (p < 1) requestAnimationFrame(passo); else setTimeout(() => ir('arrival'), 900);
+  }
+  requestAnimationFrame(passo);
+}
+
+montar(); atualizaSom();
+ir(aberto(C.abreEm) ? 'gate' : 'lock');
+tictac(); setInterval(tictac, 1000);
+</script>
+</body>
+</html>
